@@ -1,7 +1,7 @@
 <script>
-    var center = [12.9160463,77.5967117]
+    var center = [12.9160463,77.5967117];
     var map = L.map('mapDiv').setView(center, 17);
-    var markers = []
+    var markers = [];
 
     L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1Ijoic3VzaGVlbGsiLCJhIjoiY2s3NHR3YjN1MDhxOTNrcGxreGM2bmxwdiJ9.h0asAA-St15DH7sCIc0drw', {
         maxZoom: 24,
@@ -28,7 +28,7 @@
         iconSize:     [55, 35], // size of the icon
     });
 
-    refreshBikes(center)
+    refreshBikes(center);
 
     function addBikeToMap(bike) {
         bikeIcon = bikeIdleIcon;
@@ -49,11 +49,7 @@
             marker.text = bike.license_plate + " / " + bike.type;
             marker.alt = bike.license_plate + " / " + bike.type;
         }
-        markers.push(marker)
-    }
-
-    function fetchBikes(coords) {
-
+        markers.push(marker);
     }
 
     function clearBikeMarkers() {
@@ -66,7 +62,7 @@
         data = {};
         data.lat = coords[0]
         data.lon = coords[1]
-        data.limit = 20
+        data.limit = 50
         httpPost("/bikes/listing", data, function(response) {
             if(response != null) {
                 bikes = response.data.bikes;
@@ -95,8 +91,27 @@
         $.ajax(settings).done(function (response) {
           console.log(response);
           if(callback != null) {
-            callback(response)
+            callback(response);
           }
         });
+    }
+
+    function search() {
+        searchQuery = $('#searchBar')[0].value;
+        if(searchQuery == '' || searchQuery == null) {
+            console.log("Empty search query. So searching wherever the map is active")
+            pos = map.getCenter();
+            center = [pos.lat, pos.lng];
+        } else {
+            if(searchQuery.includes(",")) {
+                splits = searchQuery.split(",");
+                if(splits.length == 2) {
+                    center[0] = parseFloat(splits[0]);
+                    center[1] = parseFloat(splits[1]);
+                    map.setView(center, 17);
+                }
+            }
+        }
+        refreshBikes(center);
     }
 </script>
