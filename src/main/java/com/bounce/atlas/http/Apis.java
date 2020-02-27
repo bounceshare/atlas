@@ -55,7 +55,7 @@ public class Apis {
     }
 
     @GET
-    @Path("/resource/{path:.+}")
+    @Path("/resources/{path:.+}")
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
     @Consumes({MediaType.APPLICATION_JSON})
     public InputStream resource(@PathParam("path") String path) {
