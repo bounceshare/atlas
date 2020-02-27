@@ -95,7 +95,7 @@ public class Apis {
         data.put("title", "Bounce Atlas");
         data.put("page", "home");
 
-        String content = FreemarkerUtils.getFreemarkerString("home.html", data);
+        String content = FreemarkerUtils.getFreemarkerString("home.ftl", data);
         asyncResponse.resume(Response.ok().entity(content).build());
     }
 
@@ -110,7 +110,7 @@ public class Apis {
         data.put("title", "Bounce Atlas");
         data.put("page", "bikes");
 
-        String content = FreemarkerUtils.getFreemarkerString("home.html", data);
+        String content = FreemarkerUtils.getFreemarkerString("bikes.ftl", data);
         asyncResponse.resume(Response.ok().entity(content).build());
     }
 

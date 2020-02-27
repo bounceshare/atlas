@@ -46,7 +46,7 @@
                 break;
         }
         marker = L.marker([bike.lat, bike.lon],{icon: bikeIcon});
-        var popupInfo = "<b>" + bike.license_plate + "</b><br/>" + bike.type;
+        var popupInfo = "<b>" + bike.id + "</b><br/>" + bike.license_plate + "<br/>" + bike.type;
         if(bike.status == "oos") {
             popupInfo += "<br/>" + bike.oos_reason;
         }
@@ -72,7 +72,6 @@
         if(isLoading) {
             return;
         }
-        isLoading = true;
         showLoader(true);
         httpPost("/apis/listing", data, function(response) {
             if(response != null) {
@@ -83,9 +82,8 @@
                 }
                 showLoader(false);
             } else {
-                showLoader(flase);
+                showLoader(false);
             }
-            isLoading = false;
         })
     }
 
@@ -115,10 +113,13 @@
     function onMapEvent(event) {
         console.log("MapEvent");
         console.log(event);
-        search();
+        search(true);
     }
 
     function search(isMapEvent) {
+        if(isLoading) {
+            return;
+        }
         searchQuery = $('#searchBar')[0].value;
         if(isMapEvent || searchQuery == '' || searchQuery == null) {
             console.log("Empty search query. So searching wherever the map is active")
@@ -126,6 +127,7 @@
             center = [pos.lat, pos.lng];
         } else {
             if(searchQuery.includes(",")) {
+                $('#searchBar')[0].value = "";
                 splits = searchQuery.split(",");
                 if(splits.length == 2) {
                     center[0] = parseFloat(splits[0]);
@@ -139,6 +141,7 @@
 
     function showLoader(flag) {
         console.log("showLoader() : " + flag)
+        isLoading = flag;
         if(flag) {
             $('#progressBar')[0].hidden = false;
         } else {
