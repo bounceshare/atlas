@@ -2,6 +2,8 @@
     var center = [12.9160463,77.5967117];
     var map = L.map('mapDiv').setView(center, 17);
     var markers = [];
+    map.on('moveend', onMapEvent);
+    isLoading = false;
 
     L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1Ijoic3VzaGVlbGsiLCJhIjoiY2s3NHR3YjN1MDhxOTNrcGxreGM2bmxwdiJ9.h0asAA-St15DH7sCIc0drw', {
         maxZoom: 24,
@@ -44,7 +46,11 @@
                 break;
         }
         marker = L.marker([bike.lat, bike.lon],{icon: bikeIcon});
-        marker.addTo(map)
+        var popupInfo = "<b>" + bike.license_plate + "</b><br/>" + bike.type;
+        if(bike.status == "oos") {
+            popupInfo += "<br/>" + bike.oos_reason;
+        }
+        marker.addTo(map).bindPopup(popupInfo);
         if(bike != null) {
             marker.text = bike.license_plate + " / " + bike.type;
             marker.alt = bike.license_plate + " / " + bike.type;
@@ -63,7 +69,11 @@
         data.lat = coords[0]
         data.lon = coords[1]
         data.limit = 50
-        $('#progressBar')[0].hidden = false;
+        if(isLoading) {
+            return;
+        }
+        isLoading = true;
+        showLoader(true);
         httpPost("/bikes/listing", data, function(response) {
             if(response != null) {
                 bikes = response.data.bikes;
@@ -71,14 +81,16 @@
                 for(var i = 0; i < bikes.length; i++) {
                     addBikeToMap(bikes[i]);
                 }
-                $('#progressBar')[0].hidden = true
+                showLoader(false);
             } else {
-                $('#progressBar')[0].hidden = true
+                showLoader(flase);
             }
+            isLoading = false;
         })
     }
 
     function httpPost(path, data, callback) {
+        console.log("POST Request : " + path)
         var settings = {
           "async": true,
           "crossDomain": true,
@@ -100,9 +112,15 @@
         });
     }
 
-    function search() {
+    function onMapEvent(event) {
+        console.log("MapEvent");
+        console.log(event);
+        search();
+    }
+
+    function search(isMapEvent) {
         searchQuery = $('#searchBar')[0].value;
-        if(searchQuery == '' || searchQuery == null) {
+        if(isMapEvent || searchQuery == '' || searchQuery == null) {
             console.log("Empty search query. So searching wherever the map is active")
             pos = map.getCenter();
             center = [pos.lat, pos.lng];
@@ -117,5 +135,14 @@
             }
         }
         refreshBikes(center);
+    }
+
+    function showLoader(flag) {
+        console.log("showLoader() : " + flag)
+        if(flag) {
+            $('#progressBar')[0].hidden = false;
+        } else {
+            $('#progressBar')[0].hidden = true;
+        }
     }
 </script>
