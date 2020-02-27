@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<web-app version="3.1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee">
+    <servlet>
+        <servlet-name>Bootstrap</servlet-name>
+        <servlet-class>com.bounce.atlas.Bootstrap</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    <servlet>
+        <servlet-name>Bounce</servlet-name>
+        <servlet-class>org.glassfish.jersey.servlet.ServletContainer</servlet-class>
+        <async-supported>true</async-supported>
+        <init-param>
+            <param-name>jersey.config.server.provider.packages</param-name>
+            <param-value>com.bounce.atlas.http</param-value>
+        </init-param>
+        <init-param>
+            <param-name>com.sun.jersey.config.property.JSPTemplatesBasePath</param-name>
+            <param-value>/WEB-INF/jsp</param-value>
+        </init-param>
+        <init-param>
+            <param-name>com.sun.jersey.config.property.WebPageContentRegex</param-name>
+            <param-value>(/WEB-INF/jsp/.*\.jsp)</param-value>
+        </init-param>
+        <init-param>
+            <param-name>com.sun.jersey.config.feature.Redirect</param-name>
+            <param-value>true</param-value>
+        </init-param>
+        <init-param>
+            <param-name>jersey.config.server.provider.classnames</param-name>
+            <param-value>
+                com.bounce.utils.requestfilters.DocStatusFilter;com.bounce.utils.requestfilters.DuesFilter;com.bounce.utils.requestfilters.AuthorizationFilter;com.bounce.utils.requestfilters.ValidateBookingUserFilter;com.bounce.utils.requestfilters.ValidateRequiredFieldsFilter;com.bounce.utils.requestfilters.HttpLoggingFilter
+            </param-value>
+        </init-param>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Bounce</servlet-name>
+        <url-pattern>/*</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Bootstrap</servlet-name>
+        <url-pattern>/</url-pattern>
+    </servlet-mapping>
+
+</web-app>
