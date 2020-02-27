@@ -92,8 +92,8 @@ public class Apis {
         logger.info("/home");
 
         Map<String, Object> data = Maps.newHashMap();
-        data.put("title", "Atlas");
-        data.put("body", "Coming Soon : Atlas");
+        data.put("title", "Bounce Atlas");
+        data.put("body", "Bounce Atlas");
 
         String content = FreemarkerUtils.getFreemarkerString("home.html", data);
         asyncResponse.resume(Response.ok().entity(content).build());
