@@ -17,7 +17,7 @@ import javax.ws.rs.container.Suspended;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 
-@Path("/bikes/")
+@Path("/apis/")
 public class BikeApis {
 
     @Context

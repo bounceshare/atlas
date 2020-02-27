@@ -31,13 +31,13 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav mr-auto">
-                <li class="nav-item active">
-                    <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+                <li class="nav-item <#if page == 'home'> active </#if>">
+                    <a class="nav-link" href="/home">Home <#if page == 'home'> <span class="sr-only">(current)</span> </#if> </a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link disabled" href="#">Bikes</a>
+                <li class="nav-item <#if page == 'bikes'> active </#if>">
+                    <a class="nav-link" href="/bikes">Bikes <#if page == 'bikes'> <span class="sr-only">(current)</span> </#if> </a>
                 </li>
-                <li class="nav-item">
+                <li class="nav-item <#if page == 'bookings'> active </#if>">
                     <a class="nav-link disabled" href="#">Bookings</a>
                 </li>
             </ul>

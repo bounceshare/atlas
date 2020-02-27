@@ -74,7 +74,7 @@
         }
         isLoading = true;
         showLoader(true);
-        httpPost("/bikes/listing", data, function(response) {
+        httpPost("/apis/listing", data, function(response) {
             if(response != null) {
                 bikes = response.data.bikes;
                 clearBikeMarkers();

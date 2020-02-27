@@ -99,4 +99,19 @@ public class Apis {
         asyncResponse.resume(Response.ok().entity(content).build());
     }
 
+    @GET
+    @Path("/bikes")
+    @Produces(MediaType.TEXT_HTML)
+    @Consumes({MediaType.APPLICATION_JSON})
+    public void bikes(@Suspended final AsyncResponse asyncResponse) {
+        logger.info("/bikes");
+
+        Map<String, Object> data = Maps.newHashMap();
+        data.put("title", "Bounce Atlas");
+        data.put("page", "bikes");
+
+        String content = FreemarkerUtils.getFreemarkerString("home.html", data);
+        asyncResponse.resume(Response.ok().entity(content).build());
+    }
+
 }
