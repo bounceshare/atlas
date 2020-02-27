@@ -15,26 +15,24 @@
 
     var bikeIdleIcon = L.icon({
         iconUrl: 'resources/icons/scooter_idle.png',
-
-        iconSize:     [90, 90], // size of the icon
+        iconSize:     [55, 35], // size of the icon
     });
 
     var bikeBusyIcon = L.icon({
         iconUrl: 'resources/icons/scooter_busy.png',
-
-        iconSize:     [90, 90], // size of the icon
+        iconSize:     [55, 35], // size of the icon
     });
 
     var bikeOOSIcon = L.icon({
         iconUrl: 'resources/icons/scooter_oos.png',
-        iconSize:     [90, 90], // size of the icon
+        iconSize:     [55, 35], // size of the icon
     });
 
-    addBike(center, "idle");
+    refreshBikes(center)
 
-    function addBikeToMap(coords, state) {
+    function addBikeToMap(bike) {
         bikeIcon = bikeIdleIcon;
-        switch(state) {
+        switch(bike.status) {
             case "busy":
                 bikeIcon = bikeBusyIcon;
                 break;
@@ -45,8 +43,12 @@
                 bikeIcon = bikeOOSIcon;
                 break;
         }
-        marker = L.marker(coords,{icon: bikeIcon});
+        marker = L.marker([bike.lat, bike.lon],{icon: bikeIcon});
         marker.addTo(map)
+        if(bike != null) {
+            marker.text = bike.license_plate + " / " + bike.type;
+            marker.alt = bike.license_plate + " / " + bike.type;
+        }
         markers.push(marker)
     }
 
@@ -58,5 +60,43 @@
         for(var i = 0; i < markers.length; i++){
             map.removeLayer(markers[i]);
         }
+    }
+
+    function refreshBikes(coords) {
+        data = {};
+        data.lat = coords[0]
+        data.lon = coords[1]
+        data.limit = 20
+        httpPost("/bikes/listing", data, function(response) {
+            if(response != null) {
+                bikes = response.data.bikes;
+                clearBikeMarkers();
+                for(var i = 0; i < bikes.length; i++) {
+                    addBikeToMap(bikes[i]);
+                }
+            }
+        })
+    }
+
+    function httpPost(path, data, callback) {
+        var settings = {
+          "async": true,
+          "crossDomain": true,
+          "url": path,
+          "method": "POST",
+          "headers": {
+            "Content-Type": "application/json",
+            "cache-control": "no-cache"
+          },
+          "processData": false,
+          "data": JSON.stringify(data)
+        }
+
+        $.ajax(settings).done(function (response) {
+          console.log(response);
+          if(callback != null) {
+            callback(response)
+          }
+        });
     }
 </script>
