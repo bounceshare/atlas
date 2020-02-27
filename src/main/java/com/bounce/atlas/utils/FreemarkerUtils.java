@@ -6,6 +6,8 @@ import freemarker.template.Template;
 import freemarker.template.Version;
 import org.apache.commons.io.IOUtils;
 
+import javax.ws.rs.NotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
 import java.util.Locale;
@@ -15,18 +17,34 @@ public class FreemarkerUtils {
 
     public static final int VERSION = 1;
 
-    public static String getContent(String filename) {
+    public static String getContent(String filename) throws IOException{
         StringBuilder content = new StringBuilder();
         try {
             InputStream inputStream = FreemarkerUtils.class.getClassLoader().getResourceAsStream(filename);
             if (inputStream != null) {
                 content.append(IOUtils.toString(inputStream));
+            } else {
+                throw new IOException("File not found");
             }
         } catch (Exception e) {
             BounceUtils.logError(e);
             e.printStackTrace();
         }
         return content.toString();
+    }
+
+    public static InputStream getContentAsStream(String filename) throws IOException {
+        InputStream content = null;
+        try {
+            content = FreemarkerUtils.class.getClassLoader().getResourceAsStream(filename);
+            if(content == null) {
+                throw new IOException("Resource not found");
+            }
+        } catch (Exception e) {
+            BounceUtils.logError(e);
+            e.printStackTrace();
+        }
+        return content;
     }
 
     public static String getFreemarkerString(String filename, Map<String, Object> templateData) {

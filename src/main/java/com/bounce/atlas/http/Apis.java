@@ -1,6 +1,7 @@
 package com.bounce.atlas.http;
 
 import com.bounce.atlas.utils.FreemarkerUtils;
+import com.bounce.utils.BounceUtils;
 import com.bounce.utils.Log;
 import com.bounce.utils.status.Status;
 import com.google.common.collect.Maps;
@@ -16,6 +17,8 @@ import javax.ws.rs.container.Suspended;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Map;
 
 @Path("/")
@@ -52,6 +55,36 @@ public class Apis {
     }
 
     @GET
+    @Path("/resource/{path:.+}")
+    @Produces(MediaType.APPLICATION_OCTET_STREAM)
+    @Consumes({MediaType.APPLICATION_JSON})
+    public InputStream resource(@PathParam("path") String path) {
+        logger.info("/resource/" + path);
+        try {
+            return FreemarkerUtils.getContentAsStream(path);
+        } catch (IOException e) {
+            e.printStackTrace();
+            BounceUtils.logError(e);
+        }
+        return null;
+    }
+
+    @GET
+    @Path("/files/{path:.+}")
+    @Produces(MediaType.TEXT_PLAIN)
+    @Consumes({MediaType.APPLICATION_JSON})
+    public String files(@PathParam("path") String path) {
+        logger.info("/files/" + path);
+        try {
+            return FreemarkerUtils.getContent(path);
+        } catch (IOException e) {
+            e.printStackTrace();
+            BounceUtils.logError(e);
+        }
+        return "404";
+    }
+
+    @GET
     @Path("/home")
     @Produces(MediaType.TEXT_HTML)
     @Consumes({MediaType.APPLICATION_JSON})
@@ -62,7 +95,7 @@ public class Apis {
         data.put("title", "Atlas");
         data.put("body", "Coming Soon : Atlas");
 
-        String content = FreemarkerUtils.getFreemarkerString("home.ftl", data);
+        String content = FreemarkerUtils.getFreemarkerString("home.html", data);
         asyncResponse.resume(Response.ok().entity(content).build());
     }
 
