@@ -63,6 +63,7 @@
         data.lat = coords[0]
         data.lon = coords[1]
         data.limit = 50
+        $('#progressBar')[0].hidden = false;
         httpPost("/bikes/listing", data, function(response) {
             if(response != null) {
                 bikes = response.data.bikes;
@@ -70,6 +71,9 @@
                 for(var i = 0; i < bikes.length; i++) {
                     addBikeToMap(bikes[i]);
                 }
+                $('#progressBar')[0].hidden = true
+            } else {
+                $('#progressBar')[0].hidden = true
             }
         })
     }
