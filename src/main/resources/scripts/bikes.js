@@ -32,6 +32,7 @@
                 } else {
                     showLoader(false);
                 }
+                addMarkersToCluster();
                 isLoading = false;
                 if(bike != null) {
                     center[0] = bike.lat;

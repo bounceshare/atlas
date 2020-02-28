@@ -17,7 +17,7 @@ public class QueryUtils {
         try {
             String sql = "SELECT  * FROM bike WHERE ST_DWithin(CAST(ST_MakePoint(bike.lon, bike.lat) AS geography(GEOMETRY,-1)), " +
                     "CAST(ST_MakePoint(" + lon + "," + lat + ") AS geography(GEOMETRY,-1)), " + radius +") " +
-                    "AND bike.status = 'idle' limit " + limit;;
+                    "limit " + limit;
 
             List<BikeRecord> bikes = DatabaseConnector.getDb().getReadDbConnector().fetch(sql).into(Bike.BIKE);
             return bikes;

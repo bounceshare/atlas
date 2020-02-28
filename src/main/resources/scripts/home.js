@@ -3,6 +3,7 @@
     var defaultRadius = 2500;
     var map = L.map('mapDiv').setView(center, 17);
     var markerClusterGroup = L.markerClusterGroup();
+    var markers = []
     map.on('moveend', onMapEvent);
     isLoading = false;
 
@@ -17,18 +18,18 @@
     }).addTo(map);
 
     var bikeIdleIcon = L.icon({
-        iconUrl: '/resources/icons/scooter_idle.png',
-        iconSize:     [40, 40], // size of the icon
+        iconUrl: '/resources/icons/marker_green.png',
+        iconSize:     [50, 50], // size of the icon
     });
 
     var bikeBusyIcon = L.icon({
-        iconUrl: '/resources/icons/scooter_busy.png',
-        iconSize:     [40, 40], // size of the icon
+        iconUrl: '/resources/icons/marker_yellow.png',
+        iconSize:     [50, 50], // size of the icon
     });
 
     var bikeOOSIcon = L.icon({
-        iconUrl: '/resources/icons/scooter_oos.png',
-        iconSize:     [40, 40], // size of the icon
+        iconUrl: '/resources/icons/marker_red.png',
+        iconSize:     [50, 50], // size of the icon
     });
 
     refreshBikes(center, defaultRadius);
@@ -47,7 +48,7 @@
                 break;
         }
         marker = L.marker([bike.lat, bike.lon],{icon: bikeIcon});
-        var popupInfo = "<b>" + bike.id + "</b><br/>" + bike.license_plate + "<br/>" + bike.type;
+        var popupInfo = "<b>" + bike.id + "</b><br/>" + bike.license_plate + "<br/>" + bike.type + "<br/>" + bike.status;
         if(bike.status == "oos") {
             popupInfo += "<br/>" + bike.oos_reason;
         }
@@ -56,12 +57,18 @@
             marker.text = bike.license_plate + " / " + bike.type;
             marker.alt = bike.license_plate + " / " + bike.type;
         }
-        markerClusterGroup.addLayer(marker);
+        markers.push(marker);
+    }
+
+    function addMarkersToCluster() {
+        markerClusterGroup.addLayers(markers);
+        map.addLayer(markerClusterGroup);
     }
 
     function clearBikeMarkers() {
         map.removeLayer(markerClusterGroup);
         markerClusterGroup.clearLayers();
+        markers = [];
     }
 
     function refreshBikes(coords, radius) {
@@ -81,7 +88,7 @@
                 for(var i = 0; i < bikes.length; i++) {
                     addBikeToMap(bikes[i]);
                 }
-                map.addLayer(markerClusterGroup);
+                addMarkersToCluster();
                 showLoader(false);
             } else {
                 showLoader(false);
