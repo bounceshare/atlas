@@ -32,7 +32,14 @@
         iconSize:     [50, 50], // size of the icon
     });
 
-    refreshBikes(center, defaultRadius);
+    function bootstrap() {
+        console.log("Bootstrap()");
+        var refresh = "<#if refresh??>true<#else>false</#if>";
+        console.log("Refresh : " + refresh);
+        if(parseBoolean(refresh)) {
+            refreshBikes(center, defaultRadius);
+        }
+    }
 
     function addBikeToMap(bike) {
         bikeIcon = bikeIdleIcon;
@@ -48,7 +55,7 @@
                 break;
         }
         marker = L.marker([bike.lat, bike.lon],{icon: bikeIcon});
-        var popupInfo = "<b>" + bike.id + "</b><br/>" + bike.license_plate + "<br/>" + bike.type + "<br/>" + bike.status;
+        var popupInfo = "<b>" + bike.id + "</b><br/>" + bike.license_plate + "<br/>" + bike.type;
         if(bike.status == "oos") {
             popupInfo += "<br/>" + bike.oos_reason;
         }
@@ -167,4 +174,6 @@
         var mapDistance = mapBoundNorthEast.distanceTo(map.getCenter());
         return mapDistance;
     }
+
+    bootstrap();
 </script>

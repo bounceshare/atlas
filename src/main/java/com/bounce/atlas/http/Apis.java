@@ -98,6 +98,7 @@ public class Apis {
         Map<String, Object> data = Maps.newHashMap();
         data.put("title", "Bounce Atlas");
         data.put("page", "home");
+        data.put("refresh", "true");
 
         String content = FreemarkerUtils.getFreemarkerString("home.ftl", data);
         asyncResponse.resume(Response.ok().entity(content).build());
