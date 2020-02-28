@@ -30,9 +30,10 @@ public class BikeListingApi extends BaseApiHandler {
             double lat = input.optDouble("lat", 12.9160463);
             double lon = input.optDouble("lon", 77.5967117);
 
-            int limit = input.optInt("limit", 100);
+            int limit = input.optInt("limit", 10000);
+            int radius = input.optInt("radius", 5000);
 
-            List<BikeRecord> bikes = QueryUtils.getBikes(lat, lon, limit);
+            List<BikeRecord> bikes = QueryUtils.getBikes(lat, lon, limit, radius);
             List<Map<String, Object>> bikeMap = Lists.newArrayList();
             for(BikeRecord bike : bikes) {
                 bikeMap.add(bike.intoMap());

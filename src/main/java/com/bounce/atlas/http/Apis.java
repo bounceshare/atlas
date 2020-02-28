@@ -132,10 +132,10 @@ public class Apis {
         double lat = Double.parseDouble(location.split(",")[0]);
         double lon = Double.parseDouble(location.split(",")[1]);
 
-        List<BikeRecord> bikes = QueryUtils.getBikes(lat, lon, 100);
+        List<BikeRecord> bikes = QueryUtils.getBikes(lat, lon, 100, 2500);
         List<MarkerPojo> markers = QueryUtils.getBikesAsMarkers(bikes);
 
-        data.put("markers", markers);
+        FreemarkerUtils.addMarkersToFreemarkerObj(markers, data);
 
         String content = FreemarkerUtils.getFreemarkerString("home.ftl", data);
         asyncResponse.resume(Response.ok().entity(content).build());
@@ -155,7 +155,7 @@ public class Apis {
         List<BikeRecord> bikes = QueryUtils.getBikes(searchQuery);
         List<MarkerPojo> markers = QueryUtils.getBikesAsMarkers(bikes);
 
-        data.put("markers", markers);
+        FreemarkerUtils.addMarkersToFreemarkerObj(markers, data);
 
         String content = FreemarkerUtils.getFreemarkerString("home.ftl", data);
         asyncResponse.resume(Response.ok().entity(content).build());

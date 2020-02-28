@@ -13,12 +13,11 @@ import java.util.List;
 
 public class QueryUtils {
 
-    public static List<BikeRecord> getBikes(double lat, double lon, int limit) {
+    public static List<BikeRecord> getBikes(double lat, double lon, int limit, int radius) {
         try {
-            String sql = "select * from bike WHERE bike.axcess_id IS NOT NULL AND bike.type != 'cycle'" +
-                    " and axcess_id is not NULL " +
-                    " order by ST_SetSRID(ST_MakePoint(lon, lat), 4326) <-> ST_SetSRID(ST_MakePoint(" + lon + "," +
-                    lat + ") , 4326) " + "limit " + limit;
+            String sql = "SELECT  * FROM bike WHERE ST_DWithin(CAST(ST_MakePoint(bike.lon, bike.lat) AS geography(GEOMETRY,-1)), " +
+                    "CAST(ST_MakePoint(" + lon + "," + lat + ") AS geography(GEOMETRY,-1)), " + radius +") " +
+                    "AND bike.status = 'idle' limit " + limit;;
 
             List<BikeRecord> bikes = DatabaseConnector.getDb().getReadDbConnector().fetch(sql).into(Bike.BIKE);
             return bikes;
@@ -67,7 +66,7 @@ public class QueryUtils {
                         marker.iconUrl = "/resources/icons/scooter_idle.png";
                         break;
                     case busy:
-                        marker.iconUrl = "/resources/icons/scooter_busy.png";
+                        marker.iconUrl = "/resources/icons/scooter_oos.png";
                         break;
                     case oos:
                         marker.iconUrl = "/resources/icons/scooter_oos.png";

@@ -1,6 +1,8 @@
 package com.bounce.atlas.utils;
 
+import com.bounce.atlas.pojo.MarkerPojo;
 import com.bounce.utils.BounceUtils;
+import com.google.gson.Gson;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.Version;
@@ -10,12 +12,15 @@ import javax.ws.rs.NotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
 public class FreemarkerUtils {
 
     public static final int VERSION = 1;
+
+    public static Gson gson = new Gson();
 
     public static String getContent(String filename) throws IOException{
         StringBuilder content = new StringBuilder();
@@ -70,6 +75,11 @@ public class FreemarkerUtils {
         }
 
         return content.toString();
+    }
+
+    public static void addMarkersToFreemarkerObj(List<MarkerPojo> markers, Map<String, Object> data) {
+        data.put("markers", data);
+        data.put("markersString", gson.toJson(markers));
     }
 
 }

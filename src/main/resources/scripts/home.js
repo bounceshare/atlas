@@ -1,7 +1,8 @@
 <script>
     var center = [12.9160463,77.5967117];
+    var defaultRadius = 2500;
     var map = L.map('mapDiv').setView(center, 17);
-    var markers = [];
+    var markerClusterGroup = L.markerClusterGroup();
     map.on('moveend', onMapEvent);
     isLoading = false;
 
@@ -16,21 +17,21 @@
     }).addTo(map);
 
     var bikeIdleIcon = L.icon({
-        iconUrl: 'resources/icons/scooter_idle.png',
-        iconSize:     [55, 35], // size of the icon
+        iconUrl: '/resources/icons/scooter_idle.png',
+        iconSize:     [40, 40], // size of the icon
     });
 
     var bikeBusyIcon = L.icon({
-        iconUrl: 'resources/icons/scooter_busy.png',
-        iconSize:     [55, 35], // size of the icon
+        iconUrl: '/resources/icons/scooter_busy.png',
+        iconSize:     [40, 40], // size of the icon
     });
 
     var bikeOOSIcon = L.icon({
-        iconUrl: 'resources/icons/scooter_oos.png',
-        iconSize:     [55, 35], // size of the icon
+        iconUrl: '/resources/icons/scooter_oos.png',
+        iconSize:     [40, 40], // size of the icon
     });
 
-    refreshBikes(center);
+    refreshBikes(center, defaultRadius);
 
     function addBikeToMap(bike) {
         bikeIcon = bikeIdleIcon;
@@ -50,25 +51,25 @@
         if(bike.status == "oos") {
             popupInfo += "<br/>" + bike.oos_reason;
         }
-        marker.addTo(map).bindPopup(popupInfo);
+        marker.bindPopup(popupInfo);
         if(bike != null) {
             marker.text = bike.license_plate + " / " + bike.type;
             marker.alt = bike.license_plate + " / " + bike.type;
         }
-        markers.push(marker);
+        markerClusterGroup.addLayer(marker);
     }
 
     function clearBikeMarkers() {
-        for(var i = 0; i < markers.length; i++){
-            map.removeLayer(markers[i]);
-        }
+        map.removeLayer(markerClusterGroup);
+        markerClusterGroup.clearLayers();
     }
 
-    function refreshBikes(coords) {
+    function refreshBikes(coords, radius) {
         data = {};
-        data.lat = coords[0]
-        data.lon = coords[1]
-        data.limit = 50
+        data.lat = coords[0];
+        data.lon = coords[1];
+        data.radius = radius;
+
         if(isLoading) {
             return;
         }
@@ -80,6 +81,7 @@
                 for(var i = 0; i < bikes.length; i++) {
                     addBikeToMap(bikes[i]);
                 }
+                map.addLayer(markerClusterGroup);
                 showLoader(false);
             } else {
                 showLoader(false);
@@ -136,7 +138,11 @@
                 }
             }
         }
-        refreshBikes(center);
+        radius = defaultRadius;
+        if(isMapEvent) {
+            radius = getMapRadiusInMeters();
+        }
+        refreshBikes(center, radius);
     }
 
     function showLoader(flag) {
@@ -147,5 +153,11 @@
         } else {
             $('#progressBar')[0].hidden = true;
         }
+    }
+
+    function getMapRadiusInMeters() {
+        var mapBoundNorthEast = map.getBounds().getNorthEast();
+        var mapDistance = mapBoundNorthEast.distanceTo(map.getCenter());
+        return mapDistance;
     }
 </script>
