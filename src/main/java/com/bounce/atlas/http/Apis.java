@@ -1,8 +1,11 @@
 package com.bounce.atlas.http;
 
+import com.bounce.atlas.pojo.MarkerPojo;
 import com.bounce.atlas.utils.FreemarkerUtils;
+import com.bounce.atlas.utils.QueryUtils;
 import com.bounce.utils.BounceUtils;
 import com.bounce.utils.Log;
+import com.bounce.utils.dbmodels.public_.tables.records.BikeRecord;
 import com.bounce.utils.status.Status;
 import com.google.common.collect.Maps;
 import com.google.gson.Gson;
@@ -19,6 +22,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 import java.util.Map;
 
 @Path("/")
@@ -111,6 +115,49 @@ public class Apis {
         data.put("page", "bikes");
 
         String content = FreemarkerUtils.getFreemarkerString("bikes.ftl", data);
+        asyncResponse.resume(Response.ok().entity(content).build());
+    }
+
+    @GET
+    @Path("/home/location")
+    @Produces(MediaType.TEXT_HTML)
+    @Consumes({MediaType.APPLICATION_JSON})
+    public void homeQuery(@Suspended final AsyncResponse asyncResponse, @QueryParam("q") String location) {
+        logger.info("/home");
+
+        Map<String, Object> data = Maps.newHashMap();
+        data.put("title", "Bounce Atlas");
+        data.put("page", "home");
+
+        double lat = Double.parseDouble(location.split(",")[0]);
+        double lon = Double.parseDouble(location.split(",")[1]);
+
+        List<BikeRecord> bikes = QueryUtils.getBikes(lat, lon, 100);
+        List<MarkerPojo> markers = QueryUtils.getBikesAsMarkers(bikes);
+
+        data.put("markers", markers);
+
+        String content = FreemarkerUtils.getFreemarkerString("home.ftl", data);
+        asyncResponse.resume(Response.ok().entity(content).build());
+    }
+
+    @GET
+    @Path("/bike/{query}")
+    @Produces(MediaType.TEXT_HTML)
+    @Consumes({MediaType.APPLICATION_JSON})
+    public void bikeQuery(@Suspended final AsyncResponse asyncResponse, @QueryParam("q") String searchQuery) {
+        logger.info("/home");
+
+        Map<String, Object> data = Maps.newHashMap();
+        data.put("title", "Bounce Atlas");
+        data.put("page", "home");
+
+        List<BikeRecord> bikes = QueryUtils.getBikes(searchQuery);
+        List<MarkerPojo> markers = QueryUtils.getBikesAsMarkers(bikes);
+
+        data.put("markers", markers);
+
+        String content = FreemarkerUtils.getFreemarkerString("home.ftl", data);
         asyncResponse.resume(Response.ok().entity(content).build());
     }
 
