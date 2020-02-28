@@ -1,5 +1,6 @@
 package com.bounce.atlas.http.handlers;
 
+import com.bounce.atlas.utils.QueryUtils;
 import com.bounce.utils.BounceUtils;
 import com.bounce.utils.DatabaseConnector;
 import com.bounce.utils.apis.BaseApiHandler;
@@ -29,14 +30,9 @@ public class BikeListingApi extends BaseApiHandler {
             double lat = input.optDouble("lat", 12.9160463);
             double lon = input.optDouble("lon", 77.5967117);
 
-            double limit = input.optInt("limit", 100);
+            int limit = input.optInt("limit", 100);
 
-            String sql = "select * from bike WHERE bike.axcess_id IS NOT NULL AND bike.type != 'cycle'" +
-                    " and axcess_id is not NULL "+
-                    " order by ST_SetSRID(ST_MakePoint(lon, lat), 4326) <-> ST_SetSRID(ST_MakePoint(" + lon + "," + lat + ") , 4326) " +
-                    "limit " + limit;
-
-            List<BikeRecord> bikes = DatabaseConnector.getDb().getReadDbConnector().fetch(sql).into(Bike.BIKE);
+            List<BikeRecord> bikes = QueryUtils.getBikes(lat, lon, limit);
             List<Map<String, Object>> bikeMap = Lists.newArrayList();
             for(BikeRecord bike : bikes) {
                 bikeMap.add(bike.intoMap());

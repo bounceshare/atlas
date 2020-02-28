@@ -1,5 +1,6 @@
 package com.bounce.atlas.http.handlers;
 
+import com.bounce.atlas.utils.QueryUtils;
 import com.bounce.utils.BounceUtils;
 import com.bounce.utils.DatabaseConnector;
 import com.bounce.utils.apis.BaseApiHandler;
@@ -26,33 +27,9 @@ public class BikeSearchApi extends BaseApiHandler {
     public void onRequest() {
         try {
             super.onRequest();
-            String searchTerm = input.optString("searchQuery");
+            String searchQuery = input.optString("searchQuery");
 
-            boolean isBikeId = false;
-            if(!TextUtils.isEmpty(searchTerm)) {
-                try {
-                    int num = Integer.parseInt(searchTerm);
-                    if(num > 9999) {
-                        isBikeId = true;
-                    }
-                } catch (NumberFormatException e) {
-                }
-            }
-            List<BikeRecord> bikes = null;
-            try {
-                bikes = null;
-                if(isBikeId) {
-                    bikes = DatabaseConnector.getDb().getReadDbConnector().selectFrom(Bike.BIKE).where(Bike.BIKE.ID.eq(Integer.parseInt(searchTerm))).fetch();
-                } else {
-                    bikes = DatabaseConnector.getDb().getReadDbConnector().selectFrom(Bike.BIKE).where(Bike.BIKE.LICENSE_PLATE.contains(searchTerm)).fetch();
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-                BounceUtils.logError(e);
-            }
-            if(bikes == null) {
-                bikes = Lists.newArrayList();
-            }
+            List<BikeRecord> bikes = QueryUtils.getBikes(searchQuery);
             List<Map<String, Object>> bikeMap = Lists.newArrayList();
             for(BikeRecord bike : bikes) {
                 bikeMap.add(bike.intoMap());
