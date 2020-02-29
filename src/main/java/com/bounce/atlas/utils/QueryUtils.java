@@ -69,7 +69,7 @@ public class QueryUtils {
                         marker.iconUrl = "/resources/icons/marker_green.png";
                         break;
                     case busy:
-                        marker.iconUrl = "/resources/icons/marker_yello.png";
+                        marker.iconUrl = "/resources/icons/marker_blue.png";
                         break;
                     case oos:
                         marker.iconUrl = "/resources/icons/marker_red.png";

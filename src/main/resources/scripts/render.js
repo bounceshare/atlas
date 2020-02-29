@@ -43,11 +43,22 @@
                iconSize:     [50, 50], // size of the icon
             });;
 
-            marker = L.marker([markerData.lat, markerData.lon],{icon: markerIcon});
-            var popupInfo = "<b>" + markerData.title + "</b><br/>" + markerData.subtext;
-            if(markerData.data && markerData.data.length > 0) {
-                popupInfo += "<br/>"
+            var marker = L.marker([markerData.lat, markerData.lon],{icon: markerIcon});
+//            var tableData = '<table class="table">';
+//            tableData += '<tbody>';
+//            tableData += '<<tr><th scope="row"></th><td>' + markerData.title + '</td></tr>';
+//            tableData += '<<tr><th scope="row"></th><td>' + markerData.subtext + '</td></tr>';
+
+            var popupInfo = "<b>" + markerData.title + "</b><br/>" + markerData.subtext + "<br/>";
+            if(markerData.data) {
                 // TODO render markerData.data
+                for(var key in markerData.data) {
+                    if (markerData.data.hasOwnProperty(key)) {
+//                        tableData += '<<tr><th scope="row">' + key + '</th><td>' + markerData.data[key] + '</td></tr>';
+
+                    }
+                    popupInfo += "<br/>" + key + " : " + markerData.data[key];
+                }
             }
             marker.bindPopup(popupInfo);
             marker.text = markerData.title + " / " + markerData.subtext;
