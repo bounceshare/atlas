@@ -11,6 +11,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import org.apache.http.util.TextUtils;
 import org.apache.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
@@ -93,15 +94,23 @@ public class Apis {
     @Path("/home")
     @Produces(MediaType.TEXT_HTML)
     @Consumes({MediaType.APPLICATION_JSON})
-    public void home(@Suspended final AsyncResponse asyncResponse) {
+    public void homeLayers(@Suspended final AsyncResponse asyncResponse, @QueryParam("loc") String location, @QueryParam("layers") String layers) {
         logger.info("/home");
-
         Map<String, Object> data = Maps.newHashMap();
         data.put("title", "Bounce Atlas");
         data.put("page", "home");
-        data.put("refresh", "true");
 
-        String content = FreemarkerUtils.getFreemarkerString("home.ftl", data);
+        if(TextUtils.isEmpty(location)) {
+            location = "12.9160463,77.5967117";
+        }
+        if(TextUtils.isEmpty(layers)) {
+            layers = "bikes,parking";
+        }
+
+        data.put("location", location);
+        data.put("layers", layers);
+
+        String content = FreemarkerUtils.getFreemarkerString("index.ftl", data);
         asyncResponse.resume(Response.ok().entity(content).build());
     }
 
@@ -109,57 +118,20 @@ public class Apis {
     @Path("/bikes")
     @Produces(MediaType.TEXT_HTML)
     @Consumes({MediaType.APPLICATION_JSON})
-    public void bikes(@Suspended final AsyncResponse asyncResponse) {
+    public void bikeQuery(@Suspended final AsyncResponse asyncResponse, @QueryParam("loc") String location) {
         logger.info("/bikes");
 
         Map<String, Object> data = Maps.newHashMap();
         data.put("title", "Bounce Atlas");
         data.put("page", "bikes");
 
-        String content = FreemarkerUtils.getFreemarkerString("bikes.ftl", data);
-        asyncResponse.resume(Response.ok().entity(content).build());
-    }
+        if(TextUtils.isEmpty(location)) {
+            location = "12.9160463,77.5967117";
+        }
 
-    @GET
-    @Path("/home/location")
-    @Produces(MediaType.TEXT_HTML)
-    @Consumes({MediaType.APPLICATION_JSON})
-    public void homeQuery(@Suspended final AsyncResponse asyncResponse, @QueryParam("q") String location) {
-        logger.info("/home");
+        data.put("location", location);
 
-        Map<String, Object> data = Maps.newHashMap();
-        data.put("title", "Bounce Atlas");
-        data.put("page", "home");
-
-        double lat = Double.parseDouble(location.split(",")[0]);
-        double lon = Double.parseDouble(location.split(",")[1]);
-
-        List<BikeRecord> bikes = QueryUtils.getBikes(lat, lon, 100, 2500);
-        List<MarkerPojo> markers = QueryUtils.getBikesAsMarkers(bikes);
-
-        FreemarkerUtils.addMarkersToFreemarkerObj(markers, data);
-
-        String content = FreemarkerUtils.getFreemarkerString("home.ftl", data);
-        asyncResponse.resume(Response.ok().entity(content).build());
-    }
-
-    @GET
-    @Path("/bike/{query}")
-    @Produces(MediaType.TEXT_HTML)
-    @Consumes({MediaType.APPLICATION_JSON})
-    public void bikeQuery(@Suspended final AsyncResponse asyncResponse, @QueryParam("q") String searchQuery) {
-        logger.info("/home");
-
-        Map<String, Object> data = Maps.newHashMap();
-        data.put("title", "Bounce Atlas");
-        data.put("page", "home");
-
-        List<BikeRecord> bikes = QueryUtils.getBikes(searchQuery);
-        List<MarkerPojo> markers = QueryUtils.getBikesAsMarkers(bikes);
-
-        FreemarkerUtils.addMarkersToFreemarkerObj(markers, data);
-
-        String content = FreemarkerUtils.getFreemarkerString("home.ftl", data);
+        String content = FreemarkerUtils.getFreemarkerString("index.ftl", data);
         asyncResponse.resume(Response.ok().entity(content).build());
     }
 

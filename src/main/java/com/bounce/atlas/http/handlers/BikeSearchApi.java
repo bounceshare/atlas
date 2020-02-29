@@ -1,5 +1,7 @@
 package com.bounce.atlas.http.handlers;
 
+import com.bounce.atlas.pojo.MarkerPojo;
+import com.bounce.atlas.utils.FreemarkerUtils;
 import com.bounce.atlas.utils.QueryUtils;
 import com.bounce.utils.BounceUtils;
 import com.bounce.utils.DatabaseConnector;
@@ -30,13 +32,9 @@ public class BikeSearchApi extends BaseApiHandler {
             String searchQuery = input.optString("searchQuery");
 
             List<BikeRecord> bikes = QueryUtils.getBikes(searchQuery);
-            List<Map<String, Object>> bikeMap = Lists.newArrayList();
-            for(BikeRecord bike : bikes) {
-                bikeMap.add(bike.intoMap());
-            }
 
             Map<Object, Object> response = Maps.newHashMap();
-            response.put("bikes", bikeMap);
+            response.put("markers", QueryUtils.getBikesAsMarkers(bikes));
 
             sendSuccessResponse(asyncResponse, response);
         } catch (Exception e) {

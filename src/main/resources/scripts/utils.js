@@ -21,4 +21,27 @@
         return points;
     }
 
+    function httpPost(path, data, callback) {
+        console.log("POST Request : " + path)
+        var settings = {
+          "async": true,
+          "crossDomain": true,
+          "url": path,
+          "method": "POST",
+          "headers": {
+            "Content-Type": "application/json",
+            "cache-control": "no-cache"
+          },
+          "processData": false,
+          "data": JSON.stringify(data)
+        }
+
+        $.ajax(settings).done(function (response) {
+          console.log(response);
+          if(callback != null) {
+            callback(response);
+          }
+        });
+    }
+
 </script>

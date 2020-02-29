@@ -19,6 +19,9 @@
     var paths = []
     var circles = []
 
+    var isLoading = false;
+    var layers = "bikes,parking"
+
 
     function bootstrap() {
         console.log("bootstrap()")
@@ -128,32 +131,32 @@
         markerData = $('#markerData')[0].innerText;
         if(markerData.length > 0) {
             arr = JSON.parse($('#markerData')[0].innerText);
+            genericMarkerObjs = arr;
         }
-        genericMarkerObjs = arr;
     }
 
     function updateFences() {
         fenceData = $('#fenceData')[0].innerText;
         if(fenceData.length > 0) {
             arr = JSON.parse($('#fenceData')[0].innerText);
+            genericFenceObjs = arr;
         }
-        genericFenceObjs = arr;
     }
 
     function updatePaths() {
         pathData = $('#pathData')[0].innerText;
         if(pathData.length > 0) {
             arr = JSON.parse($('#pathData')[0].innerText);
+            genericPathObjs = arr;
         }
-        genericPathObjs = arr;
     }
 
     function updateCircles() {
         circleData = $('#circleData')[0].innerText;
         if(circleData.length > 0) {
             arr = JSON.parse($('#circleData')[0].innerText);
+            genericCircleObjs = arr;
         }
-        genericCircleObjs = arr;
     }
 
     function clearMarkers() {
@@ -201,6 +204,15 @@
     }
 
     function setupMap() {
+        var loc = $('#freemarker_location')[0].innerText;
+        if(loc.length > 0) {
+            DEFAULT_CENTRE = [parseFloat(loc.split(",")[0]), parseFloat(loc.split(",")[1])];
+        }
+        tempLayers = $('#freemarker_layers')[0].innerText;
+        if(tempLayers.length > 0) {
+            layers = tempLayers;
+        }
+
         map = L.map('mapDiv').setView(DEFAULT_CENTRE, 17);
         map.on('moveend', onMapEvent);
         isLoading = false;
@@ -220,6 +232,33 @@
         console.log("onMapEvent");
         console.log(event);
         // If move is set to true. hit api to fetch data and set it using js. Only for home page
+    }
+
+    function showLoader(flag) {
+        console.log("showLoader() : " + flag)
+        isLoading = flag;
+        if(flag) {
+            $('#progressBar')[0].hidden = false;
+        } else {
+            $('#progressBar')[0].hidden = true;
+        }
+    }
+
+    function invalidateMap(tMarkers, tFences, tCircles, tPaths) {
+        $('#markerData')[0].innerText = JSON.stringify(tMarkers);
+        $('#fenceData')[0].innerText = JSON.stringify(tFences);
+        $('#circleData')[0].innerText = JSON.stringify(tPaths);
+        $('#pathData')[0].innerText = JSON.stringify(tCircles);
+
+        updateMarkers();
+        updateFences();
+        updateCircles();
+        updatePaths();
+
+        renderMarkers();
+        renderFences();
+        renderCircles();
+        renderPaths();
     }
 
     bootstrap();
