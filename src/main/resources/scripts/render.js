@@ -47,7 +47,6 @@
 
             var popupInfo = "<b>" + markerData.title + "</b><br/>" + markerData.subtext + "<br/>";
             if(markerData.data) {
-                // TODO render markerData.data
                 for(var key in markerData.data) {
                     popupInfo += "<br/>" + key + " : " + markerData.data[key];
                 }
