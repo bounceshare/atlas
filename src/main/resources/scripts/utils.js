@@ -3,10 +3,6 @@
         return (!str || 0 === str.length);
     }
 
-    function isFreemarkerVarExists(variable) {
-        return parseBoolean(refresh);
-    }
-
     function parseBoolean(string) {
         switch (string.toLowerCase().trim()) {
             case "true": case "yes": case "1": return true;

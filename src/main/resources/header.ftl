@@ -42,6 +42,9 @@
                 <li class="nav-item <#if page == 'bikes'> active </#if>">
                     <a class="nav-link" href="/bikes">Bikes <#if page == 'bikes'> <span class="sr-only">(current)</span> </#if> </a>
                 </li>
+                <li class="nav-item <#if page == 'test'> active </#if>">
+                    <a class="nav-link" href="/test">Test <#if page == 'test'> <span class="sr-only">(current)</span> </#if> </a>
+                </li>
                 <li class="nav-item <#if page == 'bookings'> active </#if>">
                     <a class="nav-link disabled" href="#">Bookings</a>
                 </li>

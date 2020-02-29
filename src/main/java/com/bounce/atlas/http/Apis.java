@@ -162,4 +162,27 @@ public class Apis {
         asyncResponse.resume(Response.ok().entity(content).build());
     }
 
+    @GET
+    @Path("/test")
+    @Produces(MediaType.TEXT_HTML)
+    @Consumes({MediaType.APPLICATION_JSON})
+    public void test(@Suspended final AsyncResponse asyncResponse, @QueryParam("q") String location) {
+        logger.info("/test");
+
+        Map<String, Object> data = Maps.newHashMap();
+        data.put("title", "Bounce Atlas");
+        data.put("page", "test");
+
+        double lat = 12.9160463;
+        double lon = 77.5967117;
+
+        List<BikeRecord> bikes = QueryUtils.getBikes(lat, lon, 10000, 2500);
+        List<MarkerPojo> markers = QueryUtils.getBikesAsMarkers(bikes);
+
+        FreemarkerUtils.addMarkersToFreemarkerObj(markers, data);
+
+        String content = FreemarkerUtils.getFreemarkerString("index.ftl", data);
+        asyncResponse.resume(Response.ok().entity(content).build());
+    }
+
 }

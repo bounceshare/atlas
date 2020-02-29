@@ -3,13 +3,16 @@ package com.bounce.atlas.utils;
 import com.bounce.atlas.pojo.MarkerPojo;
 import com.bounce.utils.BounceUtils;
 import com.bounce.utils.DatabaseConnector;
+import com.bounce.utils.dbmodels.public_.enums.BikeStatus;
 import com.bounce.utils.dbmodels.public_.tables.Bike;
 import com.bounce.utils.dbmodels.public_.tables.records.BikeRecord;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import org.apache.http.util.TextUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class QueryUtils {
 
@@ -63,21 +66,40 @@ public class QueryUtils {
                 MarkerPojo marker = new MarkerPojo();
                 switch (bike.getStatus()) {
                     case idle:
-                        marker.iconUrl = "/resources/icons/scooter_idle.png";
+                        marker.iconUrl = "/resources/icons/marker_green.png";
                         break;
                     case busy:
-                        marker.iconUrl = "/resources/icons/scooter_oos.png";
+                        marker.iconUrl = "/resources/icons/marker_yello.png";
                         break;
                     case oos:
-                        marker.iconUrl = "/resources/icons/scooter_oos.png";
+                        marker.iconUrl = "/resources/icons/marker_red.png";
                         break;
                     default:
-                        marker.iconUrl = "/resources/icons/scooter_oos.png";
+                        marker.iconUrl = "/resources/icons/marker_red.png";
                         break;
                 }
                 marker.cta = "/bikes/" + bike.getId();
                 marker.title = "" + bike.getId();
-                marker.subtext = bike.getLicensePlate() + "<br/>" + bike.getStatus();
+                marker.subtext = bike.getLicensePlate();
+                marker.lat = bike.getLat();
+                marker.lon = bike.getLon();
+
+                Map<String, Object> bikeData = bike.intoMap();
+
+                marker.data = Maps.newHashMap();
+                marker.data.put("location", (bikeData.get("lat")+ "," + bikeData.get("lon")));
+                marker.data.put("loc_updated_time", bikeData.get("loc_updated_time"));
+                marker.data.put("type", bikeData.get("type"));
+                marker.data.put("active", bikeData.get("active"));
+                marker.data.put("is_live", bikeData.get("is_live"));
+                marker.data.put("geo_id", bikeData.get("geo_id"));
+                marker.data.put("axcess_id", bikeData.get("axcess_id"));
+                marker.data.put("secondary_gps", (bikeData.get("sec_gps_lat")+ "," + bikeData.get("sec_gps_lon")));
+                marker.data.put("sec_gps_updated_time", bikeData.get("sec_gps_updated_time"));
+                marker.data.put("is_live_reason", bikeData.get("is_live_reason"));
+                marker.data.put("is_live_update_loc", bikeData.get("is_live_update_loc"));
+
+                markers.add(marker);
             }
         } catch (Exception e) {
             e.printStackTrace();
