@@ -90,10 +90,12 @@
     function renderPaths() {
         console.log("renderPaths()");
         pathsGroup = L.layerGroup();
+
+        var pathAdded = null;
         for(var i = 0; i < genericPathObjs.length; i++) {
             var pathData = genericPathObjs[i];
             var points = getPoints(pathData.points);
-            var path = L.Polyline(point, {color: pathData.color});
+            var path = L.polyline(points, {color: pathData.color});
             var popupInfo = "";
             if(pathData.data) {
                 for(var key in pathData.data) {
@@ -101,10 +103,14 @@
                 }
             }
             path.bindPopup(popupInfo);
-            paths.push(circle);
-            pathsGroup.addLayer(circle);
+            paths.push(path);
+            pathsGroup.addLayer(path);
+            pathAdded = path;
         }
         pathsGroup.addTo(map);
+        if(pathAdded) {
+            map.fitBounds(pathAdded.getBounds());
+        }
     }
 
     function renderCircles() {
@@ -252,10 +258,10 @@
             $('#fenceData')[0].innerText = JSON.stringify(tFences);
         }
         if(tCircles != null) {
-            $('#circleData')[0].innerText = JSON.stringify(tPaths);
+            $('#circleData')[0].innerText = JSON.stringify(tCircles);
         }
         if(tPaths != null) {
-            $('#pathData')[0].innerText = JSON.stringify(tCircles);
+            $('#pathData')[0].innerText = JSON.stringify(tPaths);
         }
 
         clearMarkers();

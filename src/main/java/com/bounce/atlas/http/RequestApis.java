@@ -2,6 +2,7 @@ package com.bounce.atlas.http;
 
 import com.bounce.atlas.http.handlers.BikeListingApi;
 import com.bounce.atlas.http.handlers.BikeSearchApi;
+import com.bounce.atlas.http.handlers.BookingSearchApi;
 import com.bounce.atlas.http.handlers.LayersApi;
 import com.bounce.utils.Log;
 import com.google.gson.Gson;
@@ -45,6 +46,16 @@ public class RequestApis {
         logger.info("/apis/bike/listing");
         BikeSearchApi bikeSearchApi = new BikeSearchApi(inputString, asyncResponse, httpRequest, httpResponse);
         bikeSearchApi.onRequest();
+    }
+
+    @POST
+    @Path("/booking/search")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes({MediaType.APPLICATION_JSON})
+    public void bookingSearch(String inputString, @Suspended final AsyncResponse asyncResponse) {
+        logger.info("/apis/booking/listing");
+        BookingSearchApi bookingSearchApi = new BookingSearchApi(inputString, asyncResponse, httpRequest, httpResponse);
+        bookingSearchApi.onRequest();
     }
 
     @POST

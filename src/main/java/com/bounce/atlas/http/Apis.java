@@ -142,12 +142,33 @@ public class Apis {
     @Path("/bikes")
     @Produces(MediaType.TEXT_HTML)
     @Consumes({MediaType.APPLICATION_JSON})
-    public void bikeQuery(@Suspended final AsyncResponse asyncResponse, @QueryParam("loc") String location) {
+    public void bikePage(@Suspended final AsyncResponse asyncResponse, @QueryParam("loc") String location) {
         logger.info("/bikes");
 
         Map<String, Object> data = Maps.newHashMap();
         data.put("title", "Bounce Atlas");
         data.put("page", "bikes");
+
+        if(TextUtils.isEmpty(location)) {
+            location = "12.9160463,77.5967117";
+        }
+
+        data.put("location", location);
+
+        String content = FreemarkerUtils.getFreemarkerString("index.ftl", data);
+        asyncResponse.resume(Response.ok().entity(content).build());
+    }
+
+    @GET
+    @Path("/bookings")
+    @Produces(MediaType.TEXT_HTML)
+    @Consumes({MediaType.APPLICATION_JSON})
+    public void bookingPage(@Suspended final AsyncResponse asyncResponse, @QueryParam("loc") String location) {
+        logger.info("/bookings");
+
+        Map<String, Object> data = Maps.newHashMap();
+        data.put("title", "Bounce Atlas");
+        data.put("page", "bookings");
 
         if(TextUtils.isEmpty(location)) {
             location = "12.9160463,77.5967117";

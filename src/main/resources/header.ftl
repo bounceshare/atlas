@@ -29,7 +29,7 @@
 <body>
 <header>
     <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
-        <a class="navbar-brand" href="/home">${title}</a>
+        <a class="navbar-brand" href="/">${title}</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse"
                 aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -46,7 +46,7 @@
                     <a class="nav-link" href="/test">Test <#if page == 'test'> <span class="sr-only">(current)</span> </#if> </a>
                 </li>
                 <li class="nav-item <#if page == 'bookings'> active </#if>">
-                    <a class="nav-link disabled" href="#">Bookings</a>
+                    <a class="nav-link" href="/bookings">Bookings <#if page == 'bookings'> <span class="sr-only">(current)</span> </#if> </a>
                 </li>
                 <li class="nav-item dropdown <#if page == 'layers'> active </#if>">
                     <a class="nav-link dropdown-toggle" id="dropdown03" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Layers</a>
@@ -55,7 +55,8 @@
                         <a class="dropdown-item" href="/layers?l=idle">Idle</a>
                         <a class="dropdown-item" href="/layers?l=busy">Busy</a>
                         <a class="dropdown-item" href="/layers?l=oos">OOS</a>
-                        <a class="dropdown-item" href="/layers?l=parking">parking</a>
+                        <a class="dropdown-item" href="/layers?l=parking">Parking Fences</a>
+                        <a class="dropdown-item" href="/layers?l=bookings">Live Bookings</a>
                     </div>
                 </li>
             </ul>

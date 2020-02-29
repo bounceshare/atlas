@@ -6,9 +6,11 @@ import com.bounce.atlas.pojo.MarkerPojo;
 import com.bounce.atlas.pojo.PathPojo;
 import com.bounce.atlas.utils.QueryUtils;
 import com.bounce.utils.BounceUtils;
+import com.bounce.utils.Pair;
 import com.bounce.utils.apis.BaseApiHandler;
 import com.bounce.utils.dbmodels.public_.enums.BikeStatus;
 import com.bounce.utils.dbmodels.public_.tables.records.BikeRecord;
+import com.bounce.utils.dbmodels.public_.tables.records.BookingRecord;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import org.apache.http.util.TextUtils;
@@ -77,6 +79,13 @@ public class LayersApi extends BaseApiHandler {
                         markers.addAll(QueryUtils.getBikesAsMarkers(oosBikes));
                         break;
                     case "bookings":
+                        List<BikeRecord> inTripBikes = QueryUtils.getBikes(lat, lon, 1000, radius, BikeStatus.busy);
+                        List<Pair<BikeRecord, BookingRecord>> pairs = Lists.newArrayList();
+                        for(BikeRecord bike : inTripBikes) {
+                            BookingRecord booking = QueryUtils.getLatestBooking(bike);
+                            pairs.add(new Pair<>(bike, booking));
+                        }
+                        markers.addAll(QueryUtils.getBookingMarkers(pairs));
                         break;
                 }
             }

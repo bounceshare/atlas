@@ -13,5 +13,6 @@
 <#if page == 'home'><#include "/scripts/layers.js"></#if>
 <#if page == 'layers'><#include "/scripts/layers.js"></#if>
 <#if page == 'bikes'><#include "/scripts/bikes.js"></#if>
+<#if page == 'bookings'><#include "/scripts/booking.js"></#if>
 </main>
 <#include "/footer.ftl">
