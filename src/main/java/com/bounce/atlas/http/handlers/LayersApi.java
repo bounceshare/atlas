@@ -7,6 +7,7 @@ import com.bounce.atlas.pojo.PathPojo;
 import com.bounce.atlas.utils.QueryUtils;
 import com.bounce.utils.BounceUtils;
 import com.bounce.utils.apis.BaseApiHandler;
+import com.bounce.utils.dbmodels.public_.enums.BikeStatus;
 import com.bounce.utils.dbmodels.public_.tables.records.BikeRecord;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -62,6 +63,20 @@ public class LayersApi extends BaseApiHandler {
                         break;
                     case "parking":
                         fences = QueryUtils.getParkingFences(lat, lon, radius);
+                        break;
+                    case "idle":
+                        List<BikeRecord> idleBikes = QueryUtils.getBikes(lat, lon, 10000, radius, BikeStatus.idle);
+                        markers.addAll(QueryUtils.getBikesAsMarkers(idleBikes));
+                        break;
+                    case "busy":
+                        List<BikeRecord> busyBikes = QueryUtils.getBikes(lat, lon, 10000, radius, BikeStatus.busy);
+                        markers.addAll(QueryUtils.getBikesAsMarkers(busyBikes));
+                        break;
+                    case "oos":
+                        List<BikeRecord> oosBikes = QueryUtils.getBikes(lat, lon, 10000, radius, BikeStatus.oos);
+                        markers.addAll(QueryUtils.getBikesAsMarkers(oosBikes));
+                        break;
+                    case "bookings":
                         break;
                 }
             }

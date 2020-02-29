@@ -91,7 +91,7 @@ public class Apis {
     }
 
     @GET
-    @Path("/home")
+    @Path("/")
     @Produces(MediaType.TEXT_HTML)
     @Consumes({MediaType.APPLICATION_JSON})
     public void homeLayers(@Suspended final AsyncResponse asyncResponse, @QueryParam("loc") String location, @QueryParam("layers") String layers) {
@@ -99,6 +99,30 @@ public class Apis {
         Map<String, Object> data = Maps.newHashMap();
         data.put("title", "Bounce Atlas");
         data.put("page", "home");
+
+        if(TextUtils.isEmpty(location)) {
+            location = "12.9160463,77.5967117";
+        }
+        if(TextUtils.isEmpty(layers)) {
+            layers = "bikes,parking";
+        }
+
+        data.put("location", location);
+        data.put("layers", layers);
+
+        String content = FreemarkerUtils.getFreemarkerString("index.ftl", data);
+        asyncResponse.resume(Response.ok().entity(content).build());
+    }
+
+    @GET
+    @Path("/layers")
+    @Produces(MediaType.TEXT_HTML)
+    @Consumes({MediaType.APPLICATION_JSON})
+    public void layers(@Suspended final AsyncResponse asyncResponse, @QueryParam("loc") String location, @QueryParam("l") String layers) {
+        logger.info("/home");
+        Map<String, Object> data = Maps.newHashMap();
+        data.put("title", "Bounce Atlas");
+        data.put("page", "layers");
 
         if(TextUtils.isEmpty(location)) {
             location = "12.9160463,77.5967117";

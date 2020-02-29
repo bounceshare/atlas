@@ -1,17 +1,9 @@
 package com.bounce.atlas.http.handlers;
 
-import com.bounce.atlas.pojo.MarkerPojo;
-import com.bounce.atlas.utils.FreemarkerUtils;
 import com.bounce.atlas.utils.QueryUtils;
-import com.bounce.utils.BounceUtils;
-import com.bounce.utils.DatabaseConnector;
 import com.bounce.utils.apis.BaseApiHandler;
-import com.bounce.utils.dbmodels.public_.tables.Bike;
 import com.bounce.utils.dbmodels.public_.tables.records.BikeRecord;
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import org.apache.http.util.TextUtils;
-import org.jooq.exception.DataAccessException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

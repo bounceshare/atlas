@@ -23,10 +23,21 @@ import java.util.Map;
 public class QueryUtils {
 
     public static List<BikeRecord> getBikes(double lat, double lon, int limit, int radius) {
+        return getBikes(lat, lon, limit, radius, null);
+    }
+
+    public static List<BikeRecord> getBikes(double lat, double lon, int limit, int radius, BikeStatus status) {
         try {
-            String sql = "SELECT  * FROM bike WHERE ST_DWithin(CAST(ST_MakePoint(bike.lon, bike.lat) AS geography(GEOMETRY,-1)), " +
-                    "CAST(ST_MakePoint(" + lon + "," + lat + ") AS geography(GEOMETRY,-1)), " + radius +") " +
-                    "limit " + limit;
+            String sql = null;
+            if(status == null) {
+                sql = "SELECT  * FROM bike WHERE ST_DWithin(CAST(ST_MakePoint(bike.lon, bike.lat) AS geography(GEOMETRY,-1)), " +
+                                "CAST(ST_MakePoint(" + lon + "," + lat + ") AS geography(GEOMETRY,-1)), " + radius +
+                                ") " + "limit " + limit;
+            } else {
+                sql = "SELECT  * FROM bike WHERE ST_DWithin(CAST(ST_MakePoint(bike.lon, bike.lat) AS geography(GEOMETRY,-1)), " +
+                        "CAST(ST_MakePoint(" + lon + "," + lat + ") AS geography(GEOMETRY,-1)), " + radius +
+                        ") AND status = '" + status.getLiteral() + "' limit " + limit;
+            }
 
             List<BikeRecord> bikes = DatabaseConnector.getDb().getReadDbConnector().fetch(sql).into(Bike.BIKE);
             return bikes;
@@ -93,16 +104,17 @@ public class QueryUtils {
 
                 marker.data = Maps.newHashMap();
                 marker.data.put("location", (bikeData.get("lat")+ "," + bikeData.get("lon")));
-                marker.data.put("loc_updated_time", bikeData.get("loc_updated_time"));
-                marker.data.put("type", bikeData.get("type"));
-                marker.data.put("active", bikeData.get("active"));
-                marker.data.put("is_live", bikeData.get("is_live"));
-                marker.data.put("geo_id", bikeData.get("geo_id"));
-                marker.data.put("axcess_id", bikeData.get("axcess_id"));
-                marker.data.put("secondary_gps", (bikeData.get("sec_gps_lat")+ "," + bikeData.get("sec_gps_lon")));
-                marker.data.put("sec_gps_updated_time", bikeData.get("sec_gps_updated_time"));
-                marker.data.put("is_live_reason", bikeData.get("is_live_reason"));
-                marker.data.put("is_live_update_loc", bikeData.get("is_live_update_loc"));
+                marker.data.put("Location Updated At", bikeData.get("loc_updated_time"));
+                marker.data.put("Type", bikeData.get("type"));
+                marker.data.put("Active", bikeData.get("active"));
+                marker.data.put("Is Live", bikeData.get("is_live"));
+                marker.data.put("Geo Id", bikeData.get("geo_id"));
+                marker.data.put("Axcess Id", bikeData.get("axcess_id"));
+                marker.data.put("Secondary GPS", (bikeData.get("sec_gps_lat")+ "," + bikeData.get("sec_gps_lon")));
+                marker.data.put("Secondary GPS updated time", bikeData.get("sec_gps_updated_time"));
+                if(bike.getStatus() == BikeStatus.oos) {
+                    marker.data.put("OOS Reason", bikeData.get("oos_reason"));
+                }
 
                 markers.add(marker);
             }

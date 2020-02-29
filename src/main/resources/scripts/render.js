@@ -245,10 +245,18 @@
     }
 
     function invalidateMap(tMarkers, tFences, tCircles, tPaths) {
-        $('#markerData')[0].innerText = JSON.stringify(tMarkers);
-        $('#fenceData')[0].innerText = JSON.stringify(tFences);
-        $('#circleData')[0].innerText = JSON.stringify(tPaths);
-        $('#pathData')[0].innerText = JSON.stringify(tCircles);
+        if(tMarkers != null) {
+            $('#markerData')[0].innerText = JSON.stringify(tMarkers);
+        }
+        if(tFences != null) {
+            $('#fenceData')[0].innerText = JSON.stringify(tFences);
+        }
+        if(tCircles != null) {
+            $('#circleData')[0].innerText = JSON.stringify(tPaths);
+        }
+        if(tPaths != null) {
+            $('#pathData')[0].innerText = JSON.stringify(tCircles);
+        }
 
         clearMarkers();
         clearFences();

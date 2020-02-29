@@ -11,5 +11,7 @@
 <div id="mapDiv" style="height:100%;"></div>
 <#include "/scripts/render.js">
 <#if page == 'home'><#include "/scripts/layers.js"></#if>
+<#if page == 'layers'><#include "/scripts/layers.js"></#if>
+<#if page == 'bikes'><#include "/scripts/bikes.js"></#if>
 </main>
 <#include "/footer.ftl">
