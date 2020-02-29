@@ -1,6 +1,8 @@
 package com.bounce.atlas.utils;
 
+import com.bounce.atlas.pojo.FencePojo;
 import com.bounce.atlas.pojo.MarkerPojo;
+import com.bounce.atlas.pojo.PointPojo;
 import com.bounce.utils.BounceUtils;
 import com.bounce.utils.DatabaseConnector;
 import com.bounce.utils.dbmodels.public_.enums.BikeStatus;
@@ -8,9 +10,13 @@ import com.bounce.utils.dbmodels.public_.tables.Bike;
 import com.bounce.utils.dbmodels.public_.tables.records.BikeRecord;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import javafx.util.Pair;
 import org.apache.http.util.TextUtils;
+import org.jooq.Record;
+import org.jooq.Result;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -81,8 +87,7 @@ public class QueryUtils {
                 marker.cta = "/bikes/" + bike.getId();
                 marker.title = "" + bike.getId();
                 marker.subtext = bike.getLicensePlate();
-                marker.lat = bike.getLat();
-                marker.lon = bike.getLon();
+                marker.location = new PointPojo(bike.getLat(), bike.getLon());
 
                 Map<String, Object> bikeData = bike.intoMap();
 
@@ -107,6 +112,66 @@ public class QueryUtils {
         }
 
         return markers;
+    }
+
+    public static List<FencePojo> getParkingFences(double lat, double lon, int radius) {
+        List<FencePojo> fences = Lists.newArrayList();
+        List<Map<String, Object>> parkingList = getParkingAround(lat, lon, radius);
+        for(Map<String, Object> parkingMap : parkingList) {
+            Map<String, Object> data = Maps.newHashMap();
+            data.put("Name", parkingMap.get("name"));
+            data.put("Category", parkingMap.get("category"));
+            FencePojo fence = FencePojo.createDefaultFence((List<PointPojo>)parkingMap.get("polygon"), data);
+            if(! (boolean)parkingMap.get("negative")) {
+                fence.fillColor = "#a2cff5";
+            }
+            fences.add(fence);
+        }
+        return fences;
+    }
+
+    private static List<Map<String, Object>> getParkingAround(double lat, double lon, int radius) {
+        List<Map<String, Object>> parkingData = new ArrayList<>();
+        try {
+            String sql = "SELECT ST_AsText(ST_ExteriorRing(fence)) as fence, name, category_name, negative, priority \n" +
+                    "FROM public.parking \n" +
+                    "LEFT JOIN public.parking_category on parking.category_id = parking_category.id\n" +
+                    "WHERE ST_DWithin(fence::geography, ST_MakePoint(" + lon + "," + lat + ")::geography," + radius + ")\n" +
+                    "    and enabled and active and verified";
+            Result<Record> records = DatabaseConnector.getDb().getConnector().fetch(sql);
+            for (Record record : records) {
+                Map<String, Object> parkingMap = new HashMap<>();
+                parkingMap.put("polygon", getPointsFromSqlLineString(record.get("fence").toString()));
+                parkingMap.put("name", record.get("name"));
+                parkingMap.put("category", record.get("category_name"));
+                parkingMap.put("negative", record.get("negative"));
+                parkingData.add(parkingMap);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            BounceUtils.logError(e);
+        }
+        return parkingData;
+    }
+
+    private static List<PointPojo> getPointsFromSqlLineString(String lineString) {
+        //LINESTRING(77.5942394 12.9347669,77.5939417 12.9337579,77.5946445 12.9335827,77.5949368 12.9345264,77.5942394 12.9347669,77.5942394 12.9347669)
+        List<PointPojo> pointPojos = Lists.newArrayList();
+        lineString = lineString.replace("LINESTRING", "");
+        lineString = lineString.replace("(", "");
+        lineString = lineString.replace(")", "");
+
+        String[] splits = lineString.split(",");
+        for(String split : splits) {
+            try {
+                PointPojo pointPojo = new PointPojo(Double.parseDouble(split.split(" ")[1]), Double.parseDouble(split.split(" ")[0]));
+                pointPojos.add(pointPojo);
+            } catch (Exception e) {
+                BounceUtils.logError(e);
+                e.printStackTrace();
+            }
+        }
+        return pointPojos;
     }
 
 }

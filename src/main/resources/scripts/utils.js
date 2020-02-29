@@ -11,4 +11,14 @@
         }
     }
 
+    function getPoints(jPoint) {
+        points = [];
+        for(var i = 0; i < jPoint.length; i++) {
+            coords = [];
+            coords.push(jPoint[i].lat, jPoint[i].lon);
+            points.push(coords);
+        }
+        return points;
+    }
+
 </script>

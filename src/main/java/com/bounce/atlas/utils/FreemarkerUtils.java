@@ -1,6 +1,9 @@
 package com.bounce.atlas.utils;
 
+import com.bounce.atlas.pojo.CirclePojo;
+import com.bounce.atlas.pojo.FencePojo;
 import com.bounce.atlas.pojo.MarkerPojo;
+import com.bounce.atlas.pojo.PathPojo;
 import com.bounce.utils.BounceUtils;
 import com.google.gson.Gson;
 import freemarker.template.Configuration;
@@ -80,6 +83,21 @@ public class FreemarkerUtils {
     public static void addMarkersToFreemarkerObj(List<MarkerPojo> markers, Map<String, Object> data) {
         data.put("markers", data);
         data.put("markersString", gson.toJson(markers));
+    }
+
+    public static void addFencesToFreemarkerObj(List<FencePojo> markers, Map<String, Object> data) {
+        data.put("fences", data);
+        data.put("fenceString", gson.toJson(markers));
+    }
+
+    public static void addCirclesToFreemarkerObj(List<CirclePojo> markers, Map<String, Object> data) {
+        data.put("circles", data);
+        data.put("circleString", gson.toJson(markers));
+    }
+
+    public static void addPathsToFreemarkerObj(List<PathPojo> markers, Map<String, Object> data) {
+        data.put("paths", data);
+        data.put("pathString", gson.toJson(markers));
     }
 
 }

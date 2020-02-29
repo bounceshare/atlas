@@ -10,6 +10,9 @@
 
     var map = null;
     var markerClusterGroup = null;
+    var fencesGroup = null;
+    var circlesGroup = null;
+    var pathsGroup = null;
 
     var markers = []
     var fences = []
@@ -36,14 +39,15 @@
 
     function renderMarkers() {
         console.log("renderMarkers()")
+        markerClusterGroup = L.markerClusterGroup();
         for(var i = 0; i < genericMarkerObjs.length; i++) {
             var markerData = genericMarkerObjs[i];
-            markerIcon = L.icon({
+            var markerIcon = L.icon({
                iconUrl: markerData.iconUrl,
                iconSize:     [50, 50], // size of the icon
             });;
 
-            var marker = L.marker([markerData.lat, markerData.lon],{icon: markerIcon});
+            var marker = L.marker([markerData.location.lat, markerData.location.lon],{icon: markerIcon});
 
             var popupInfo = "<b>" + markerData.title + "</b><br/>" + markerData.subtext + "<br/>";
             if(markerData.data) {
@@ -61,12 +65,33 @@
     }
 
     function renderFences() {
+        console.log("renderFences()");
+        fencesGroup = L.layerGroup();
+        for(var i = 0; i < genericFenceObjs.length; i++) {
+            var fenceData = genericFenceObjs[i];
+            var points = getPoints(fenceData.points);
+            var fence = L.polygon(points, {fillColor: fenceData.fillColor, fillOpacity: fenceData.fillOpacity, color: fenceData.color});
+            var popupInfo = "";
+            if(fenceData.data) {
+                for(var key in fenceData.data) {
+                    popupInfo += "<br/>" + key + " : " + fenceData.data[key];
+                }
+            }
+            fence.bindPopup(popupInfo);
+            fences.push(fence);
+            fencesGroup.addLayer(fence);
+        }
+        fencesGroup.addTo(map);
     }
 
     function renderPaths() {
+        console.log("renderPaths()");
+        pathsGroup = L.layerGroup();
     }
 
     function renderCircles() {
+        console.log("renderCircles");
+        circlesGroup = L.layerGroup();
     }
 
     function updateMarkers() {
@@ -101,6 +126,34 @@
         genericCircleObjs = arr;
     }
 
+    function clearMarkers() {
+        map.removeLayer(markerClusterGroup);
+        markerClusterGroup.clearLayers();
+        markers = [];
+        markerClusterGroup = null;
+    }
+
+    function clearFences() {
+        map.removeLayer(fencesGroup);
+        fencesGroup.clearLayers();
+        fences = [];
+        fencesGroup = null;
+    }
+
+    function clearCircles() {
+        map.removeLayer(circlesGroup);
+        circlesGroup.clearLayers();
+        circles = [];
+        circlesGroup = null;
+    }
+
+    function clearPaths() {
+        map.removeLayer(pathsGroup);
+        pathsGroup.clearLayers();
+        paths = [];
+        pathsGroup = null;
+    }
+
     function getMarkers() {
         return genericMarkerObjs;
     }
@@ -119,8 +172,6 @@
 
     function setupMap() {
         map = L.map('mapDiv').setView(DEFAULT_CENTRE, 17);
-        markerClusterGroup = L.markerClusterGroup();
-        markers = []
         map.on('moveend', onMapEvent);
         isLoading = false;
 

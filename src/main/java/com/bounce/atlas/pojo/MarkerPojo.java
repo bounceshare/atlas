@@ -1,11 +1,12 @@
 package com.bounce.atlas.pojo;
 
+import javafx.util.Pair;
+
 import java.util.Map;
 
 public class MarkerPojo {
 
-    public double lat;
-    public double lon;
+    public PointPojo location;
     public String iconUrl;
     public String title;
     public String subtext;

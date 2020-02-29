@@ -1,12 +1,13 @@
 package com.bounce.atlas.http;
 
-import com.bounce.atlas.pojo.MarkerPojo;
+import com.bounce.atlas.pojo.*;
 import com.bounce.atlas.utils.FreemarkerUtils;
 import com.bounce.atlas.utils.QueryUtils;
 import com.bounce.utils.BounceUtils;
 import com.bounce.utils.Log;
 import com.bounce.utils.dbmodels.public_.tables.records.BikeRecord;
 import com.bounce.utils.status.Status;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -179,7 +180,14 @@ public class Apis {
         List<BikeRecord> bikes = QueryUtils.getBikes(lat, lon, 10000, 2500);
         List<MarkerPojo> markers = QueryUtils.getBikesAsMarkers(bikes);
 
+        List<FencePojo> fences = QueryUtils.getParkingFences(lat, lon, 2500);
+        List<CirclePojo> circles = Lists.newArrayList();
+        List<PathPojo> paths = Lists.newArrayList();
+
         FreemarkerUtils.addMarkersToFreemarkerObj(markers, data);
+        FreemarkerUtils.addFencesToFreemarkerObj(fences, data);
+        FreemarkerUtils.addCirclesToFreemarkerObj(circles, data);
+        FreemarkerUtils.addPathsToFreemarkerObj(paths, data);
 
         String content = FreemarkerUtils.getFreemarkerString("index.ftl", data);
         asyncResponse.resume(Response.ok().entity(content).build());
