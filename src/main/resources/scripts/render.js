@@ -119,7 +119,7 @@
         for(var i = 0; i < genericCircleObjs.length; i++) {
             var circleData = genericCircleObjs[i];
             point = [circleData.location.lat, circleData.location.lon];
-            var circle = L.circle(point, {fillColor: circleData.fillColor, fillOpacity: circleData.fillOpacity, color: circleData.color});
+            var circle = L.circle(point, {fillColor: circleData.fillColor, fillOpacity: circleData.fillOpacity, color: circleData.color, radius: circleData.radius});
             var popupInfo = "";
             if(circleData.data) {
                 for(var key in circleData.data) {

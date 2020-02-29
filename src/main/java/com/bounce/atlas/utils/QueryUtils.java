@@ -1,9 +1,6 @@
 package com.bounce.atlas.utils;
 
-import com.bounce.atlas.pojo.FencePojo;
-import com.bounce.atlas.pojo.MarkerPojo;
-import com.bounce.atlas.pojo.PathPojo;
-import com.bounce.atlas.pojo.PointPojo;
+import com.bounce.atlas.pojo.*;
 import com.bounce.utils.BounceUtils;
 import com.bounce.utils.DatabaseConnector;
 import com.bounce.utils.Pair;
@@ -11,8 +8,10 @@ import com.bounce.utils.dbmodels.public_.enums.BikeStatus;
 import com.bounce.utils.dbmodels.public_.enums.BookingStatus;
 import com.bounce.utils.dbmodels.public_.tables.Bike;
 import com.bounce.utils.dbmodels.public_.tables.Booking;
+import com.bounce.utils.dbmodels.public_.tables.Hub;
 import com.bounce.utils.dbmodels.public_.tables.records.BikeRecord;
 import com.bounce.utils.dbmodels.public_.tables.records.BookingRecord;
+import com.bounce.utils.dbmodels.public_.tables.records.HubRecord;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import org.apache.http.util.TextUtils;
@@ -45,6 +44,21 @@ public class QueryUtils {
 
             List<BikeRecord> bikes = DatabaseConnector.getDb().getReadDbConnector().fetch(sql).into(Bike.BIKE);
             return bikes;
+        } catch (Exception e) {
+            e.printStackTrace();
+            BounceUtils.logError(e);
+        }
+        return Lists.newArrayList();
+    }
+
+    public static List<HubRecord> getHubs(double lat, double lon, int limit, int radius) {
+        try {
+            String sql = "SELECT * FROM hub WHERE ST_DWithin(CAST(ST_MakePoint(hub.lon, hub.lat) AS geography(GEOMETRY,-1)), " +
+                    "CAST(ST_MakePoint(" + lon + "," + lat + ") AS geography(GEOMETRY,-1)), " + radius +
+                    ") " + "limit " + limit;
+
+            List<HubRecord> hubs = DatabaseConnector.getDb().getReadDbConnector().fetch(sql).into(Hub.HUB);
+            return hubs;
         } catch (Exception e) {
             e.printStackTrace();
             BounceUtils.logError(e);
@@ -153,7 +167,7 @@ public class QueryUtils {
                 Map<String, Object> bikeData = bike.intoMap();
 
                 marker.data = Maps.newHashMap();
-                marker.data.put("location", (bikeData.get("lat")+ "," + bikeData.get("lon")));
+                marker.data.put("Location", (bikeData.get("lat")+ "," + bikeData.get("lon")));
                 marker.data.put("Location Updated At", bikeData.get("loc_updated_time"));
                 marker.data.put("Type", bikeData.get("type"));
                 marker.data.put("Active", bikeData.get("active"));
@@ -174,6 +188,39 @@ public class QueryUtils {
         }
 
         return markers;
+    }
+
+    public static List<CirclePojo> getHubsAsMarkers(List<HubRecord> hubs) {
+        List<CirclePojo> circles = new ArrayList<>();
+        try {
+            for (HubRecord hub : hubs) {
+                CirclePojo circle = new CirclePojo();
+                circle.location = new PointPojo(hub.getLat(), hub.getLon());
+                circle.color = "blue";
+                circle.fillColor = "#a2cff5";
+
+                circle.data = Maps.newHashMap();
+                circle.data.put("Location", (hub.getLat()+ "," + hub.getLon()));
+                circle.data.put("Created On", hub.getCreatedOn().toString());
+                circle.data.put("Name", hub.getName());
+                circle.data.put("Address", hub.getAddress());
+                circle.data.put("Active", hub.getActive());
+                circle.data.put("Capacity", hub.getCapacity());
+                circle.data.put("Image", hub.getImageUrl());
+                circle.data.put("Contact Number", hub.getContactNumber());
+                circle.data.put("Is Reliable", hub.getIsReliable());
+                circle.data.put("Is Online", hub.getIsOnline());
+                circle.data.put("Rating", hub.getRating());
+                circle.data.put("Rating Booking Count", hub.getRatedBookingCount());
+
+                circles.add(circle);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            BounceUtils.logError(e);
+        }
+
+        return circles;
     }
 
     public static List<FencePojo> getParkingFences(double lat, double lon, int radius) {

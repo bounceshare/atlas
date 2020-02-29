@@ -11,9 +11,9 @@ import com.bounce.utils.apis.BaseApiHandler;
 import com.bounce.utils.dbmodels.public_.enums.BikeStatus;
 import com.bounce.utils.dbmodels.public_.tables.records.BikeRecord;
 import com.bounce.utils.dbmodels.public_.tables.records.BookingRecord;
+import com.bounce.utils.dbmodels.public_.tables.records.HubRecord;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import org.apache.http.util.TextUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -86,6 +86,10 @@ public class LayersApi extends BaseApiHandler {
                             pairs.add(new Pair<>(bike, booking));
                         }
                         markers.addAll(QueryUtils.getBookingMarkers(pairs));
+                        break;
+                    case "hubs":
+                        List<HubRecord> hubs = QueryUtils.getHubs(lat, lon, 100, radius);
+                        circles.addAll(QueryUtils.getHubsAsMarkers(hubs));
                         break;
                 }
             }
