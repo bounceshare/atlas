@@ -87,11 +87,41 @@
     function renderPaths() {
         console.log("renderPaths()");
         pathsGroup = L.layerGroup();
+        for(var i = 0; i < genericPathObjs.length; i++) {
+            var pathData = genericPathObjs[i];
+            var points = getPoints(pathData.points);
+            var path = L.Polyline(point, {color: pathData.color});
+            var popupInfo = "";
+            if(pathData.data) {
+                for(var key in pathData.data) {
+                    popupInfo += "<br/>" + key + " : " + pathData.data[key];
+                }
+            }
+            path.bindPopup(popupInfo);
+            paths.push(circle);
+            pathsGroup.addLayer(circle);
+        }
+        pathsGroup.addTo(map);
     }
 
     function renderCircles() {
         console.log("renderCircles");
         circlesGroup = L.layerGroup();
+        for(var i = 0; i < genericCircleObjs.length; i++) {
+            var circleData = genericCircleObjs[i];
+            point = [circleData.location.lat, circleData.location.lon];
+            var circle = L.circle(point, {fillColor: circleData.fillColor, fillOpacity: circleData.fillOpacity, color: circleData.color});
+            var popupInfo = "";
+            if(circleData.data) {
+                for(var key in circleData.data) {
+                    popupInfo += "<br/>" + key + " : " + circleData.data[key];
+                }
+            }
+            circle.bindPopup(popupInfo);
+            circles.push(circle);
+            circlesGroup.addLayer(circle);
+        }
+        circlesGroup.addTo(map);
     }
 
     function updateMarkers() {
