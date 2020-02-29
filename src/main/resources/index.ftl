@@ -16,3 +16,4 @@
 <#if page == 'bookings'><#include "/scripts/booking.js"></#if>
 </main>
 <#include "/footer.ftl">
+<#include "/modal.ftl">
