@@ -206,7 +206,10 @@ public class QueryUtils {
                 circle.data.put("Address", hub.getAddress());
                 circle.data.put("Active", hub.getActive());
                 circle.data.put("Capacity", hub.getCapacity());
-                circle.data.put("Image", hub.getImageUrl());
+                if(!TextUtils.isEmpty(hub.getImageUrl())) {
+                    circle.data.put("Image",
+                            "<br/><img src='" + hub.getImageUrl() + "' alt='Hub Image' width='200' height='200'>");
+                }
                 circle.data.put("Contact Number", hub.getContactNumber());
                 circle.data.put("Is Reliable", hub.getIsReliable());
                 circle.data.put("Is Online", hub.getIsOnline());
