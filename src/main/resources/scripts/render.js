@@ -250,6 +250,11 @@
         $('#circleData')[0].innerText = JSON.stringify(tPaths);
         $('#pathData')[0].innerText = JSON.stringify(tCircles);
 
+        clearMarkers();
+        clearFences();
+        clearPaths();
+        clearCircles();
+
         updateMarkers();
         updateFences();
         updateCircles();
@@ -259,6 +264,12 @@
         renderFences();
         renderCircles();
         renderPaths();
+    }
+
+    function getMapRadiusInMeters() {
+        var mapBoundNorthEast = map.getBounds().getNorthEast();
+        var mapDistance = mapBoundNorthEast.distanceTo(map.getCenter());
+        return mapDistance;
     }
 
     bootstrap();

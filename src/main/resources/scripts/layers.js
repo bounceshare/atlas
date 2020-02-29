@@ -1,11 +1,5 @@
 <script>
 
-    function onMapEvent(event) {
-        console.log("fences onMapEvent");
-        console.log(event);
-        // If move is set to true. hit api to fetch data and set it using js. Only for home page
-    }
-
     function refreshLayers(coords, radius) {
         console.log("refreshFences()");
         data = {};
@@ -25,7 +19,43 @@
         });
     }
 
+    function onMapEvent(event) {
+        console.log("Layers onMapEvent");
+        console.log(event);
+        search(true);
+    }
+
+    function search(isMapEvent) {
+        if(isLoading) {
+            return;
+        }
+        searchQuery = $('#searchBar')[0].value;
+        if(isMapEvent || searchQuery == '' || searchQuery == null) {
+            console.log("Empty search query. So searching wherever the map is active")
+            pos = map.getCenter();
+            center = [pos.lat, pos.lng];
+        } else {
+            if(searchQuery.includes(",")) {
+                $('#searchBar')[0].value = "";
+                splits = searchQuery.split(",");
+                if(splits.length == 2) {
+                    center = [];
+                    center[0] = parseFloat(splits[0]);
+                    center[1] = parseFloat(splits[1]);
+                    map.setView(center, 17);
+                }
+            } else {
+                return;
+            }
+        }
+        radius = DEFAULT_RADIUS;
+        if(isMapEvent) {
+            radius = getMapRadiusInMeters();
+        }
+        refreshLayers(center, radius);
+    }
+
     refreshLayers(DEFAULT_CENTRE, DEFAULT_RADIUS);
-    // TODO onMapEvent handling and search handling
+    map.on('moveend', onMapEvent);
 
 </script>
