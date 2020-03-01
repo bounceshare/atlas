@@ -2,6 +2,7 @@ package com.bounce.atlas.pojo;
 
 import com.bounce.atlas.utils.Constants;
 import com.bounce.utils.BounceUtils;
+import com.bounce.utils.dbmodels.public_.tables.records.BikeStatusLogRecord;
 import com.bounce.utils.dbmodels.public_.tables.records.BookingRecord;
 import com.bounce.utils.dbmodels.public_.tables.records.EndTripFeedbackRecord;
 import com.google.common.collect.Maps;
@@ -96,6 +97,24 @@ public class BikeDetailsCard {
                 card.details.put("Rating", endTripFeedback.getRating().toString());
             }
             card.details.put("Comments", endTripFeedback.getComments());
+        } catch (Exception e) {
+            e.printStackTrace();
+            BounceUtils.logError(e);
+        }
+
+        return card;
+    }
+
+    public static BikeDetailsCard getCard(BikeStatusLogRecord bikeStatusLog) {
+        BikeDetailsCard card = new BikeDetailsCard();
+        try {
+            card.header = "Bike State Change";
+            card.time = bikeStatusLog.getCreatedOn().getTime();
+            card.timeString = bikeStatusLog.getCreatedOn().toString();
+            card.body = bikeStatusLog.getPreviousStatus() + " to " + bikeStatusLog.getCurrentStatus() + " - " + bikeStatusLog.getReason();
+            card.details = Maps.newHashMap();
+            card.color = Constants.Color.INFO;
+
         } catch (Exception e) {
             e.printStackTrace();
             BounceUtils.logError(e);

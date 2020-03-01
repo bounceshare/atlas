@@ -48,10 +48,10 @@
         for (var i = 0; i < items.length; i++) {
             var item = items[i];
             var detailsElement = "<div class='border'><div class='p-2 text-monospace'>{$detail-item}</div></div>";
-            var divElement = "<div class='row'><div class='col-auto text-center flex-column d-none d-sm-flex'><div class='row h-50'><div class='col border-right'>&nbsp;</div><div class='col'>&nbsp;</div></div><h5 class='m-2'><span class='badge badge-pill bg-primary'>&nbsp;</span></h5><div class='row h-50'><div class='col border-right'>&nbsp;</div><div class='col'>&nbsp;</div></div></div><div class='col py-2'><div class='card border-primary shadow'><div class='card-body'><div class='float-right text-primary'>{$time}</div><h4 class='card-title text-primary'>{$title}</h4><p class='card-text'>{$body}</p>{$details}</div></div></div></div>";
+            var divElement = "<div class='row'><div class='col-auto text-center flex-column d-none d-sm-flex'><div class='row h-50'><div class='col border-right'>&nbsp;</div><div class='col'>&nbsp;</div></div><h5 class='m-2'><span class='badge badge-pill bg-primary'>&nbsp;</span></h5><div class='row h-50'><div class='col border-right'>&nbsp;</div><div class='col'>&nbsp;</div></div></div><div class='col py-2'><div class='card border-primary shadow'><div class='card-body'><div class='float-right text-primary'>{$time}</div><h4 class='card-title text-primary'>{$title}</h4><p class='card-text p-2 text-monospace'>{$body}</p>{$details}</div></div></div></div>";
 
             var detailDom = ""
-            if(item.details) {
+            if(item.details && !jQuery.isEmptyObject(item.details)) {
                 for(detailItem in item.details) {
                     detailDom += "<div>" + detailItem + " : " + item.details[detailItem] + "</div>";
                 }
