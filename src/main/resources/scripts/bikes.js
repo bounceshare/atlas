@@ -22,7 +22,7 @@
         showLoader(true);
         var bike = null;
         httpPost("/apis/bike/search", data, function(response) {
-            invalidateMap(response.data.markers, null, null, null);
+            invalidateMap(response.data.markers, null, null, null, true);
             showLoader(false);
         });
     }

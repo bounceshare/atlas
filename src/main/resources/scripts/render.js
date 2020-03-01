@@ -230,7 +230,7 @@
         isLoading = false;
 
         L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1Ijoic3VzaGVlbGsiLCJhIjoiY2s3NHR3YjN1MDhxOTNrcGxreGM2bmxwdiJ9.h0asAA-St15DH7sCIc0drw', {
-            maxZoom: 24,
+            maxZoom: 18,
             attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
                 '<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
                 'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
@@ -256,7 +256,7 @@
         }
     }
 
-    function invalidateMap(tMarkers, tFences, tCircles, tPaths) {
+    function invalidateMap(tMarkers, tFences, tCircles, tPaths, fitToBounds = false) {
         if(tMarkers != null) {
             $('#markerData')[0].innerText = JSON.stringify(tMarkers);
         }
@@ -284,6 +284,16 @@
         renderFences();
         renderCircles();
         renderPaths();
+
+        if(tMarkers != null && fitToBounds) {
+            map.fitBounds(markerClusterGroup.getBounds());
+        }
+        if(tFences != null && fitToBounds) {
+            map.fitBounds(fencesGroup.getBounds());
+        }
+        if(tCircles != null && fitToBounds) {
+            map.fitBounds(circlesGroup.getBounds());
+        }
     }
 
     function getMapRadiusInMeters() {
