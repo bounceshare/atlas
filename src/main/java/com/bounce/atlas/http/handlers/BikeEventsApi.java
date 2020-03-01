@@ -30,42 +30,40 @@ public class BikeEventsApi extends BaseApiHandler {
 
     @Override
     public void onRequest() {
+        List<BikeDetailsCard> bikeDetailsCards = Lists.newArrayList();
         try {
             super.onRequest();
-            int bikeId = input.optInt("bikeId");
+            int bikeId = input.optInt("id");
 
-            int numHours = input.optInt("numHours", 48);
-            int numMins = input.optInt("numMins", 0);
-
-            int totalMins = numMins + (numHours * 60);
-
-            DateTime dateTime = DateTime.now().minusMinutes(totalMins);
-            long oldTimestamp = dateTime.getMillis();
+            long from = input.optLong("from", System.currentTimeMillis());
+            long to = input.optLong("to", DateTime.now().minusDays(2).getMillis());
 
             BikeRecord bike = QueryUtils.getBike(bikeId);
 
             List<BookingRecord> bookings = DatabaseConnector.getDb().getReadDbConnector().selectFrom(Booking.BOOKING)
-                    .where(Booking.BOOKING.CREATED_ON.greaterOrEqual(new Timestamp(oldTimestamp))).fetch();
+                    .where(Booking.BOOKING.BIKE_ID.eq(bikeId))
+                    .and(Booking.BOOKING.CREATED_ON.lessOrEqual(new Timestamp(from)))
+                    .and(Booking.BOOKING.CREATED_ON.greaterOrEqual(new Timestamp(to))).fetch();
 
-            List<BikeDetailsCard> bikeDetailsCards = Lists.newArrayList();
             for (BookingRecord booking : bookings) {
                 bikeDetailsCards.add(BikeDetailsCard.getCard(booking));
                 List<EndTripFeedbackRecord> endTripFeedbacks =
                         DatabaseConnector.getDb().getReadDbConnector().selectFrom(EndTripFeedback.END_TRIP_FEEDBACK)
                                 .where(EndTripFeedback.END_TRIP_FEEDBACK.BOOKING_ID.eq(booking.getId())).fetch();
 
-                for(EndTripFeedbackRecord endTripFeedback : endTripFeedbacks) {
+                for (EndTripFeedbackRecord endTripFeedback : endTripFeedbacks) {
                     bikeDetailsCards.add(BikeDetailsCard.getCard(endTripFeedback));
                 }
             }
-            Collections.sort(bikeDetailsCards, new BikeDetailsCard.CardComparator());
-            Map<Object, Object> response = Maps.newHashMap();
-            response.put("events", bikeDetailsCards);
-
-            sendSuccessResponse(asyncResponse, response);
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        Collections.sort(bikeDetailsCards, new BikeDetailsCard.CardComparator());
+        Map<Object, Object> response = Maps.newHashMap();
+        response.put("events", bikeDetailsCards);
+
+        sendSuccessResponse(asyncResponse, response);
     }
 
 }
