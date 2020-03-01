@@ -67,8 +67,10 @@
             </ul>
             <div class="form-inline mt-2 mt-md-0">
                 <input class="form-control mr-sm-2" type="text" id="searchBar" placeholder="Search" aria-label="Search"></input>
-                <button class="btn btn-outline-success my-2 my-sm-0" onclick="search()">Search</button>
+                <button class="btn btn-outline-success my-2 my-sm-0" onclick="search()">Search</button>&nbsp;
+                <button class="btn btn-outline-danger my-2 my-sm-0" onclick="signOut()">Logout</button>
             </div>
+
         </div>
     </nav>
     <br/>
