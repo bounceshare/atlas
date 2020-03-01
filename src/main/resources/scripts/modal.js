@@ -5,7 +5,13 @@
     var timelineItems = []
     var timelineLastObjTime = null;
 
-    function showTimeline(url, id) {
+    function showTimeline(url, id, title) {
+        // TODO set title
+        $('#timelineModalTitle')[0].innerHTML = title;
+        fetchData(url, id);
+    }
+
+    function fetchData(url, id) {
         if(timelineUrl != url || id != timelineObjectId) {
             timelineItems = [];
             $('#timeline-view')[0].innerHTML = "";
@@ -82,7 +88,7 @@
 
     function loadMoreTimelineItems() {
         if(timelineUrl && timelineObjectId) {
-            showTimeline(timelineUrl, timelineObjectId);
+            fetchData(timelineUrl, timelineObjectId);
         }
     }
 
