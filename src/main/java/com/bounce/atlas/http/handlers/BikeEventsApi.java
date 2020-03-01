@@ -46,7 +46,7 @@ public class BikeEventsApi extends BaseApiHandler {
                     .limit(40).fetch();
 
             for (BookingRecord booking : bookings) {
-                bikeDetailsCards.add(BikeDetailsCard.getCard(booking));
+                bikeDetailsCards.addAll(BikeDetailsCard.getCard(booking));
                 List<EndTripFeedbackRecord> endTripFeedbacks =
                         DatabaseConnector.getDb().getReadDbConnector().selectFrom(EndTripFeedback.END_TRIP_FEEDBACK)
                                 .where(EndTripFeedback.END_TRIP_FEEDBACK.BOOKING_ID.eq(booking.getId())).fetch();

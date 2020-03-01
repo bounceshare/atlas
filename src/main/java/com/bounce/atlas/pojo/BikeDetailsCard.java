@@ -5,9 +5,11 @@ import com.bounce.utils.BounceUtils;
 import com.bounce.utils.dbmodels.public_.tables.records.BikeStatusLogRecord;
 import com.bounce.utils.dbmodels.public_.tables.records.BookingRecord;
 import com.bounce.utils.dbmodels.public_.tables.records.EndTripFeedbackRecord;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
 import java.util.Comparator;
+import java.util.List;
 import java.util.Map;
 
 public class BikeDetailsCard {
@@ -19,62 +21,98 @@ public class BikeDetailsCard {
     public String color = Constants.Color.BOUNCE_RED;
     public Map<String, String> details;
 
-    public static BikeDetailsCard getCard(BookingRecord booking) {
-        BikeDetailsCard card = new BikeDetailsCard();
+    public static List<BikeDetailsCard> getCard(BookingRecord booking) {
+        BikeDetailsCard startCard = new BikeDetailsCard();
+        BikeDetailsCard endCard = new BikeDetailsCard();
         try {
-            card.header = "Booking : " + booking.getId() + " - " + booking.getStatus();
-            card.time = booking.getCreatedOn().getTime();
-            card.timeString = booking.getCreatedOn().toString();
-            card.body = "From " + booking.getStartAddress() + " to " + booking.getEndAddress();
-            card.details = Maps.newHashMap();
+            startCard.header = "Booking : " + booking.getId() + " - " + "started";
+            startCard.time = booking.getCreatedOn().getTime();
+            startCard.timeString = booking.getCreatedOn().toString();
+            startCard.body = "From " + booking.getStartAddress() + " to " + booking.getEndAddress();
+            startCard.details = Maps.newHashMap();
+
+            endCard.time = booking.getCreatedOn().getTime();
+            endCard.timeString = booking.getCreatedOn().toString();
+            endCard.body = "From " + booking.getStartAddress() + " to " + booking.getEndAddress();
+            endCard.details = Maps.newHashMap();
 
             switch (booking.getStatus()) {
                 case hold:
                     break;
                 case reserved:
-                    card.color = Constants.Color.BOUNCE_RED;
-                    card.details.put("Est. Time", booking.getEstTime() + "");
-                    card.details.put("Est. Distance", booking.getEstDistance() + "");
-                    card.details.put("Est. Cost", booking.getEstCost() + "");
-                    card.details.put("User Id", booking.getUserId() + "");
+                    startCard.color = Constants.Color.BOUNCE_RED;
+                    startCard.details.put("Est. Time", booking.getEstTime() + "");
+                    startCard.details.put("Est. Distance", booking.getEstDistance() + "");
+                    startCard.details.put("Est. Cost", booking.getEstCost() + "");
+                    startCard.details.put("User Id", booking.getUserId() + "");
+
+                    endCard = null;
                     break;
                 case in_delivery:
                     break;
                 case delivered:
                     break;
                 case in_trip:
-                    card.color = Constants.Color.BOUNCE_RED;
-                    card.details.put("Est. Time", booking.getEstTime() + "");
-                    card.details.put("Est. Distance", booking.getEstDistance() + "");
-                    card.details.put("Est. Cost", booking.getEstCost() + "");
-                    card.details.put("User Id", booking.getUserId() + "");
-                    card.details.put("Trip Start Time", booking.getTripStartTime() + "");
-                    card.details.put("Actual Start Point", booking.getActStartPointLat() + "," + booking.getActStartPointLon());
+                    startCard.color = Constants.Color.BOUNCE_RED;
+                    startCard.details.put("Est. Time", booking.getEstTime() + "");
+                    startCard.details.put("Est. Distance", booking.getEstDistance() + "");
+                    startCard.details.put("Est. Cost", booking.getEstCost() + "");
+                    startCard.details.put("User Id", booking.getUserId() + "");
+                    startCard.details.put("Trip Start Time", booking.getTripStartTime() + "");
+                    startCard.details.put("Actual Start Point", booking.getActStartPointLat() + "," + booking.getActStartPointLon());
+
+                    endCard = null;
                     break;
                 case completed:
-                    card.color = Constants.Color.BOUNCE_GREEN;
-                    card.details.put("Est. Time", booking.getEstTime() + "");
-                    card.details.put("Est. Distance", booking.getEstDistance() + "");
-                    card.details.put("Est. Cost", booking.getEstCost() + "");
-                    card.details.put("Actual Time", booking.getActualTime() + "");
-                    card.details.put("Actual Distance", booking.getActualDistance() + "");
-                    card.details.put("Actual Cost", booking.getActualCost() + "");
-                    card.details.put("User Id", booking.getUserId() + "");
+                    startCard.color = Constants.Color.BOUNCE_GREEN;
+                    startCard.details.put("Est. Time", booking.getEstTime() + "");
+                    startCard.details.put("Est. Distance", booking.getEstDistance() + "");
+                    startCard.details.put("Est. Cost", booking.getEstCost() + "");
+                    startCard.details.put("Actual Time", booking.getActualTime() + "");
+                    startCard.details.put("Actual Distance", booking.getActualDistance() + "");
+                    startCard.details.put("Actual Cost", booking.getActualCost() + "");
+                    startCard.details.put("User Id", booking.getUserId() + "");
+
+                    endCard.details.put("Est. Time", booking.getEstTime() + "");
+                    endCard.details.put("Est. Distance", booking.getEstDistance() + "");
+                    endCard.details.put("Est. Cost", booking.getEstCost() + "");
+                    endCard.details.put("Actual Time", booking.getActualTime() + "");
+                    endCard.details.put("Actual Distance", booking.getActualDistance() + "");
+                    endCard.details.put("Actual Cost", booking.getActualCost() + "");
+                    endCard.details.put("User Id", booking.getUserId() + "");
+                    endCard.time = booking.getTripEndTime().getTime();
+                    endCard.timeString = booking.getTripEndTime().toString();
+                    endCard.header = "Booking : " + booking.getId() + " - " + booking.getStatus();
                     break;
                 case cancelled:
-                    card.color = Constants.Color.WARNING;
-                    card.details.put("Est. Time", booking.getEstTime() + "");
-                    card.details.put("Est. Distance", booking.getEstDistance() + "");
-                    card.details.put("Est. Cost", booking.getEstCost() + "");
-                    card.details.put("User Id", booking.getUserId() + "");
-                    card.body = "Cancelled because of " + booking.getCancellationReason();
+                    startCard.color = Constants.Color.WARNING;
+                    startCard.details.put("Est. Time", booking.getEstTime() + "");
+                    startCard.details.put("Est. Distance", booking.getEstDistance() + "");
+                    startCard.details.put("Est. Cost", booking.getEstCost() + "");
+                    startCard.details.put("User Id", booking.getUserId() + "");
+                    startCard.body = "Cancelled because of " + booking.getCancellationReason();
+
+                    endCard.color = Constants.Color.WARNING;
+                    endCard.details.put("Est. Time", booking.getEstTime() + "");
+                    endCard.details.put("Est. Distance", booking.getEstDistance() + "");
+                    endCard.details.put("Est. Cost", booking.getEstCost() + "");
+                    endCard.details.put("User Id", booking.getUserId() + "");
+                    endCard.body = "Cancelled because of " + booking.getCancellationReason();
+                    endCard.time = booking.getUpdatedOn().getTime();
+                    endCard.timeString = booking.getUpdatedOn().toString();
+                    endCard.header = "Booking : " + booking.getId() + " - " + booking.getStatus();
                     break;
             }
         } catch (Exception e) {
             e.printStackTrace();
             BounceUtils.logError(e);
         }
-        return card;
+        List<BikeDetailsCard> cards = Lists.newArrayList();
+        cards.add(startCard);
+        if(endCard != null) {
+            cards.add(endCard);
+        }
+        return cards;
     }
 
     public static BikeDetailsCard getCard(EndTripFeedbackRecord endTripFeedback) {
