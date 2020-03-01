@@ -29,7 +29,7 @@
         <init-param>
             <param-name>jersey.config.server.provider.classnames</param-name>
             <param-value>
-                com.bounce.utils.requestfilters.DocStatusFilter;com.bounce.utils.requestfilters.DuesFilter;com.bounce.utils.requestfilters.AuthorizationFilter;com.bounce.utils.requestfilters.ValidateBookingUserFilter;com.bounce.utils.requestfilters.ValidateRequiredFieldsFilter
+                com.bounce.utils.requestfilters.DocStatusFilter;com.bounce.utils.requestfilters.DuesFilter;com.bounce.utils.requestfilters.AuthorizationFilter;com.bounce.utils.requestfilters.ValidateBookingUserFilter;com.bounce.utils.requestfilters.ValidateRequiredFieldsFilter;com.bounce.atlas.utils.GoogleAuthFilter
             </param-value>
         </init-param>
     </servlet>

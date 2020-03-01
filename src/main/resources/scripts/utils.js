@@ -21,8 +21,19 @@
         return points;
     }
 
+    function getToken() {
+        for(count in document.cookie.split(";")) {
+            var cookie = document.cookie.split(";")[count];
+            if(cookie.trim().split("=")[0] == "token") {
+                return cookie.trim().split("=")[1];
+            }
+        }
+    }
+
     function httpPost(path, data, callback) {
         console.log("POST Request : " + path)
+
+        token = getToken();
         var settings = {
           "async": true,
           "crossDomain": true,
@@ -30,7 +41,8 @@
           "method": "POST",
           "headers": {
             "Content-Type": "application/json",
-            "cache-control": "no-cache"
+            "cache-control": "no-cache",
+            "token": token
           },
           "processData": false,
           "data": JSON.stringify(data)
@@ -42,6 +54,24 @@
             callback(response);
           }
         });
+    }
+
+    function signOut() {
+        var auth2 = gapi.auth2.getAuthInstance();
+        auth2.signOut().then(function () {
+            console.log('User signed out.');
+        });
+    }
+
+    function onSignIn(googleUser) {
+        var profile = googleUser.getBasicProfile();
+        console.log("Logged in successfully as : " + profile.getEmail());
+        var cookie = "token=" + gapi.auth2.getAuthInstance().currentUser.get().getAuthResponse().id_token;
+        document.cookie = cookie;
+
+        if(window.location.pathname.startsWith('/login')) {
+            window.location = "/";
+        }
     }
 
 </script>

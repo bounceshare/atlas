@@ -1,7 +1,9 @@
 package com.bounce.atlas.http;
 
 import com.bounce.atlas.pojo.*;
+import com.bounce.atlas.utils.AuthUtils;
 import com.bounce.atlas.utils.FreemarkerUtils;
+import com.bounce.atlas.utils.GoogleAuth;
 import com.bounce.atlas.utils.QueryUtils;
 import com.bounce.utils.BounceUtils;
 import com.bounce.utils.Log;
@@ -24,6 +26,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -49,6 +53,7 @@ public class Apis {
 
     /**
      * WARNING
+     *
      * @param asyncResponse
      */
     @POST
@@ -91,19 +96,39 @@ public class Apis {
     }
 
     @GET
+    @Path("/login")
+    @Produces(MediaType.TEXT_HTML)
+    @Consumes({MediaType.APPLICATION_JSON})
+    public void login(@Suspended final AsyncResponse asyncResponse) {
+        logger.info("/login");
+
+        Map<String, Object> data = Maps.newHashMap();
+        data.put("title", "Bounce Atlas");
+        data.put("page", "login");
+
+        String content = FreemarkerUtils.getFreemarkerString("login.ftl", data);
+        asyncResponse.resume(Response.ok().entity(content).build());
+    }
+
+    @GET
     @Path("/")
     @Produces(MediaType.TEXT_HTML)
     @Consumes({MediaType.APPLICATION_JSON})
-    public void homeLayers(@Suspended final AsyncResponse asyncResponse, @QueryParam("loc") String location, @QueryParam("layers") String layers) {
+    @GoogleAuth
+    public void homeLayers(@Suspended final AsyncResponse asyncResponse, @QueryParam("loc") String location,
+                           @QueryParam("layers") String layers) {
         logger.info("/home");
+
+        Map<String, String> map = new HashMap<String, String>();
+
         Map<String, Object> data = Maps.newHashMap();
         data.put("title", "Bounce Atlas");
         data.put("page", "home");
 
-        if(TextUtils.isEmpty(location)) {
+        if (TextUtils.isEmpty(location)) {
             location = "12.9160463,77.5967117";
         }
-        if(TextUtils.isEmpty(layers)) {
+        if (TextUtils.isEmpty(layers)) {
             layers = "bikes,parking";
         }
 
@@ -118,16 +143,19 @@ public class Apis {
     @Path("/layers")
     @Produces(MediaType.TEXT_HTML)
     @Consumes({MediaType.APPLICATION_JSON})
-    public void layers(@Suspended final AsyncResponse asyncResponse, @QueryParam("loc") String location, @QueryParam("l") String layers) {
+    @GoogleAuth
+    public void layers(@Suspended final AsyncResponse asyncResponse, @QueryParam("loc") String location, @QueryParam(
+            "l") String layers) {
         logger.info("/home");
+
         Map<String, Object> data = Maps.newHashMap();
         data.put("title", "Bounce Atlas");
         data.put("page", "layers");
 
-        if(TextUtils.isEmpty(location)) {
+        if (TextUtils.isEmpty(location)) {
             location = "12.9160463,77.5967117";
         }
-        if(TextUtils.isEmpty(layers)) {
+        if (TextUtils.isEmpty(layers)) {
             layers = "bikes,parking";
         }
 
@@ -142,6 +170,7 @@ public class Apis {
     @Path("/bikes")
     @Produces(MediaType.TEXT_HTML)
     @Consumes({MediaType.APPLICATION_JSON})
+    @GoogleAuth
     public void bikePage(@Suspended final AsyncResponse asyncResponse, @QueryParam("loc") String location) {
         logger.info("/bikes");
 
@@ -149,7 +178,7 @@ public class Apis {
         data.put("title", "Bounce Atlas");
         data.put("page", "bikes");
 
-        if(TextUtils.isEmpty(location)) {
+        if (TextUtils.isEmpty(location)) {
             location = "12.9160463,77.5967117";
         }
 
@@ -163,6 +192,7 @@ public class Apis {
     @Path("/bookings")
     @Produces(MediaType.TEXT_HTML)
     @Consumes({MediaType.APPLICATION_JSON})
+    @GoogleAuth
     public void bookingPage(@Suspended final AsyncResponse asyncResponse, @QueryParam("loc") String location) {
         logger.info("/bookings");
 
@@ -170,7 +200,7 @@ public class Apis {
         data.put("title", "Bounce Atlas");
         data.put("page", "bookings");
 
-        if(TextUtils.isEmpty(location)) {
+        if (TextUtils.isEmpty(location)) {
             location = "12.9160463,77.5967117";
         }
 
@@ -184,6 +214,7 @@ public class Apis {
     @Path("/test")
     @Produces(MediaType.TEXT_HTML)
     @Consumes({MediaType.APPLICATION_JSON})
+    @GoogleAuth
     public void test(@Suspended final AsyncResponse asyncResponse, @QueryParam("q") String location) {
         logger.info("/test");
 

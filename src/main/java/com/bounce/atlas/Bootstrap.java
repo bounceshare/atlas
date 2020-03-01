@@ -21,9 +21,9 @@ public class Bootstrap extends HttpServlet {
         logger.info("Service booting : " + SERVICE_NAME);
         logger.info("------------------------");
 
-        PlatformBootstrap.setup("atlas");
+//        PlatformBootstrap.setup("atlas");
 
-        Sentry.init(ConfigData.getConfig().get("sentry.dsn"));
+//        Sentry.init(ConfigData.getConfig().get("sentry.dsn"));
 
         Runtime.getRuntime().addShutdownHook(new ShutdownHook());
     }
