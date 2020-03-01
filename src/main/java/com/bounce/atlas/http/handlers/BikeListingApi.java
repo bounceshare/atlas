@@ -17,6 +17,7 @@ import javax.ws.rs.container.AsyncResponse;
 import java.util.List;
 import java.util.Map;
 
+@Deprecated
 public class BikeListingApi extends BaseApiHandler {
 
     public BikeListingApi(String inputString, AsyncResponse asyncResponse, HttpServletRequest httpRequest, HttpServletResponse httpResponse) {

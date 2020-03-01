@@ -1,9 +1,6 @@
 package com.bounce.atlas.http;
 
-import com.bounce.atlas.http.handlers.BikeListingApi;
-import com.bounce.atlas.http.handlers.BikeSearchApi;
-import com.bounce.atlas.http.handlers.BookingSearchApi;
-import com.bounce.atlas.http.handlers.LayersApi;
+import com.bounce.atlas.http.handlers.*;
 import com.bounce.utils.Log;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -32,10 +29,21 @@ public class RequestApis {
     @Path("/listing")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes({MediaType.APPLICATION_JSON})
+    @Deprecated
     public void listing(String inputString, @Suspended final AsyncResponse asyncResponse) {
         logger.info("/apis/listing");
         BikeListingApi bikeListingApi = new BikeListingApi(inputString, asyncResponse, httpRequest, httpResponse);
         bikeListingApi.onRequest();
+    }
+
+    @POST
+    @Path("/search")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes({MediaType.APPLICATION_JSON})
+    public void layerSearch(String inputString, @Suspended final AsyncResponse asyncResponse) {
+        logger.info("/apis/search");
+        LayersApi layersApi = new LayersApi(inputString, asyncResponse, httpRequest, httpResponse);
+        layersApi.onRequest();
     }
 
     @POST
@@ -49,6 +57,16 @@ public class RequestApis {
     }
 
     @POST
+    @Path("/bike/events")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes({MediaType.APPLICATION_JSON})
+    public void bikeEvents(String inputString, @Suspended final AsyncResponse asyncResponse) {
+        logger.info("/apis/bike/events");
+        BikeEventsApi bikeSearchApi = new BikeEventsApi(inputString, asyncResponse, httpRequest, httpResponse);
+        bikeSearchApi.onRequest();
+    }
+
+    @POST
     @Path("/booking/search")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes({MediaType.APPLICATION_JSON})
@@ -56,16 +74,6 @@ public class RequestApis {
         logger.info("/apis/booking/listing");
         BookingSearchApi bookingSearchApi = new BookingSearchApi(inputString, asyncResponse, httpRequest, httpResponse);
         bookingSearchApi.onRequest();
-    }
-
-    @POST
-    @Path("/search")
-    @Produces(MediaType.APPLICATION_JSON)
-    @Consumes({MediaType.APPLICATION_JSON})
-    public void search(String inputString, @Suspended final AsyncResponse asyncResponse) {
-        logger.info("/apis/search");
-        LayersApi layersApi = new LayersApi(inputString, asyncResponse, httpRequest, httpResponse);
-        layersApi.onRequest();
     }
 
 }

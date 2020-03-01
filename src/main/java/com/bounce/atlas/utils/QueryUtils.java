@@ -94,6 +94,17 @@ public class QueryUtils {
         return Lists.newArrayList();
     }
 
+    public static BikeRecord getBike(int bikeId) {
+        Result<Record> records =
+                DatabaseConnector.getDb().getConnector().select().from(Bike.BIKE).where(Bike.BIKE.ID.eq(bikeId))
+                        .limit(1).fetch();
+
+        if (records != null && records.size() > 0) {
+            return (BikeRecord) records.get(0);
+        }
+        return null;
+    }
+
     public static List<MarkerPojo> getBookingMarkers(List<Pair<BikeRecord, BookingRecord>> bookings) {
         List<MarkerPojo> markers = new ArrayList<>();
         try {
