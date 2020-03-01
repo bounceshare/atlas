@@ -36,14 +36,13 @@ public class BikeEventsApi extends BaseApiHandler {
             int bikeId = input.optInt("id");
 
             long from = input.optLong("from", System.currentTimeMillis());
-            long to = input.optLong("to", DateTime.now().minusDays(2).getMillis());
 
             BikeRecord bike = QueryUtils.getBike(bikeId);
 
             List<BookingRecord> bookings = DatabaseConnector.getDb().getReadDbConnector().selectFrom(Booking.BOOKING)
                     .where(Booking.BOOKING.BIKE_ID.eq(bikeId))
-                    .and(Booking.BOOKING.CREATED_ON.lessOrEqual(new Timestamp(from)))
-                    .and(Booking.BOOKING.CREATED_ON.greaterOrEqual(new Timestamp(to))).fetch();
+                    .and(Booking.BOOKING.CREATED_ON.lessThan(new Timestamp(from))).orderBy(Booking.BOOKING.CREATED_ON).limit(40)
+                    .fetch();
 
             for (BookingRecord booking : bookings) {
                 bikeDetailsCards.add(BikeDetailsCard.getCard(booking));
