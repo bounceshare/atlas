@@ -52,12 +52,15 @@
 
             var marker = L.marker([markerData.location.lat, markerData.location.lon],{icon: markerIcon});
 
-            var popupInfo = "<b>" + markerData.title + "</b><br/>" + markerData.subtext + "<br/>";
+            var popupInfo = "<br/><div class='border'><div class='p-2 text-monospace'>";
+
+            popupInfo += "<b>" + markerData.title + "</b><br/>" + markerData.subtext + "<br/>";
             if(markerData.data) {
                 for(var key in markerData.data) {
-                    popupInfo += "<br/>" + key + " : " + markerData.data[key];
+                    popupInfo += "<div>" + key + " : " + markerData.data[key] + "</div>";
                 }
             }
+            popupInfo += "</div></div><br/>";
             marker.bindPopup(popupInfo);
             marker.text = markerData.title + " / " + markerData.subtext;
             marker.alt = markerData.title + " / " + markerData.subtext;
@@ -74,12 +77,13 @@
             var fenceData = genericFenceObjs[i];
             var points = getPoints(fenceData.points);
             var fence = L.polygon(points, {fillColor: fenceData.fillColor, fillOpacity: fenceData.fillOpacity, color: fenceData.color});
-            var popupInfo = "";
+            var popupInfo = "<br/><div class='border'><div class='p-2 text-monospace'>";
             if(fenceData.data) {
                 for(var key in fenceData.data) {
-                    popupInfo += "<br/>" + key + " : " + fenceData.data[key];
+                    popupInfo += "<div>" + key + " : " + fenceData.data[key] + "</div>";
                 }
             }
+            popupInfo += "</div></div><br/>";
             fence.bindPopup(popupInfo);
             fences.push(fence);
             fencesGroup.addLayer(fence);
@@ -96,12 +100,13 @@
             var pathData = genericPathObjs[i];
             var points = getPoints(pathData.points);
             var path = L.polyline(points, {color: pathData.color});
-            var popupInfo = "";
+            var popupInfo = "<br/><div class='border'><div class='p-2 text-monospace'>";
             if(pathData.data) {
                 for(var key in pathData.data) {
-                    popupInfo += "<br/>" + key + " : " + pathData.data[key];
+                    popupInfo += "<div>" + key + " : " + pathData.data[key] + "</div>";
                 }
             }
+            popupInfo += "</div></div><br/>";
             path.bindPopup(popupInfo);
             paths.push(path);
             pathsGroup.addLayer(path);
@@ -120,12 +125,13 @@
             var circleData = genericCircleObjs[i];
             point = [circleData.location.lat, circleData.location.lon];
             var circle = L.circle(point, {fillColor: circleData.fillColor, fillOpacity: circleData.fillOpacity, color: circleData.color, radius: circleData.radius});
-            var popupInfo = "";
+            var popupInfo = "<br/><div class='border'><div class='p-2 text-monospace'>";
             if(circleData.data) {
                 for(var key in circleData.data) {
-                    popupInfo += "<br/>" + key + " : " + circleData.data[key];
+                    popupInfo += "<div>" + key + " : " + circleData.data[key] + "</div>";
                 }
             }
+            popupInfo += "</div></div><br/>";
             circle.bindPopup(popupInfo);
             circles.push(circle);
             circlesGroup.addLayer(circle);
