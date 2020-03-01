@@ -1,6 +1,7 @@
 package com.bounce.atlas;
 
-import com.bounce.utils.Log;
+import com.bounce.utils.*;
+import io.sentry.Sentry;
 import org.apache.log4j.Logger;
 
 import javax.servlet.http.HttpServlet;
@@ -20,6 +21,10 @@ public class Bootstrap extends HttpServlet {
         logger.info("Service booting : " + SERVICE_NAME);
         logger.info("------------------------");
 
+        PlatformBootstrap.setup("atlas");
+
+        Sentry.init(ConfigData.getConfig().get("sentry.dsn"));
+
         Runtime.getRuntime().addShutdownHook(new ShutdownHook());
     }
 
@@ -28,9 +33,12 @@ public class Bootstrap extends HttpServlet {
         @Override
         public void run() {
             try {
-                logger.info("Server shutting down");
+                logger.info("------------------------");
+                logger.info("Service shutting down : " + SERVICE_NAME);
+                logger.info("------------------------");
             } catch (Exception e) {
                 e.printStackTrace();
+                BounceUtils.logError(e);
             }
         }
     }
