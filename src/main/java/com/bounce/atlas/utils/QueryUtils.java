@@ -407,7 +407,7 @@ public class QueryUtils {
                 startPoint.location = new PointPojo(booking.getStartPointLat(), booking.getStartPointLon());
                 startPoint.title = "Start Point";
                 startPoint.iconUrl = "/resources/icons/marker_blue.png";
-                startPoint.subtext = booking.getTripStartTime().toString();
+                startPoint.subtext = booking.getCreatedOn().toString();
 
 
                 MarkerPojo endPoint = new MarkerPojo();

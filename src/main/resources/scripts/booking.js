@@ -22,7 +22,7 @@
         showLoader(true);
         var bike = null;
         httpPost("/apis/booking/search", data, function(response) {
-            invalidateMap(response.data.markers, null, null, response.data.paths);
+            invalidateMap(response.data.markers, null, null, response.data.paths, true);
             showLoader(false);
         });
     }

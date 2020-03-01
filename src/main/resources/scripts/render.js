@@ -70,9 +70,10 @@
         map.addLayer(markerClusterGroup);
     }
 
-    function renderFences() {
+    function renderFences(fitToBounds) {
         console.log("renderFences()");
         fencesGroup = L.layerGroup();
+        var layerAdded = null;
         for(var i = 0; i < genericFenceObjs.length; i++) {
             var fenceData = genericFenceObjs[i];
             var points = getPoints(fenceData.points);
@@ -87,15 +88,20 @@
             fence.bindPopup(popupInfo);
             fences.push(fence);
             fencesGroup.addLayer(fence);
+            layerAdded = fence;
+        }
+        console.log("fitToBounds : " + fitToBounds);
+        if(layerAdded && fitToBounds) {
+            map.fitBounds(layerAdded.getBounds());
         }
         fencesGroup.addTo(map);
     }
 
-    function renderPaths() {
+    function renderPaths(fitToBounds) {
         console.log("renderPaths()");
         pathsGroup = L.layerGroup();
 
-        var pathAdded = null;
+        var layerAdded = null;
         for(var i = 0; i < genericPathObjs.length; i++) {
             var pathData = genericPathObjs[i];
             var points = getPoints(pathData.points);
@@ -110,17 +116,18 @@
             path.bindPopup(popupInfo);
             paths.push(path);
             pathsGroup.addLayer(path);
-            pathAdded = path;
+            layerAdded = path;
         }
         pathsGroup.addTo(map);
-        if(pathAdded) {
-            map.fitBounds(pathAdded.getBounds());
+        if(layerAdded && fitToBounds) {
+            map.fitBounds(layerAdded.getBounds());
         }
     }
 
-    function renderCircles() {
-        console.log("renderCircles");
+    function renderCircles(fitToBounds) {
+        console.log("renderCircles()");
         circlesGroup = L.layerGroup();
+        layerAdded = null;
         for(var i = 0; i < genericCircleObjs.length; i++) {
             var circleData = genericCircleObjs[i];
             point = [circleData.location.lat, circleData.location.lon];
@@ -135,6 +142,11 @@
             circle.bindPopup(popupInfo);
             circles.push(circle);
             circlesGroup.addLayer(circle);
+            layerAdded = circle;
+        }
+        if(layerAdded && fitToBounds) {
+//            map.fitBounds(layerAdded.getBounds());
+            console.log("Don't support fitBounds on circles")
         }
         circlesGroup.addTo(map);
     }
@@ -257,6 +269,7 @@
     }
 
     function invalidateMap(tMarkers, tFences, tCircles, tPaths, fitToBounds = false) {
+        console.log("fitToBounds : " + fitToBounds);
         if(tMarkers != null) {
             $('#markerData')[0].innerText = JSON.stringify(tMarkers);
         }
@@ -281,18 +294,12 @@
         updatePaths();
 
         renderMarkers();
-        renderFences();
-        renderCircles();
-        renderPaths();
+        renderFences(fitToBounds);
+        renderCircles(fitToBounds);
+        renderPaths(fitToBounds);
 
-        if(tMarkers != null && fitToBounds) {
+        if(tMarkers != null && tMarkers.length > 0 && fitToBounds) {
             map.fitBounds(markerClusterGroup.getBounds());
-        }
-        if(tFences != null && fitToBounds) {
-            map.fitBounds(fencesGroup.getBounds());
-        }
-        if(tCircles != null && fitToBounds) {
-            map.fitBounds(circlesGroup.getBounds());
         }
     }
 
