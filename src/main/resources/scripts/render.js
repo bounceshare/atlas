@@ -31,13 +31,17 @@
         renderMarkers();
 
         updateFences();
-        renderFences();
+        renderFences(getFences().length > 0);
 
         updatePaths();
-        renderPaths();
+        renderPaths(getPaths().length > 0);
 
         updateCircles();
-        renderCircles();
+        renderCircles(getCircles().length > 0);
+
+        if(getMarkers().length > 0) {
+            map.fitBounds(markerClusterGroup.getBounds());
+        }
     }
 
     function renderMarkers() {

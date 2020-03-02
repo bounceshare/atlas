@@ -83,21 +83,25 @@ public class FreemarkerUtils {
     public static void addMarkersToFreemarkerObj(List<MarkerPojo> markers, Map<String, Object> data) {
         data.put("markers", data);
         data.put("markersString", gson.toJson(markers));
+        data.put("panOut", "true");
     }
 
     public static void addFencesToFreemarkerObj(List<FencePojo> markers, Map<String, Object> data) {
         data.put("fences", data);
         data.put("fenceString", gson.toJson(markers));
+        data.put("panOut", "true");
     }
 
     public static void addCirclesToFreemarkerObj(List<CirclePojo> markers, Map<String, Object> data) {
         data.put("circles", data);
         data.put("circleString", gson.toJson(markers));
+        data.put("panOut", "true");
     }
 
     public static void addPathsToFreemarkerObj(List<PathPojo> markers, Map<String, Object> data) {
         data.put("paths", data);
         data.put("pathString", gson.toJson(markers));
+        data.put("panOut", "true");
     }
 
 }
