@@ -24,6 +24,8 @@
         httpPost("/apis/bike/search", data, function(response) {
             invalidateMap(response.data.markers, null, null, null, true);
             showLoader(false);
+        }, function(jqXHR, exceptiom) {
+            showLoader(false);
         });
     }
 

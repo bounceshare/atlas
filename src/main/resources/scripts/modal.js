@@ -33,7 +33,9 @@
         httpPost(url, data, function(response) {
             renderTimeline(response.data.events);
             showLoader(false);
-        });
+        }, function(jqXHR, exceptiom) {
+             showLoader(false);
+         });
     }
 
     function renderTimeline(items) {

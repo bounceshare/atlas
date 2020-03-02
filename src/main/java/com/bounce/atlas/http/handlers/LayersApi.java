@@ -60,23 +60,23 @@ public class LayersApi extends BaseApiHandler {
                 switch (layer) {
                     case "bikes":
                         List<BikeRecord> bikes = QueryUtils.getBikes(lat, lon, 10000, radius);
-                        List<MarkerPojo> bikeMarkers = QueryUtils.getBikesAsMarkers(bikes);
+                        List<MarkerPojo> bikeMarkers = MarkerPojo.getBikesAsMarkers(bikes);
                         markers.addAll(bikeMarkers);
                         break;
                     case "parking":
-                        fences = QueryUtils.getParkingFences(lat, lon, radius);
+                        fences = FencePojo.getParkingFences(lat, lon, radius);
                         break;
                     case "idle":
                         List<BikeRecord> idleBikes = QueryUtils.getBikes(lat, lon, 10000, radius, BikeStatus.idle);
-                        markers.addAll(QueryUtils.getBikesAsMarkers(idleBikes));
+                        markers.addAll(MarkerPojo.getBikesAsMarkers(idleBikes));
                         break;
                     case "busy":
                         List<BikeRecord> busyBikes = QueryUtils.getBikes(lat, lon, 10000, radius, BikeStatus.busy);
-                        markers.addAll(QueryUtils.getBikesAsMarkers(busyBikes));
+                        markers.addAll(MarkerPojo.getBikesAsMarkers(busyBikes));
                         break;
                     case "oos":
                         List<BikeRecord> oosBikes = QueryUtils.getBikes(lat, lon, 10000, radius, BikeStatus.oos);
-                        markers.addAll(QueryUtils.getBikesAsMarkers(oosBikes));
+                        markers.addAll(MarkerPojo.getBikesAsMarkers(oosBikes));
                         break;
                     case "bookings":
                         List<BikeRecord> inTripBikes = QueryUtils.getBikes(lat, lon, 1000, radius, BikeStatus.busy);
@@ -85,11 +85,11 @@ public class LayersApi extends BaseApiHandler {
                             BookingRecord booking = QueryUtils.getLatestBooking(bike);
                             pairs.add(new Pair<>(bike, booking));
                         }
-                        markers.addAll(QueryUtils.getBookingMarkers(pairs));
+                        markers.addAll(MarkerPojo.getBookingMarkers(pairs));
                         break;
                     case "hubs":
                         List<HubRecord> hubs = QueryUtils.getHubs(lat, lon, 100, radius);
-                        circles.addAll(QueryUtils.getHubsAsMarkers(hubs));
+                        circles.addAll(CirclePojo.getHubsAsCircles(hubs));
                         break;
                 }
             }

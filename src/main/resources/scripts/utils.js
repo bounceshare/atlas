@@ -30,7 +30,7 @@
         }
     }
 
-    function httpPost(path, data, callback) {
+    function httpPost(path, data, callback, error) {
         console.log("POST Request : " + path)
 
         token = getToken();
@@ -53,6 +53,13 @@
           if(callback != null) {
             callback(response);
           }
+        })
+        .fail(function (jqXHR, exception) {
+            // Our error logic here
+            console.log("Error in httpPost");
+            if(error != null) {
+                error(jqXHR, exception);
+            }
         });
     }
 

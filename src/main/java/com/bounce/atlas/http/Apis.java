@@ -226,9 +226,9 @@ public class Apis {
         double lon = 77.5967117;
 
         List<BikeRecord> bikes = QueryUtils.getBikes(lat, lon, 10000, 2500);
-        List<MarkerPojo> markers = QueryUtils.getBikesAsMarkers(bikes);
+        List<MarkerPojo> markers = MarkerPojo.getBikesAsMarkers(bikes);
 
-        List<FencePojo> fences = QueryUtils.getParkingFences(lat, lon, 2500);
+        List<FencePojo> fences = FencePojo.getParkingFences(lat, lon, 2500);
         List<CirclePojo> circles = Lists.newArrayList();
         List<PathPojo> paths = Lists.newArrayList();
 

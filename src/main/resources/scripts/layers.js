@@ -16,7 +16,9 @@
         httpPost("/apis/search", data, function(response) {
             invalidateMap(response.data.markers, response.data.fences, response.data.circles, response.data.paths);
             showLoader(false);
-        });
+        }, function(jqXHR, exceptiom) {
+             showLoader(false);
+         });
     }
 
     function onMapEvent(event) {

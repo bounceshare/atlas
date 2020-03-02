@@ -24,7 +24,9 @@
         httpPost("/apis/booking/search", data, function(response) {
             invalidateMap(response.data.markers, null, null, response.data.paths, true);
             showLoader(false);
-        });
+        }, function(jqXHR, exceptiom) {
+             showLoader(false);
+         });
     }
 
 
