@@ -60,7 +60,6 @@
                         <a class="dropdown-item" href="/layers?l=busy">Busy</a>
                         <a class="dropdown-item" href="/layers?l=oos">OOS</a>
                         <a class="dropdown-item" href="/layers?l=parking">Parking Fences</a>
-                        <a class="dropdown-item" href="/layers?l=bookings">Live Bookings</a>
                         <a class="dropdown-item" href="/layers?l=hubs">Hubs</a>
                     </div>
                 </li>
