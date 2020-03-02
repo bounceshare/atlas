@@ -5,6 +5,7 @@ import com.bounce.atlas.utils.Utils;
 import com.bounce.utils.BounceUtils;
 import com.bounce.utils.dbmodels.public_.tables.records.BikeStatusLogRecord;
 import com.bounce.utils.dbmodels.public_.tables.records.BookingRecord;
+import com.bounce.utils.dbmodels.public_.tables.records.DeviceLatestDataRecord;
 import com.bounce.utils.dbmodels.public_.tables.records.EndTripFeedbackRecord;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -259,6 +260,27 @@ public class BikeDetailsCard {
         }
 
         return cards;
+    }
+
+    public static BikeDetailsCard getCard(DeviceLatestDataRecord deviceLatestData) {
+        BikeDetailsCard card = new BikeDetailsCard();
+
+        try {
+            card.header = "Latest Sensor Information";
+            card.color = Constants.Color.INFO;
+            card.time = System.currentTimeMillis();
+            card.timeString = new Date().toString();
+            card.details = Maps.newHashMap();
+            Map<String, Object> deviceMap = deviceLatestData.intoMap();
+            for(Map.Entry<String, Object> entry : deviceMap.entrySet()) {
+                card.details.put(entry.getKey(), entry.getValue() + "");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            BounceUtils.logError(e);
+        }
+
+        return card;
     }
 
     public static class CardComparator implements Comparator<BikeDetailsCard> {

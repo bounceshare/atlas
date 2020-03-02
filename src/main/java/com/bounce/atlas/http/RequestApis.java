@@ -87,6 +87,18 @@ public class RequestApis {
     }
 
     @POST
+    @Path("/bike/deviceData")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes({MediaType.APPLICATION_JSON})
+    @GoogleAuth
+    public void bikeDeviceData(String inputString, @Suspended final AsyncResponse asyncResponse) {
+        logger.info("/apis/bike/deviceData");
+        BikeDeviceDataApi
+                bikeDeviceDataApi = new BikeDeviceDataApi(inputString, asyncResponse, httpRequest, httpResponse);
+        bikeDeviceDataApi.onRequest();
+    }
+
+    @POST
     @Path("/booking/events")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes({MediaType.APPLICATION_JSON})
