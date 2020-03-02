@@ -268,7 +268,7 @@ public class Apis {
                 mins = "0";
             }
             int numHours = Integer.parseInt(hours);
-            int numMins = Integer.parseInt(hours);
+            int numMins = Integer.parseInt(mins);
             Map<Object, Object> response = TrackingSearchApi.getTrackingRenderData(imei,
                     new DateTime().minusHours(numHours).minusMinutes(numMins).getMillis(), System.currentTimeMillis());
             FreemarkerUtils.addMarkersToFreemarkerObj((List<MarkerPojo>) response.get("markers"), data);
