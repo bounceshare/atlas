@@ -7,8 +7,11 @@ import com.bounce.atlas.utils.FreemarkerUtils;
 import com.bounce.atlas.utils.GoogleAuth;
 import com.bounce.atlas.utils.QueryUtils;
 import com.bounce.utils.BounceUtils;
+import com.bounce.utils.DatabaseConnector;
 import com.bounce.utils.Log;
+import com.bounce.utils.dbmodels.public_.tables.Booking;
 import com.bounce.utils.dbmodels.public_.tables.records.BikeRecord;
+import com.bounce.utils.dbmodels.public_.tables.records.BookingRecord;
 import com.bounce.utils.status.Status;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -32,6 +35,8 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static com.bounce.atlas.http.handlers.BookingSearchApi.getMarkersAndPathForBooking;
 
 @Path("/")
 public class Apis {
@@ -173,7 +178,7 @@ public class Apis {
     @Produces(MediaType.TEXT_HTML)
     @Consumes({MediaType.APPLICATION_JSON})
     @GoogleAuth
-    public void bikePage(@Suspended final AsyncResponse asyncResponse, @QueryParam("loc") String location) {
+    public void bikePage(@Suspended final AsyncResponse asyncResponse, @QueryParam("loc") String location, @QueryParam("q") String searchTerm) {
         logger.info("/bikes");
 
         Map<String, Object> data = Maps.newHashMap();
@@ -187,6 +192,13 @@ public class Apis {
             location = "12.9160463,77.5967117";
         }
 
+        if(!TextUtils.isEmpty(searchTerm)) {
+            List<BikeRecord> bikes = QueryUtils.getBikes(searchTerm);
+            if(bikes != null && bikes.size() > 0) {
+                FreemarkerUtils.addMarkersToFreemarkerObj(MarkerPojo.getBikesAsMarkers(bikes), data);
+            }
+        }
+
         data.put("location", location);
 
         String content = FreemarkerUtils.getFreemarkerString("index.ftl", data);
@@ -198,7 +210,7 @@ public class Apis {
     @Produces(MediaType.TEXT_HTML)
     @Consumes({MediaType.APPLICATION_JSON})
     @GoogleAuth
-    public void bookingPage(@Suspended final AsyncResponse asyncResponse, @QueryParam("loc") String location) {
+    public void bookingPage(@Suspended final AsyncResponse asyncResponse, @QueryParam("loc") String location, @QueryParam("q") String bookingId) {
         logger.info("/bookings");
 
         Map<String, Object> data = Maps.newHashMap();
@@ -210,6 +222,16 @@ public class Apis {
 
         if (TextUtils.isEmpty(location)) {
             location = "12.9160463,77.5967117";
+        }
+
+        if(!TextUtils.isEmpty(bookingId)) {
+            BookingRecord booking = DatabaseConnector.getDb().getReadDbConnector().selectFrom(Booking.BOOKING)
+                    .where(Booking.BOOKING.ID.eq(Integer.parseInt(bookingId))).fetchAny();
+            Map<String, Object> markersPaths = getMarkersAndPathForBooking(booking);
+            if(markersPaths != null && markersPaths.size() > 0) {
+                FreemarkerUtils.addMarkersToFreemarkerObj((List<MarkerPojo>) markersPaths.get("markers"), data);
+                FreemarkerUtils.addPathsToFreemarkerObj((List<PathPojo>) markersPaths.get("paths"), data);
+            }
         }
 
         data.put("location", location);
