@@ -177,6 +177,9 @@ public class Apis {
         Map<String, Object> data = Maps.newHashMap();
         data.put("title", "Bounce Atlas");
         data.put("page", "bikes");
+        data.put("searchPage", "true");
+        data.put("searchUrl", "/apis/bike/search");
+        data.put("searchText", "Bike Id or License Plate");
 
         if (TextUtils.isEmpty(location)) {
             location = "12.9160463,77.5967117";
@@ -199,6 +202,9 @@ public class Apis {
         Map<String, Object> data = Maps.newHashMap();
         data.put("title", "Bounce Atlas");
         data.put("page", "bookings");
+        data.put("searchPage", "true");
+        data.put("searchUrl", "/apis/booking/search");
+        data.put("searchText", "Booking Id");
 
         if (TextUtils.isEmpty(location)) {
             location = "12.9160463,77.5967117";

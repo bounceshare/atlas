@@ -92,7 +92,7 @@ public class RequestApis {
     @Consumes({MediaType.APPLICATION_JSON})
     @GoogleAuth
     public void bookingSearch(String inputString, @Suspended final AsyncResponse asyncResponse) {
-        logger.info("/apis/booking/listing");
+        logger.info("/apis/booking/search");
         BookingSearchApi bookingSearchApi = new BookingSearchApi(inputString, asyncResponse, httpRequest, httpResponse);
         bookingSearchApi.onRequest();
     }

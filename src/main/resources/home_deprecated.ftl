@@ -6,6 +6,6 @@
     <div id="circleData" hidden><#if circleString??>${circleString}<#else></#if></div>
 
     <div id="mapDiv" style="height:100%;"></div>
-    <#include "/scripts/home.js">
+    <#include "/scripts/home_deprecated.js">
 </main>
 <#include "/footer.ftl">
