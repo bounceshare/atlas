@@ -81,7 +81,7 @@ public class BikeEventsApi extends BaseApiHandler {
 
             List<BikeStatusLogRecord> bikeStatusLogRecords = null;
             if(GlobalConfigUtils.getGlobalConfigBoolean("ATLAS_USE_BSL_FROM_REDIS", true)) {
-                bikeStatusLogRecords = getBsl(bikeId, bslFirstTime, bslLastTime);
+                bikeStatusLogRecords = getBsl(bikeId, bslLastTime, bslFirstTime);
             } else {
                 bikeStatusLogRecords = DatabaseConnector.getDb().getReadDbConnector().selectFrom(BikeStatusLog.BIKE_STATUS_LOG)
                                 .where(BikeStatusLog.BIKE_STATUS_LOG.BIKE_ID.eq(bikeId))
@@ -115,6 +115,8 @@ public class BikeEventsApi extends BaseApiHandler {
                 BounceUtils.logError(e);
                 e.printStackTrace();
             }
+
+            logger.info("BSL records found : " + bikeStatusLogSet.size());
 
             for(String bslString : bikeStatusLogSet) {
                 Type type = new TypeToken<Map<String, Object>>(){}.getType();

@@ -1,14 +1,19 @@
 package com.bounce.atlas.pojo;
 
 import com.bounce.atlas.utils.QueryUtils;
+import com.bounce.utils.Log;
+import com.bounce.utils.apis.BaseApiHandler;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import javafx.util.Pair;
+import org.apache.log4j.Logger;
 
 import java.util.List;
 import java.util.Map;
 
 public class FencePojo {
+
+    protected static Logger logger = Log.getLogger(FencePojo.class.getCanonicalName());
 
     public List<PointPojo> points;
     public String color = "red";
@@ -26,6 +31,7 @@ public class FencePojo {
     public static List<FencePojo> getParkingFences(double lat, double lon, int radius) {
         List<FencePojo> fences = Lists.newArrayList();
         List<Map<String, Object>> parkingList = QueryUtils.getParkingAround(lat, lon, radius);
+        logger.info("Parking : " + parkingList);
         for(Map<String, Object> parkingMap : parkingList) {
             Map<String, Object> data = Maps.newHashMap();
             data.put("Name", parkingMap.get("name"));

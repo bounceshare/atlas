@@ -36,6 +36,8 @@ public class BookingSearchApi extends BaseApiHandler {
             BookingRecord booking = DatabaseConnector.getDb().getReadDbConnector().selectFrom(Booking.BOOKING)
                     .where(Booking.BOOKING.ID.eq(Integer.parseInt(searchQuery))).fetchAny();
 
+            logger.info("Booking : " + booking);
+
             Map<String, Object> markersPaths = getMarkersAndPathForBooking(booking);
             Map<Object, Object> response = Maps.newHashMap();
             response.put("markers", markersPaths.get("markers"));

@@ -26,6 +26,8 @@ public class BikeSearchApi extends BaseApiHandler {
 
             List<BikeRecord> bikes = QueryUtils.getBikes(searchQuery);
 
+            logger.info("Bikes : " + bikes);
+
             Map<Object, Object> response = Maps.newHashMap();
             response.put("markers", MarkerPojo.getBikesAsMarkers(bikes));
 

@@ -109,7 +109,7 @@ public class QueryUtils {
                     "FROM public.parking \n" +
                     "LEFT JOIN public.parking_category on parking.category_id = parking_category.id\n" +
                     "WHERE ST_DWithin(fence::geography, ST_MakePoint(" + lon + "," + lat + ")::geography," + radius + ")\n" +
-                    "    and enabled and active and verified";
+                    "    and active and verified";
             Result<Record> records = DatabaseConnector.getDb().getConnector().fetch(sql);
             for (Record record : records) {
                 Map<String, Object> parkingMap = new HashMap<>();
