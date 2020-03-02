@@ -57,13 +57,17 @@ public class BookingSearchApi extends BaseApiHandler {
                 startPoint.location = new PointPojo(booking.getActStartPointLat(), booking.getActEndPointLon());
                 startPoint.title = "Actual Start Point";
                 startPoint.iconUrl = "/resources/icons/marker_blue.png";
-                startPoint.subtext = booking.getTripStartTime().toString();
+                if(booking.getTripStartTime() != null) {
+                    startPoint.subtext = booking.getTripStartTime().toString();
+                }
 
                 MarkerPojo endPoint = new MarkerPojo();
                 endPoint.location = new PointPojo(booking.getActEndPointLat(), booking.getActEndPointLon());
                 endPoint.iconUrl = "/resources/icons/marker_blue.png";
                 endPoint.title = "Actual End Point";
-                endPoint.subtext = booking.getTripEndTime().toString();
+                if(booking.getTripEndTime() != null) {
+                    endPoint.subtext = booking.getTripEndTime().toString();
+                }
 
                 PathPojo pathPojo = new PathPojo();
                 pathPojo.points = Lists.newArrayList();
@@ -71,6 +75,7 @@ public class BookingSearchApi extends BaseApiHandler {
                 pathPojo.points.add(endPoint.location);
                 pathPojo.data = Maps.newHashMap();
                 pathPojo.data.put("Booking Id", booking.getId());
+                pathPojo.data.put("Timeline", "<b><a href='#' onclick='showTimeline(\"/apis/booking/events\", " + booking.getId() +", \"Bike Event Timeline - " + booking.getId() + "\");'>Events</a></b>");
 
                 pathPojo.data.put("Trip Created At", booking.getCreatedOn().toString());
                 if(booking.getTripStartTime() != null) {
@@ -108,7 +113,9 @@ public class BookingSearchApi extends BaseApiHandler {
                 endPoint.location = new PointPojo(bike.getLat(), bike.getLon());
                 endPoint.iconUrl = "/resources/icons/marker_green.png";
                 endPoint.title = "Bike Location";
-                endPoint.subtext = bike.getLocUpdatedTime().toString();
+                if(bike.getLocUpdatedTime() != null) {
+                    endPoint.subtext = bike.getLocUpdatedTime().toString();
+                }
 
                 PathPojo pathPojo = new PathPojo();
                 pathPojo.points = Lists.newArrayList();
@@ -116,6 +123,7 @@ public class BookingSearchApi extends BaseApiHandler {
                 pathPojo.points.add(endPoint.location);
                 pathPojo.data = Maps.newHashMap();
                 pathPojo.data.put("Booking Id", booking.getId());
+                pathPojo.data.put("Timeline", "<b><a href='#' onclick='showTimeline(\"/apis/booking/events\", " + booking.getId() +", \"Bike Event Timeline - " + booking.getId() + "\");'>Events</a></b>");
 
                 pathPojo.data.put("Trip Created At", booking.getCreatedOn().toString());
                 if(booking.getTripStartTime() != null) {
@@ -160,6 +168,7 @@ public class BookingSearchApi extends BaseApiHandler {
                 pathPojo.points.add(endPoint.location);
                 pathPojo.data = Maps.newHashMap();
                 pathPojo.data.put("Booking Id", booking.getId());
+                pathPojo.data.put("Timeline", "<b><a href='#' onclick='showTimeline(\"/apis/booking/events\", " + booking.getId() +", \"Bike Event Timeline - " + booking.getId() + "\");'>Events</a></b>");
 
                 pathPojo.data.put("Trip Created At", booking.getCreatedOn().toString());
                 if(booking.getTripStartTime() != null) {

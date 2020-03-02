@@ -87,6 +87,17 @@ public class RequestApis {
     }
 
     @POST
+    @Path("/booking/events")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes({MediaType.APPLICATION_JSON})
+    @GoogleAuth
+    public void bookingEvents(String inputString, @Suspended final AsyncResponse asyncResponse) {
+        logger.info("/apis/booking/events");
+        BookingEventsApi bookingEventsApi = new BookingEventsApi(inputString, asyncResponse, httpRequest, httpResponse);
+        bookingEventsApi.onRequest();
+    }
+
+    @POST
     @Path("/booking/search")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes({MediaType.APPLICATION_JSON})
