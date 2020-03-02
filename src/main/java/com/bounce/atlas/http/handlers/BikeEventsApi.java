@@ -1,10 +1,9 @@
 package com.bounce.atlas.http.handlers;
 
 import com.bounce.atlas.pojo.BikeDetailsCard;
-import com.bounce.utils.BounceUtils;
-import com.bounce.utils.DatabaseConnector;
-import com.bounce.utils.GlobalConfigUtils;
-import com.bounce.utils.RealtimeData;
+import com.bounce.atlas.utils.Constants;
+import com.bounce.atlas.utils.Utils;
+import com.bounce.utils.*;
 import com.bounce.utils.apis.BaseApiHandler;
 import com.bounce.utils.dbmodels.public_.tables.BikeStatusLog;
 import com.bounce.utils.dbmodels.public_.tables.Booking;
@@ -16,7 +15,9 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import org.apache.http.util.TextUtils;
 import org.joda.time.DateTime;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import redis.clients.jedis.Jedis;
 
@@ -99,15 +100,44 @@ public class BikeEventsApi extends BaseApiHandler {
             for(BikeStatusLogRecord bsl : bikeStatusLogRecords) {
                 bikeDetailsCards.add(BikeDetailsCard.getCard(bsl));
             }
+
+            Collections.sort(bikeDetailsCards, new BikeDetailsCard.CardComparator());
+
+            JSONArray tasksArray = getTasks(bikeId);
+            if(tasksArray.length() > 0) {
+                for (int i = 0; i < tasksArray.length(); i++) {
+                    bikeDetailsCards.addAll(BikeDetailsCard.getCard(tasksArray.getJSONObject(i)));
+                }
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
 
         Collections.sort(bikeDetailsCards, new BikeDetailsCard.CardComparator());
+
         Map<Object, Object> response = Maps.newHashMap();
         response.put("events", bikeDetailsCards);
 
         sendSuccessResponse(asyncResponse, response);
+    }
+
+    private static JSONArray getTasks(int bikeId) {
+        JSONArray jsonArray = new JSONArray();
+        try {
+            JSONObject jsonObject = new JSONObject();
+            JSONArray reqArray = new JSONArray();
+            reqArray.put("" + bikeId);
+            jsonObject.put("assetIds", reqArray);
+            String response = RestGenericRequest.httpPost(ConfigData.getConfig().get(Constants.Config.HAWKEYE_URL), jsonObject, Maps.newHashMap());
+            if(!TextUtils.isEmpty(response)) {
+                JSONObject responseObj = new JSONObject(response);
+                jsonArray = responseObj.optJSONObject("data").optJSONArray("content");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            BounceUtils.logError(e);
+        }
+        return jsonArray;
     }
 
     private static List<BikeStatusLogRecord> getBsl(int bikeId, long startTime, long endTime) {

@@ -1,14 +1,17 @@
 package com.bounce.atlas.pojo;
 
 import com.bounce.atlas.utils.Constants;
+import com.bounce.atlas.utils.Utils;
 import com.bounce.utils.BounceUtils;
 import com.bounce.utils.dbmodels.public_.tables.records.BikeStatusLogRecord;
 import com.bounce.utils.dbmodels.public_.tables.records.BookingRecord;
 import com.bounce.utils.dbmodels.public_.tables.records.EndTripFeedbackRecord;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import org.json.JSONObject;
 
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -28,18 +31,18 @@ public class BikeDetailsCard {
         try {
             tripCreatedCard.header = "Booking : " + booking.getId() + " - " + "created";
             tripCreatedCard.time = booking.getCreatedOn().getTime();
-            tripCreatedCard.timeString = booking.getCreatedOn().toString();
+            tripCreatedCard.timeString = new Date(booking.getCreatedOn().getTime()).toString();
             tripCreatedCard.body = "From " + booking.getStartAddress() + " to " + booking.getEndAddress();
             tripCreatedCard.details = Maps.newHashMap();
 
             tripEndCard.time = booking.getCreatedOn().getTime();
-            tripEndCard.timeString = booking.getCreatedOn().toString();
+            tripEndCard.timeString = new Date(booking.getCreatedOn().getTime()).toString();
             tripEndCard.body = "From " + booking.getStartAddress() + " to " + booking.getEndAddress();
             tripEndCard.details = Maps.newHashMap();
 
             tripStartCard.header = "Booking : " + booking.getId() + " - " + "started";
             tripStartCard.time = booking.getCreatedOn().getTime();
-            tripStartCard.timeString = booking.getCreatedOn().toString();
+            tripStartCard.timeString = new Date(booking.getCreatedOn().getTime()).toString();
             tripStartCard.body = "From " + booking.getStartAddress() + " to " + booking.getEndAddress();
             tripStartCard.details = Maps.newHashMap();
 
@@ -81,10 +84,10 @@ public class BikeDetailsCard {
                     tripStartCard.color = Constants.Color.BOUNCE_RED;
                     if(booking.getTripStartTime() != null) {
                         tripStartCard.time = booking.getTripStartTime().getTime();
-                        tripStartCard.timeString = booking.getTripStartTime().toString();
+                        tripStartCard.timeString = new Date(booking.getTripStartTime().getTime()).toString();
                     } else {
                         tripStartCard.time = booking.getCreatedOn().getTime() + (20 * 60 * 1000);
-                        tripStartCard.timeString = booking.getCreatedOn().toString() + (20 * 60 * 1000);
+                        tripStartCard.timeString = new Date(booking.getCreatedOn().getTime() + (20 * 60 * 1000)).toString();
                     }
                     tripStartCard.details.put("Est. Time", booking.getEstTime() + "");
                     tripStartCard.details.put("Est. Distance", booking.getEstDistance() + "");
@@ -114,10 +117,10 @@ public class BikeDetailsCard {
                     tripEndCard.details.put("User Id", booking.getUserId() + "");
                     if(booking.getTripEndTime() != null) {
                         tripEndCard.time = booking.getTripEndTime().getTime();
-                        tripEndCard.timeString = booking.getTripEndTime().toString();
+                        tripEndCard.timeString = new Date(booking.getTripEndTime().getTime()).toString();
                     } else {
                         tripEndCard.time = booking.getUpdatedOn().getTime();
-                        tripEndCard.timeString = booking.getUpdatedOn().toString();
+                        tripEndCard.timeString = new Date(booking.getUpdatedOn().getTime()).toString();
                     }
                     tripEndCard.header = "Booking : " + booking.getId() + " - " + booking.getStatus();
 
@@ -130,10 +133,10 @@ public class BikeDetailsCard {
                     tripStartCard.details.put("User Id", booking.getUserId() + "");
                     if(booking.getTripStartTime() != null) {
                         tripStartCard.time = booking.getTripStartTime().getTime();
-                        tripStartCard.timeString = booking.getTripStartTime().toString();
+                        tripStartCard.timeString = new Date(booking.getTripStartTime().getTime()).toString();
                     } else {
                         tripStartCard.time = booking.getCreatedOn().getTime() + (20 * 60 * 1000);
-                        tripStartCard.timeString = booking.getCreatedOn().toString() + (20 * 60 * 1000);
+                        tripStartCard.timeString = new Date(booking.getCreatedOn().getTime() + (20 * 60 * 1000)).toString();
                     }
                     break;
                 case cancelled:
@@ -151,7 +154,7 @@ public class BikeDetailsCard {
                     tripEndCard.details.put("User Id", booking.getUserId() + "");
                     tripEndCard.body = "Cancelled because of " + booking.getCancellationReason();
                     tripEndCard.time = booking.getUpdatedOn().getTime();
-                    tripEndCard.timeString = booking.getUpdatedOn().toString();
+                    tripEndCard.timeString = new Date(booking.getUpdatedOn().getTime()).toString();
                     tripEndCard.header = "Booking : " + booking.getId() + " - " + booking.getStatus();
 
                     tripStartCard = null;
@@ -177,7 +180,7 @@ public class BikeDetailsCard {
         try {
             card.header = "EndTripFeedback - " + endTripFeedback.getBookingId();
             card.time = endTripFeedback.getCreatedOn().getTime();
-            card.timeString = endTripFeedback.getCreatedOn().toString();
+            card.timeString = new Date(endTripFeedback.getCreatedOn().getTime()).toString();
             card.body = endTripFeedback.getPrimary();
             card.details = Maps.newHashMap();
             card.color = Constants.Color.INFO;
@@ -205,7 +208,7 @@ public class BikeDetailsCard {
         try {
             card.header = "Bike State Change";
             card.time = bikeStatusLog.getCreatedOn().getTime();
-            card.timeString = bikeStatusLog.getCreatedOn().toString();
+            card.timeString = new Date(bikeStatusLog.getCreatedOn().getTime()).toString();
             card.body = bikeStatusLog.getPreviousStatus() + " to " + bikeStatusLog.getCurrentStatus() + " - " + bikeStatusLog.getReason();
             card.details = Maps.newHashMap();
             card.color = Constants.Color.INFO;
@@ -216,6 +219,46 @@ public class BikeDetailsCard {
         }
 
         return card;
+    }
+
+    public static List<BikeDetailsCard> getCard(JSONObject task) {
+        BikeDetailsCard creationCard = new BikeDetailsCard();
+        BikeDetailsCard updationCard = new BikeDetailsCard();
+        List<BikeDetailsCard> cards = Lists.newArrayList();
+        try {
+            creationCard.header = "Task Created";
+            creationCard.body = task.optString("taskType") + " for " + task.optString("assetType");
+            creationCard.color = Constants.Color.INFO;
+            creationCard.timeString = new Date(Utils.convertHawkeyeTimstamp(task.optString("createdOn"))).toString();
+            creationCard.time = Utils.convertHawkeyeTimstamp(task.optString("createdOn"));
+            creationCard.details = Maps.newHashMap();
+            creationCard.details.put("Task Lat", task.optDouble("taskLat") + "");
+            creationCard.details.put("Task Lon", task.optDouble("taskLon") + "");
+            creationCard.details.put("Team Id", task.optDouble("teamId") + "");
+            creationCard.details.put("Task Id", task.optDouble("taskId") + "");
+            creationCard.details.put("Comments", task.optDouble("comment") + "");
+
+            updationCard.header = "Task " + task.optString("taskStatus");
+            updationCard.body = task.optString("taskType") + " for " + task.optString("assetType");
+            updationCard.color = Constants.Color.INFO;
+            updationCard.timeString = new Date(Utils.convertHawkeyeTimstamp(task.optString("updatedOn"))).toString();
+            updationCard.time = Utils.convertHawkeyeTimstamp(task.optString("updatedOn"));
+            updationCard.details = Maps.newHashMap();
+            updationCard.details.put("Task Lat", task.optDouble("taskLat") + "");
+            updationCard.details.put("Task Lon", task.optDouble("taskLon") + "");
+            updationCard.details.put("Team Id", task.optDouble("teamId") + "");
+            updationCard.details.put("Task Id", task.optDouble("taskId") + "");
+            updationCard.details.put("Comments", task.optDouble("comment") + "");
+
+            cards.add(creationCard);
+            cards.add(updationCard);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            BounceUtils.logError(e);
+        }
+
+        return cards;
     }
 
     public static class CardComparator implements Comparator<BikeDetailsCard> {

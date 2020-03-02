@@ -13,4 +13,8 @@ public class Constants {
         public static final String INFO = String.format("#%02x%02x%02x", 0, 124, 255);;
     }
 
+    public static class Config {
+        public static final String HAWKEYE_URL = "hawkeye.baseurl";
+    }
+
 }
