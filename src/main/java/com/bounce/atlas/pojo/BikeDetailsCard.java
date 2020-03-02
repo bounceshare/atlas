@@ -22,85 +22,139 @@ public class BikeDetailsCard {
     public Map<String, String> details;
 
     public static List<BikeDetailsCard> getCard(BookingRecord booking) {
-        BikeDetailsCard startCard = new BikeDetailsCard();
-        BikeDetailsCard endCard = new BikeDetailsCard();
+        BikeDetailsCard tripCreatedCard = new BikeDetailsCard();
+        BikeDetailsCard tripStartCard = new BikeDetailsCard();
+        BikeDetailsCard tripEndCard = new BikeDetailsCard();
         try {
-            startCard.header = "Booking : " + booking.getId() + " - " + "started";
-            startCard.time = booking.getCreatedOn().getTime();
-            startCard.timeString = booking.getCreatedOn().toString();
-            startCard.body = "From " + booking.getStartAddress() + " to " + booking.getEndAddress();
-            startCard.details = Maps.newHashMap();
+            tripCreatedCard.header = "Booking : " + booking.getId() + " - " + "created";
+            tripCreatedCard.time = booking.getCreatedOn().getTime();
+            tripCreatedCard.timeString = booking.getCreatedOn().toString();
+            tripCreatedCard.body = "From " + booking.getStartAddress() + " to " + booking.getEndAddress();
+            tripCreatedCard.details = Maps.newHashMap();
 
-            endCard.time = booking.getCreatedOn().getTime();
-            endCard.timeString = booking.getCreatedOn().toString();
-            endCard.body = "From " + booking.getStartAddress() + " to " + booking.getEndAddress();
-            endCard.details = Maps.newHashMap();
+            tripEndCard.time = booking.getCreatedOn().getTime();
+            tripEndCard.timeString = booking.getCreatedOn().toString();
+            tripEndCard.body = "From " + booking.getStartAddress() + " to " + booking.getEndAddress();
+            tripEndCard.details = Maps.newHashMap();
+
+            tripStartCard.header = "Booking : " + booking.getId() + " - " + "started";
+            tripStartCard.time = booking.getCreatedOn().getTime();
+            tripStartCard.timeString = booking.getCreatedOn().toString();
+            tripStartCard.body = "From " + booking.getStartAddress() + " to " + booking.getEndAddress();
+            tripStartCard.details = Maps.newHashMap();
 
             switch (booking.getStatus()) {
                 case hold:
+                    tripCreatedCard = null;
+                    tripStartCard = null;
+                    tripEndCard = null;
                     break;
                 case reserved:
-                    startCard.color = Constants.Color.BOUNCE_RED;
-                    startCard.details.put("Est. Time", booking.getEstTime() + "");
-                    startCard.details.put("Est. Distance", booking.getEstDistance() + "");
-                    startCard.details.put("Est. Cost", booking.getEstCost() + "");
-                    startCard.details.put("User Id", booking.getUserId() + "");
+                    tripCreatedCard.color = Constants.Color.BOUNCE_RED;
+                    tripCreatedCard.details.put("Est. Time", booking.getEstTime() + "");
+                    tripCreatedCard.details.put("Est. Distance", booking.getEstDistance() + "");
+                    tripCreatedCard.details.put("Est. Cost", booking.getEstCost() + "");
+                    tripCreatedCard.details.put("User Id", booking.getUserId() + "");
 
-                    endCard = null;
+                    tripEndCard = null;
+                    tripStartCard = null;
                     break;
                 case in_delivery:
+                    tripCreatedCard = null;
+                    tripStartCard = null;
+                    tripEndCard = null;
                     break;
                 case delivered:
+                    tripCreatedCard = null;
+                    tripStartCard = null;
+                    tripEndCard = null;
                     break;
                 case in_trip:
-                    startCard.color = Constants.Color.BOUNCE_RED;
-                    startCard.details.put("Est. Time", booking.getEstTime() + "");
-                    startCard.details.put("Est. Distance", booking.getEstDistance() + "");
-                    startCard.details.put("Est. Cost", booking.getEstCost() + "");
-                    startCard.details.put("User Id", booking.getUserId() + "");
-                    startCard.details.put("Trip Start Time", booking.getTripStartTime() + "");
-                    startCard.details.put("Actual Start Point", booking.getActStartPointLat() + "," + booking.getActStartPointLon());
+                    tripCreatedCard.color = Constants.Color.BOUNCE_RED;
+                    tripCreatedCard.details.put("Est. Time", booking.getEstTime() + "");
+                    tripCreatedCard.details.put("Est. Distance", booking.getEstDistance() + "");
+                    tripCreatedCard.details.put("Est. Cost", booking.getEstCost() + "");
+                    tripCreatedCard.details.put("User Id", booking.getUserId() + "");
+                    tripCreatedCard.details.put("Trip Start Time", booking.getTripStartTime() + "");
+                    tripCreatedCard.details.put("Actual Start Point", booking.getActStartPointLat() + "," + booking.getActStartPointLon());
 
-                    endCard = null;
+                    tripStartCard.color = Constants.Color.BOUNCE_RED;
+                    if(booking.getTripStartTime() != null) {
+                        tripStartCard.time = booking.getTripStartTime().getTime();
+                        tripStartCard.timeString = booking.getTripStartTime().toString();
+                    } else {
+                        tripStartCard.time = booking.getCreatedOn().getTime() + (20 * 60 * 1000);
+                        tripStartCard.timeString = booking.getCreatedOn().toString() + (20 * 60 * 1000);
+                    }
+                    tripStartCard.details.put("Est. Time", booking.getEstTime() + "");
+                    tripStartCard.details.put("Est. Distance", booking.getEstDistance() + "");
+                    tripStartCard.details.put("Est. Cost", booking.getEstCost() + "");
+                    tripStartCard.details.put("User Id", booking.getUserId() + "");
+                    tripStartCard.details.put("Trip Start Time", booking.getTripStartTime() + "");
+                    tripStartCard.details.put("Actual Start Point", booking.getActStartPointLat() + "," + booking.getActStartPointLon());
+
+                    tripEndCard = null;
                     break;
                 case completed:
-                    startCard.color = Constants.Color.BOUNCE_GREEN;
-                    startCard.details.put("Est. Time", booking.getEstTime() + "");
-                    startCard.details.put("Est. Distance", booking.getEstDistance() + "");
-                    startCard.details.put("Est. Cost", booking.getEstCost() + "");
-                    startCard.details.put("Actual Time", booking.getActualTime() + "");
-                    startCard.details.put("Actual Distance", booking.getActualDistance() + "");
-                    startCard.details.put("Actual Cost", booking.getActualCost() + "");
-                    startCard.details.put("User Id", booking.getUserId() + "");
+                    tripCreatedCard.color = Constants.Color.BOUNCE_GREEN;
+                    tripCreatedCard.details.put("Est. Time", booking.getEstTime() + "");
+                    tripCreatedCard.details.put("Est. Distance", booking.getEstDistance() + "");
+                    tripCreatedCard.details.put("Est. Cost", booking.getEstCost() + "");
+                    tripCreatedCard.details.put("Actual Time", booking.getActualTime() + "");
+                    tripCreatedCard.details.put("Actual Distance", booking.getActualDistance() + "");
+                    tripCreatedCard.details.put("Actual Cost", booking.getActualCost() + "");
+                    tripCreatedCard.details.put("User Id", booking.getUserId() + "");
 
-                    endCard.details.put("Est. Time", booking.getEstTime() + "");
-                    endCard.details.put("Est. Distance", booking.getEstDistance() + "");
-                    endCard.details.put("Est. Cost", booking.getEstCost() + "");
-                    endCard.details.put("Actual Time", booking.getActualTime() + "");
-                    endCard.details.put("Actual Distance", booking.getActualDistance() + "");
-                    endCard.details.put("Actual Cost", booking.getActualCost() + "");
-                    endCard.details.put("User Id", booking.getUserId() + "");
-                    endCard.time = booking.getTripEndTime().getTime();
-                    endCard.timeString = booking.getTripEndTime().toString();
-                    endCard.header = "Booking : " + booking.getId() + " - " + booking.getStatus();
+                    tripEndCard.details.put("Est. Time", booking.getEstTime() + "");
+                    tripEndCard.details.put("Est. Distance", booking.getEstDistance() + "");
+                    tripEndCard.details.put("Est. Cost", booking.getEstCost() + "");
+                    tripEndCard.details.put("Actual Time", booking.getActualTime() + "");
+                    tripEndCard.details.put("Actual Distance", booking.getActualDistance() + "");
+                    tripEndCard.details.put("Actual Cost", booking.getActualCost() + "");
+                    tripEndCard.details.put("User Id", booking.getUserId() + "");
+                    if(booking.getTripEndTime() != null) {
+                        tripEndCard.time = booking.getTripEndTime().getTime();
+                        tripEndCard.timeString = booking.getTripEndTime().toString();
+                    } else {
+                        tripEndCard.time = booking.getUpdatedOn().getTime();
+                        tripEndCard.timeString = booking.getUpdatedOn().toString();
+                    }
+                    tripEndCard.header = "Booking : " + booking.getId() + " - " + booking.getStatus();
+
+                    tripStartCard.details.put("Est. Time", booking.getEstTime() + "");
+                    tripStartCard.details.put("Est. Distance", booking.getEstDistance() + "");
+                    tripStartCard.details.put("Est. Cost", booking.getEstCost() + "");
+                    tripStartCard.details.put("Actual Time", booking.getActualTime() + "");
+                    tripStartCard.details.put("Actual Distance", booking.getActualDistance() + "");
+                    tripStartCard.details.put("Actual Cost", booking.getActualCost() + "");
+                    tripStartCard.details.put("User Id", booking.getUserId() + "");
+                    if(booking.getTripStartTime() != null) {
+                        tripStartCard.time = booking.getTripStartTime().getTime();
+                        tripStartCard.timeString = booking.getTripStartTime().toString();
+                    } else {
+                        tripStartCard.time = booking.getCreatedOn().getTime() + (20 * 60 * 1000);
+                        tripStartCard.timeString = booking.getCreatedOn().toString() + (20 * 60 * 1000);
+                    }
                     break;
                 case cancelled:
-                    startCard.color = Constants.Color.WARNING;
-                    startCard.details.put("Est. Time", booking.getEstTime() + "");
-                    startCard.details.put("Est. Distance", booking.getEstDistance() + "");
-                    startCard.details.put("Est. Cost", booking.getEstCost() + "");
-                    startCard.details.put("User Id", booking.getUserId() + "");
-                    startCard.body = "Cancelled because of " + booking.getCancellationReason();
+                    tripCreatedCard.color = Constants.Color.WARNING;
+                    tripCreatedCard.details.put("Est. Time", booking.getEstTime() + "");
+                    tripCreatedCard.details.put("Est. Distance", booking.getEstDistance() + "");
+                    tripCreatedCard.details.put("Est. Cost", booking.getEstCost() + "");
+                    tripCreatedCard.details.put("User Id", booking.getUserId() + "");
+                    tripCreatedCard.body = "Cancelled because of " + booking.getCancellationReason();
 
-                    endCard.color = Constants.Color.WARNING;
-                    endCard.details.put("Est. Time", booking.getEstTime() + "");
-                    endCard.details.put("Est. Distance", booking.getEstDistance() + "");
-                    endCard.details.put("Est. Cost", booking.getEstCost() + "");
-                    endCard.details.put("User Id", booking.getUserId() + "");
-                    endCard.body = "Cancelled because of " + booking.getCancellationReason();
-                    endCard.time = booking.getUpdatedOn().getTime();
-                    endCard.timeString = booking.getUpdatedOn().toString();
-                    endCard.header = "Booking : " + booking.getId() + " - " + booking.getStatus();
+                    tripEndCard.color = Constants.Color.WARNING;
+                    tripEndCard.details.put("Est. Time", booking.getEstTime() + "");
+                    tripEndCard.details.put("Est. Distance", booking.getEstDistance() + "");
+                    tripEndCard.details.put("Est. Cost", booking.getEstCost() + "");
+                    tripEndCard.details.put("User Id", booking.getUserId() + "");
+                    tripEndCard.body = "Cancelled because of " + booking.getCancellationReason();
+                    tripEndCard.time = booking.getUpdatedOn().getTime();
+                    tripEndCard.timeString = booking.getUpdatedOn().toString();
+                    tripEndCard.header = "Booking : " + booking.getId() + " - " + booking.getStatus();
+
+                    tripStartCard = null;
                     break;
             }
         } catch (Exception e) {
@@ -108,9 +162,12 @@ public class BikeDetailsCard {
             BounceUtils.logError(e);
         }
         List<BikeDetailsCard> cards = Lists.newArrayList();
-        cards.add(startCard);
-        if(endCard != null) {
-            cards.add(endCard);
+        cards.add(tripCreatedCard);
+        if(tripEndCard != null) {
+            cards.add(tripEndCard);
+        }
+        if(tripStartCard != null) {
+            cards.add(tripStartCard);
         }
         return cards;
     }
