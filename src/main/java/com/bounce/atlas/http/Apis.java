@@ -103,7 +103,7 @@ public class Apis {
         logger.info("/login");
 
         Map<String, Object> data = Maps.newHashMap();
-        data.put("title", "Bounce Atlas");
+        data.put("title", "Atlas");
         data.put("page", "login");
 
         String content = FreemarkerUtils.getFreemarkerString("login.ftl", data);
@@ -122,7 +122,7 @@ public class Apis {
         Map<String, String> map = new HashMap<String, String>();
 
         Map<String, Object> data = Maps.newHashMap();
-        data.put("title", "Bounce Atlas");
+        data.put("title", "Atlas");
         data.put("page", "home");
 
         if (TextUtils.isEmpty(location)) {
@@ -149,7 +149,7 @@ public class Apis {
         logger.info("/home");
 
         Map<String, Object> data = Maps.newHashMap();
-        data.put("title", "Bounce Atlas");
+        data.put("title", "Atlas");
         data.put("page", "layers");
 
         if (TextUtils.isEmpty(location)) {
@@ -175,7 +175,7 @@ public class Apis {
         logger.info("/bikes");
 
         Map<String, Object> data = Maps.newHashMap();
-        data.put("title", "Bounce Atlas");
+        data.put("title", "Atlas");
         data.put("page", "bikes");
         data.put("searchPage", "true");
         data.put("searchUrl", "/apis/bike/search");
@@ -200,7 +200,7 @@ public class Apis {
         logger.info("/bookings");
 
         Map<String, Object> data = Maps.newHashMap();
-        data.put("title", "Bounce Atlas");
+        data.put("title", "Atlas");
         data.put("page", "bookings");
         data.put("searchPage", "true");
         data.put("searchUrl", "/apis/booking/search");
@@ -225,7 +225,7 @@ public class Apis {
         logger.info("/test");
 
         Map<String, Object> data = Maps.newHashMap();
-        data.put("title", "Bounce Atlas");
+        data.put("title", "Atlas");
         data.put("page", "test");
 
         double lat = 12.9160463;

@@ -41,114 +41,130 @@
     }
 
     function renderMarkers() {
-        console.log("renderMarkers()")
-        markerClusterGroup = L.markerClusterGroup();
-        for(var i = 0; i < genericMarkerObjs.length; i++) {
-            var markerData = genericMarkerObjs[i];
-            var markerIcon = L.icon({
-               iconUrl: markerData.iconUrl,
-               iconSize:     [50, 50], // size of the icon
-            });;
+        try{
+            console.log("renderMarkers()")
+            markerClusterGroup = L.markerClusterGroup();
+            for(var i = 0; i < genericMarkerObjs.length; i++) {
+                var markerData = genericMarkerObjs[i];
+                var markerIcon = L.icon({
+                   iconUrl: markerData.iconUrl,
+                   iconSize:     [50, 50], // size of the icon
+                });;
 
-            var marker = L.marker([markerData.location.lat, markerData.location.lon],{icon: markerIcon});
+                var marker = L.marker([markerData.location.lat, markerData.location.lon],{icon: markerIcon});
 
-            var popupInfo = "<br/><div class='border'><div class='p-2 text-monospace'>";
+                var popupInfo = "<br/><div class='border'><div class='p-2 text-monospace'>";
 
-            popupInfo += "<b>" + markerData.title + "</b><br/>" + markerData.subtext + "<br/>";
-            if(markerData.data) {
-                for(var key in markerData.data) {
-                    popupInfo += "<div>" + key + " : " + markerData.data[key] + "</div>";
+                popupInfo += "<b>" + markerData.title + "</b><br/>" + markerData.subtext + "<br/>";
+                if(markerData.data) {
+                    for(var key in markerData.data) {
+                        popupInfo += "<div>" + key + " : " + markerData.data[key] + "</div>";
+                    }
                 }
+                popupInfo += "</div></div><br/>";
+                marker.bindPopup(popupInfo);
+                marker.text = markerData.title + " / " + markerData.subtext;
+                marker.alt = markerData.title + " / " + markerData.subtext;
+                markers.push(marker);
             }
-            popupInfo += "</div></div><br/>";
-            marker.bindPopup(popupInfo);
-            marker.text = markerData.title + " / " + markerData.subtext;
-            marker.alt = markerData.title + " / " + markerData.subtext;
-            markers.push(marker);
+            markerClusterGroup.addLayers(markers);
+            map.addLayer(markerClusterGroup);
+        } catch(err) {
+            console.log(err);
         }
-        markerClusterGroup.addLayers(markers);
-        map.addLayer(markerClusterGroup);
     }
 
     function renderFences(fitToBounds) {
-        console.log("renderFences()");
-        fencesGroup = L.layerGroup();
-        var layerAdded = null;
-        for(var i = 0; i < genericFenceObjs.length; i++) {
-            var fenceData = genericFenceObjs[i];
-            var points = getPoints(fenceData.points);
-            var fence = L.polygon(points, {fillColor: fenceData.fillColor, fillOpacity: fenceData.fillOpacity, color: fenceData.color});
-            var popupInfo = "<br/><div class='border'><div class='p-2 text-monospace'>";
-            if(fenceData.data) {
-                for(var key in fenceData.data) {
-                    popupInfo += "<div>" + key + " : " + fenceData.data[key] + "</div>";
+        try{
+            console.log("renderFences()");
+            fencesGroup = L.layerGroup();
+            var layerAdded = null;
+            for(var i = 0; i < genericFenceObjs.length; i++) {
+                var fenceData = genericFenceObjs[i];
+                var points = getPoints(fenceData.points);
+                var fence = L.polygon(points, {fillColor: fenceData.fillColor, fillOpacity: fenceData.fillOpacity, color: fenceData.color});
+                var popupInfo = "<br/><div class='border'><div class='p-2 text-monospace'>";
+                if(fenceData.data) {
+                    for(var key in fenceData.data) {
+                        popupInfo += "<div>" + key + " : " + fenceData.data[key] + "</div>";
+                    }
                 }
+                popupInfo += "</div></div><br/>";
+                fence.bindPopup(popupInfo);
+                fences.push(fence);
+                fencesGroup.addLayer(fence);
+                layerAdded = fence;
             }
-            popupInfo += "</div></div><br/>";
-            fence.bindPopup(popupInfo);
-            fences.push(fence);
-            fencesGroup.addLayer(fence);
-            layerAdded = fence;
+            console.log("fitToBounds : " + fitToBounds);
+            if(layerAdded && fitToBounds) {
+                map.fitBounds(layerAdded.getBounds());
+            }
+            fencesGroup.addTo(map);
+        } catch(err) {
+            console.log(err);
         }
-        console.log("fitToBounds : " + fitToBounds);
-        if(layerAdded && fitToBounds) {
-            map.fitBounds(layerAdded.getBounds());
-        }
-        fencesGroup.addTo(map);
     }
 
     function renderPaths(fitToBounds) {
-        console.log("renderPaths()");
-        pathsGroup = L.layerGroup();
+        try{
+            console.log("renderPaths()");
+            pathsGroup = L.layerGroup();
 
-        var layerAdded = null;
-        for(var i = 0; i < genericPathObjs.length; i++) {
-            var pathData = genericPathObjs[i];
-            var points = getPoints(pathData.points);
-            var path = L.polyline(points, {color: pathData.color});
-            var popupInfo = "<br/><div class='border'><div class='p-2 text-monospace'>";
-            if(pathData.data) {
-                for(var key in pathData.data) {
-                    popupInfo += "<div>" + key + " : " + pathData.data[key] + "</div>";
+            var layerAdded = null;
+            for(var i = 0; i < genericPathObjs.length; i++) {
+                var pathData = genericPathObjs[i];
+                var points = getPoints(pathData.points);
+                var path = L.polyline(points, {color: pathData.color});
+                var popupInfo = "<br/><div class='border'><div class='p-2 text-monospace'>";
+                if(pathData.data) {
+                    for(var key in pathData.data) {
+                        popupInfo += "<div>" + key + " : " + pathData.data[key] + "</div>";
+                    }
                 }
+                popupInfo += "</div></div><br/>";
+                path.bindPopup(popupInfo);
+                paths.push(path);
+                pathsGroup.addLayer(path);
+                layerAdded = path;
             }
-            popupInfo += "</div></div><br/>";
-            path.bindPopup(popupInfo);
-            paths.push(path);
-            pathsGroup.addLayer(path);
-            layerAdded = path;
-        }
-        pathsGroup.addTo(map);
-        if(layerAdded && fitToBounds) {
-            map.fitBounds(layerAdded.getBounds());
+            pathsGroup.addTo(map);
+            if(layerAdded && fitToBounds) {
+                map.fitBounds(layerAdded.getBounds());
+            }
+        }catch(err) {
+            console.log(err);
         }
     }
 
     function renderCircles(fitToBounds) {
-        console.log("renderCircles()");
-        circlesGroup = L.layerGroup();
-        layerAdded = null;
-        for(var i = 0; i < genericCircleObjs.length; i++) {
-            var circleData = genericCircleObjs[i];
-            point = [circleData.location.lat, circleData.location.lon];
-            var circle = L.circle(point, {fillColor: circleData.fillColor, fillOpacity: circleData.fillOpacity, color: circleData.color, radius: circleData.radius});
-            var popupInfo = "<br/><div class='border'><div class='p-2 text-monospace'>";
-            if(circleData.data) {
-                for(var key in circleData.data) {
-                    popupInfo += "<div>" + key + " : " + circleData.data[key] + "</div>";
+        try{
+            console.log("renderCircles()");
+            circlesGroup = L.layerGroup();
+            layerAdded = null;
+            for(var i = 0; i < genericCircleObjs.length; i++) {
+                var circleData = genericCircleObjs[i];
+                point = [circleData.location.lat, circleData.location.lon];
+                var circle = L.circle(point, {fillColor: circleData.fillColor, fillOpacity: circleData.fillOpacity, color: circleData.color, radius: circleData.radius});
+                var popupInfo = "<br/><div class='border'><div class='p-2 text-monospace'>";
+                if(circleData.data) {
+                    for(var key in circleData.data) {
+                        popupInfo += "<div>" + key + " : " + circleData.data[key] + "</div>";
+                    }
                 }
+                popupInfo += "</div></div><br/>";
+                circle.bindPopup(popupInfo);
+                circles.push(circle);
+                circlesGroup.addLayer(circle);
+                layerAdded = circle;
             }
-            popupInfo += "</div></div><br/>";
-            circle.bindPopup(popupInfo);
-            circles.push(circle);
-            circlesGroup.addLayer(circle);
-            layerAdded = circle;
+            if(layerAdded && fitToBounds) {
+    //            map.fitBounds(layerAdded.getBounds());
+                console.log("Don't support fitBounds on circles")
+            }
+            circlesGroup.addTo(map);
+        } catch(err) {
+            console.log(err);
         }
-        if(layerAdded && fitToBounds) {
-//            map.fitBounds(layerAdded.getBounds());
-            console.log("Don't support fitBounds on circles")
-        }
-        circlesGroup.addTo(map);
     }
 
     function updateMarkers() {
