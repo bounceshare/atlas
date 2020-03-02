@@ -108,4 +108,15 @@ public class RequestApis {
         bookingSearchApi.onRequest();
     }
 
+    @POST
+    @Path("/tracking/search")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes({MediaType.APPLICATION_JSON})
+    @GoogleAuth
+    public void trackingSearch(String inputString, @Suspended final AsyncResponse asyncResponse) {
+        logger.info("/apis/tracking/search");
+        TrackingSearchApi trackingSearchApi = new TrackingSearchApi(inputString, asyncResponse, httpRequest, httpResponse);
+        trackingSearchApi.onRequest();
+    }
+
 }

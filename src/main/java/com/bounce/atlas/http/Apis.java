@@ -1,5 +1,6 @@
 package com.bounce.atlas.http;
 
+import com.bounce.atlas.http.handlers.TrackingSearchApi;
 import com.bounce.atlas.pojo.*;
 import com.bounce.atlas.utils.AuthUtils;
 import com.bounce.atlas.utils.FreemarkerUtils;
@@ -15,6 +16,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.apache.http.util.TextUtils;
 import org.apache.log4j.Logger;
+import org.joda.time.DateTime;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -211,6 +213,38 @@ public class Apis {
         }
 
         data.put("location", location);
+
+        String content = FreemarkerUtils.getFreemarkerString("index.ftl", data);
+        asyncResponse.resume(Response.ok().entity(content).build());
+    }
+
+    @GET
+    @Path("/tracking")
+    @Produces(MediaType.TEXT_HTML)
+    @Consumes({MediaType.APPLICATION_JSON})
+    @GoogleAuth
+    public void trackingPage(@Suspended final AsyncResponse asyncResponse, @QueryParam("hours") String hours, @QueryParam("imei") String imei) {
+        logger.info("/tracking");
+
+        Map<String, Object> data = Maps.newHashMap();
+        data.put("title", "Atlas");
+        data.put("page", "tracking");
+        data.put("searchPage", "true");
+        data.put("searchUrl", "/apis/tracking/search");
+        data.put("searchText", "Bike Id");
+
+        data.put("location", "12.9160463,77.5967117");
+        data.put("help", "You can try filtering like this : /tracking?imei=<imei>&hours=<number of hours from now>");
+
+        if (!TextUtils.isEmpty(imei)) {
+            if(TextUtils.isEmpty(hours)) {
+                hours = "24";
+            }
+            int numHours = Integer.parseInt(hours);
+            Map<Object, Object> response = TrackingSearchApi.getTrackingRenderData(imei, new DateTime().minusHours(numHours).getMillis(), System.currentTimeMillis());
+            FreemarkerUtils.addMarkersToFreemarkerObj((List<MarkerPojo>) response.get("markers"), data);
+            FreemarkerUtils.addPathsToFreemarkerObj((List<PathPojo>) response.get("paths"), data);
+        }
 
         String content = FreemarkerUtils.getFreemarkerString("index.ftl", data);
         asyncResponse.resume(Response.ok().entity(content).build());

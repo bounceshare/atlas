@@ -15,6 +15,7 @@
           crossorigin=""/>
     <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.css"/>
     <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
@@ -52,6 +53,9 @@
                 <li class="nav-item <#if page == 'bookings'> active </#if>">
                     <a class="nav-link" href="/bookings">Bookings <#if page == 'bookings'> <span class="sr-only">(current)</span> </#if> </a>
                 </li>
+                <li class="nav-item <#if page == 'tracking'> active </#if>">
+                    <a class="nav-link" href="/tracking">Tracking <#if page == 'tracking'> <span class="sr-only">(current)</span> </#if> </a>
+                </li>
                 <li class="nav-item dropdown <#if page == 'layers'> active </#if>">
                     <a class="nav-link dropdown-toggle" id="dropdown03" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Layers</a>
                     <div class="dropdown-menu" aria-labelledby="dropdown03">
@@ -63,6 +67,11 @@
                         <a class="dropdown-item" href="/layers?l=hubs">Hubs</a>
                     </div>
                 </li>
+                <#if help??>
+                <li class="nav-item">
+                    <a class="nav-link" href="#" data-toggle="popover" title="Help" data-content="${help}">?</a>
+                </li>
+                <#else></#if>
             </ul>
             <div class="form-inline mt-2 mt-md-0">
                 <input class="form-control mr-sm-2" type="text" id="searchBar" placeholder="Search" aria-label="Search"></input>

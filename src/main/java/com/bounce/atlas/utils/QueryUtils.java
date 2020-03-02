@@ -3,6 +3,7 @@ package com.bounce.atlas.utils;
 import com.bounce.atlas.pojo.PointPojo;
 import com.bounce.utils.BounceUtils;
 import com.bounce.utils.DatabaseConnector;
+import com.bounce.utils.JedisCommands;
 import com.bounce.utils.dbmodels.public_.enums.BikeStatus;
 import com.bounce.utils.dbmodels.public_.tables.Bike;
 import com.bounce.utils.dbmodels.public_.tables.Booking;
@@ -11,14 +12,17 @@ import com.bounce.utils.dbmodels.public_.tables.records.BikeRecord;
 import com.bounce.utils.dbmodels.public_.tables.records.BookingRecord;
 import com.bounce.utils.dbmodels.public_.tables.records.HubRecord;
 import com.google.common.collect.Lists;
+import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
+import com.google.gson.reflect.TypeToken;
 import org.apache.http.util.TextUtils;
 import org.jooq.Record;
 import org.jooq.Result;
+import org.json.JSONObject;
+import redis.clients.jedis.Tuple;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.lang.reflect.Type;
+import java.util.*;
 
 public class QueryUtils {
 
@@ -135,6 +139,36 @@ public class QueryUtils {
             return (BookingRecord) records.get(0);
         }
         return null;
+    }
+
+    public static List<Map<String, Object>> getTrackingRecords(String imei, long startTime, long endTime) {
+        List<Map<String, Object>> trackings = Lists.newArrayList();
+
+        try {
+
+            if(startTime > 9999999999l) {
+                startTime = startTime/1000;
+            }
+
+            if(endTime > 9999999999l) {
+                endTime = endTime/1000;
+            }
+
+            Set<Tuple> set = JedisCommands.zrevrangeByScoreWithScores("tracking_dump_" + imei, endTime, startTime, 1, JedisCommands.JedisConnectionType.TRACKING);
+
+            for(Tuple item : set) {
+                String trackingString = item.getElement();
+                Type type = new TypeToken<Map<String, Object>>(){}.getType();
+                Map<String, Object> map = new Gson().fromJson(trackingString, type);
+
+                trackings.add(map);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            BounceUtils.logError(e);
+        }
+
+        return trackings;
     }
 
 }

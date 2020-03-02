@@ -83,4 +83,11 @@
         }
     }
 
+    $(document).ready(function(){
+        try {
+            $('[data-toggle="popover"]').popover();
+        } catch(err) {
+        }
+    });
+
 </script>

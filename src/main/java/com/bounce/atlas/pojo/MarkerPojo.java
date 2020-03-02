@@ -117,4 +117,23 @@ public class MarkerPojo {
         return markers;
     }
 
+    public static MarkerPojo getMarkerPojo(Map<String, Object> tracking) {
+        try {
+            if(!tracking.containsKey("lat") || !tracking.containsKey("lng")) {
+                return null;
+            }
+            MarkerPojo markerPojo = new MarkerPojo();
+            markerPojo.location = new PointPojo((Double) tracking.get("lat"), (Double) tracking.get("lng"));
+            markerPojo.iconUrl = "/resources/icons/dot.png";
+            markerPojo.title = "Tracking Data";
+            markerPojo.subtext = tracking.get("device_id").toString();
+            markerPojo.data = Maps.newHashMap();
+            markerPojo.data = tracking;
+            return markerPojo;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
 }
