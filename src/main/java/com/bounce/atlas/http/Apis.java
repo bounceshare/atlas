@@ -129,7 +129,7 @@ public class Apis {
             location = "12.9160463,77.5967117";
         }
         if (TextUtils.isEmpty(layers)) {
-            layers = "bikes,parking";
+            layers = "bikes";
         }
 
         data.put("location", location);
@@ -231,7 +231,7 @@ public class Apis {
         double lat = 12.9160463;
         double lon = 77.5967117;
 
-        List<BikeRecord> bikes = QueryUtils.getBikes(lat, lon, 10000, 2500);
+        List<BikeRecord> bikes = QueryUtils.getBikes(lat, lon, 20000, 2500);
         List<MarkerPojo> markers = MarkerPojo.getBikesAsMarkers(bikes);
 
         List<FencePojo> fences = FencePojo.getParkingFences(lat, lon, 2500);

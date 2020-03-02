@@ -24,7 +24,10 @@
     function onMapEvent(event) {
         console.log("Layers onMapEvent");
         console.log(event);
-        search(true);
+
+        setTimeout(function() {
+            search(true);
+        }, 1500);
     }
 
     function search(isMapEvent) {

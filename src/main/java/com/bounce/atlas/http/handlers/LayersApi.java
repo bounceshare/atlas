@@ -46,7 +46,7 @@ public class LayersApi extends BaseApiHandler {
             double lat = input.optDouble("lat", 12.9160463);
             double lon = input.optDouble("lon", 77.5967117);
 
-            int limit = input.optInt("limit", 10000);
+            int limit = input.optInt("limit", 20000);
             int radius = input.optInt("radius", 5000);
             String layers = input.optString("layers", "bikes,parking");
 
@@ -59,7 +59,7 @@ public class LayersApi extends BaseApiHandler {
             for(String layer : layerList) {
                 switch (layer) {
                     case "bikes":
-                        List<BikeRecord> bikes = QueryUtils.getBikes(lat, lon, 10000, radius);
+                        List<BikeRecord> bikes = QueryUtils.getBikes(lat, lon, 20000, radius);
                         List<MarkerPojo> bikeMarkers = MarkerPojo.getBikesAsMarkers(bikes);
                         markers.addAll(bikeMarkers);
                         break;

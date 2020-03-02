@@ -17,6 +17,7 @@ import com.google.common.collect.Maps;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import org.joda.time.DateTime;
+import org.json.JSONObject;
 import redis.clients.jedis.Jedis;
 
 import javax.servlet.http.HttpServletRequest;
@@ -24,6 +25,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.container.AsyncResponse;
 import java.lang.reflect.Type;
 import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class BikeEventsApi extends BaseApiHandler {
@@ -79,6 +82,10 @@ public class BikeEventsApi extends BaseApiHandler {
                 bslLastTime = new DateTime(from).minusDays(2).getMillis();
             }
 
+            logger.info("bslFirstTime : " + bslFirstTime);
+            logger.info("bslLastTime : " + bslLastTime);
+            logger.info("bikeId : " + bikeId);
+
             List<BikeStatusLogRecord> bikeStatusLogRecords = null;
             if(GlobalConfigUtils.getGlobalConfigBoolean("ATLAS_USE_BSL_FROM_REDIS", true)) {
                 bikeStatusLogRecords = getBsl(bikeId, bslLastTime, bslFirstTime);
@@ -118,11 +125,22 @@ public class BikeEventsApi extends BaseApiHandler {
 
             logger.info("BSL records found : " + bikeStatusLogSet.size());
 
-            for(String bslString : bikeStatusLogSet) {
-                Type type = new TypeToken<Map<String, Object>>(){}.getType();
-                Map<String, Object> map = new Gson().fromJson(bslString, type);
+            for(String data : bikeStatusLogSet) {
                 BikeStatusLogRecord record = new BikeStatusLogRecord();
+                Type type = new TypeToken<Map<String, Object>>(){}.getType();
+
+                JSONObject jsonObject = new JSONObject(data);
+                long createdOn = jsonObject.optLong("created_on");
+                long updatedOn = jsonObject.optLong("updated_on");
+
+                Map<String, Object> map = new Gson().fromJson(data, type);
+
+                map.remove("created_on");
+                map.remove("updated_on");
+
                 record.fromMap(map);
+                record.setCreatedOn(new Timestamp(createdOn));
+                record.setUpdatedOn(new Timestamp(updatedOn));
 
                 bikeStatusLogRecords.add(record);
             }
@@ -132,6 +150,20 @@ public class BikeEventsApi extends BaseApiHandler {
         }
 
         return bikeStatusLogRecords;
+    }
+
+    public static Date toTimestamp(String input) {
+        //Sep 30, 2019 8:20:55 PM
+        try{
+            //Converting the input String to Date
+            SimpleDateFormat sdf = new SimpleDateFormat("MMM d, yyyy hh:mm:ss a");
+            return sdf.parse(input);
+            //Displaying the date
+        }catch(ParseException pe){
+            BounceUtils.logError(pe);
+            pe.printStackTrace();
+        }
+        return null;
     }
 
 }
