@@ -245,7 +245,9 @@ public class Apis {
     @Produces(MediaType.TEXT_HTML)
     @Consumes({MediaType.APPLICATION_JSON})
     @GoogleAuth
-    public void trackingPage(@Suspended final AsyncResponse asyncResponse, @QueryParam("hours") String hours, @QueryParam("imei") String imei) {
+    public void trackingPage(@Suspended final AsyncResponse asyncResponse, @QueryParam("hours") String hours,
+                             @QueryParam("mins") String mins,
+                             @QueryParam("imei") String imei) {
         logger.info("/tracking");
 
         Map<String, Object> data = Maps.newHashMap();
@@ -262,8 +264,13 @@ public class Apis {
             if(TextUtils.isEmpty(hours)) {
                 hours = "24";
             }
+            if(TextUtils.isEmpty(mins)) {
+                mins = "0";
+            }
             int numHours = Integer.parseInt(hours);
-            Map<Object, Object> response = TrackingSearchApi.getTrackingRenderData(imei, new DateTime().minusHours(numHours).getMillis(), System.currentTimeMillis());
+            int numMins = Integer.parseInt(hours);
+            Map<Object, Object> response = TrackingSearchApi.getTrackingRenderData(imei,
+                    new DateTime().minusHours(numHours).minusMinutes(numMins).getMillis(), System.currentTimeMillis());
             FreemarkerUtils.addMarkersToFreemarkerObj((List<MarkerPojo>) response.get("markers"), data);
             FreemarkerUtils.addPathsToFreemarkerObj((List<PathPojo>) response.get("paths"), data);
         }
