@@ -101,7 +101,7 @@
             }
             console.log("fitToBounds : " + fitToBounds);
             if(layerAdded && fitToBounds) {
-                map.fitBounds(layerAdded.getBounds());
+                map.fitBounds(layerAdded.getBounds(), {padding: [50,50]});
             }
             fencesGroup.addTo(map);
         } catch(err) {
@@ -133,7 +133,7 @@
             }
             pathsGroup.addTo(map);
             if(layerAdded && fitToBounds) {
-                map.fitBounds(layerAdded.getBounds());
+                map.fitBounds(layerAdded.getBounds(), {padding: [50,50]});
             }
         }catch(err) {
             console.log(err);
@@ -319,7 +319,7 @@
         renderPaths(fitToBounds);
 
         if(tMarkers != null && tMarkers.length > 0 && fitToBounds) {
-            map.fitBounds(markerClusterGroup.getBounds());
+            map.fitBounds(markerClusterGroup.getBounds(), {padding: [50,50]});
         }
     }
 

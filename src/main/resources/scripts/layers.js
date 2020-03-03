@@ -25,6 +25,10 @@
         console.log("Layers onMapEvent");
         console.log(event);
 
+        if(isLoading) {
+            return;
+        }
+
         setTimeout(function() {
             search(true);
         }, 1500);
