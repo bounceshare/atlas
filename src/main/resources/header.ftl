@@ -7,7 +7,7 @@
     <meta name="description" content="${title}"></meta>
     <meta name="google-signin-client_id" content="665442752379-qrreooo8o3q27svvkn1i52s3v2jr3plp.apps.googleusercontent.com"></meta>
 
-    <link rel="shortcut icon" type="image/png" href="/resources/icons/favicon.ico">
+    <link rel="shortcut icon" type="image/png" href="${favicon}">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
           integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous"></link>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"
@@ -34,6 +34,9 @@
 <body>
 <header>
     <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+        <a class="navbar-brand" href="/">
+            <img src="${favicon}" width="20" height="20" alt="">
+        </a>
         <a class="navbar-brand" href="/">${title}</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse"
                 aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">

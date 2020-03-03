@@ -5,6 +5,7 @@ import com.bounce.atlas.pojo.FencePojo;
 import com.bounce.atlas.pojo.MarkerPojo;
 import com.bounce.atlas.pojo.PathPojo;
 import com.bounce.utils.BounceUtils;
+import com.google.common.collect.Maps;
 import com.google.gson.Gson;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
@@ -102,6 +103,16 @@ public class FreemarkerUtils {
         data.put("paths", data);
         data.put("pathString", gson.toJson(markers));
         data.put("panOut", "true");
+    }
+
+    public static Map<String, Object> getDefaultFreemarkerObj(String page) {
+        Map<String, Object> data = Maps.newHashMap();
+        data.put("title", "ATLAS");
+        data.put("page", page);
+        data.put("favicon", "/resources/icons/favicon.ico");
+        data.put("icon", "/resources/icons/bounce.png");
+
+        return data;
     }
 
 }

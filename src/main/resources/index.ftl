@@ -6,6 +6,7 @@
 <div id="circleData" hidden><#if circleString??>${circleString}<#else></#if></div>
 
 <div id="freemarker_location" hidden><#if location??>${location}<#else></#if></div>
+<div id="freemarker_zoom" hidden><#if zoom??>${zoom}<#else></#if></div>
 <div id="freemarker_layers" hidden><#if layers??>${layers}<#else></#if></div>
 
 <div id="freemarker_searchtext" hidden><#if searchText??>${searchText}<#else></#if></div>
@@ -15,10 +16,7 @@
 <#include "/scripts/render.js">
 <#if page == 'home'><#include "/scripts/layers.js"></#if>
 <#if page == 'layers'><#include "/scripts/layers.js"></#if>
-<#if page == 'layers'><#include "/scripts/layers.js"></#if>
 <#if searchPage??><#include "/scripts/search.js"><#else></#if>
-<!--<#if page == 'bikes'><#include "/scripts/bikes.js"></#if>-->
-<!--<#if page == 'bookings'><#include "/scripts/booking.js"></#if>-->
 <#include "/scripts/modal.js">
 </main>
 <#include "/footer.ftl">

@@ -2,7 +2,6 @@ package com.bounce.atlas.http;
 
 import com.bounce.atlas.http.handlers.TrackingSearchApi;
 import com.bounce.atlas.pojo.*;
-import com.bounce.atlas.utils.AuthUtils;
 import com.bounce.atlas.utils.FreemarkerUtils;
 import com.bounce.atlas.utils.GoogleAuth;
 import com.bounce.atlas.utils.QueryUtils;
@@ -33,7 +32,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -125,17 +123,16 @@ public class Apis {
     @Consumes({MediaType.APPLICATION_JSON})
     @GoogleAuth
     public void homeLayers(@Suspended final AsyncResponse asyncResponse, @QueryParam("p") String location,
-                           @QueryParam("layers") String layers) {
+                           @QueryParam("z") String zoom, @QueryParam("layers") String layers) {
         logger.info("/home");
 
-        Map<String, String> map = new HashMap<String, String>();
-
-        Map<String, Object> data = Maps.newHashMap();
-        data.put("title", "Atlas");
-        data.put("page", "home");
+        Map<String, Object> data = FreemarkerUtils.getDefaultFreemarkerObj("home");
 
         if (TextUtils.isEmpty(location)) {
             location = "12.9160463,77.5967117";
+        }
+        if (TextUtils.isEmpty(zoom)) {
+            zoom = 17 + "";
         }
         if (TextUtils.isEmpty(layers)) {
             layers = "bikes";
@@ -143,6 +140,7 @@ public class Apis {
 
         data.put("location", location);
         data.put("layers", layers);
+        data.put("zoom", zoom);
 
         String content = FreemarkerUtils.getFreemarkerString("index.ftl", data);
         asyncResponse.resume(Response.ok().entity(content).build());
@@ -153,15 +151,17 @@ public class Apis {
     @Produces(MediaType.TEXT_HTML)
     @Consumes({MediaType.APPLICATION_JSON})
     @GoogleAuth
-    public void layers(@Suspended final AsyncResponse asyncResponse, @QueryParam("p") String location, @QueryParam("l") String layers) {
+    public void layers(@Suspended final AsyncResponse asyncResponse, @QueryParam("p") String location,
+                       @QueryParam("z") String zoom, @QueryParam("l") String layers) {
         logger.info("/home");
 
-        Map<String, Object> data = Maps.newHashMap();
-        data.put("title", "Atlas");
-        data.put("page", "layers");
+        Map<String, Object> data = FreemarkerUtils.getDefaultFreemarkerObj("layers");
 
         if (TextUtils.isEmpty(location)) {
             location = "12.9160463,77.5967117";
+        }
+        if (TextUtils.isEmpty(zoom)) {
+            zoom = 17 + "";
         }
         if (TextUtils.isEmpty(layers)) {
             layers = "bikes,parking";
@@ -169,6 +169,7 @@ public class Apis {
 
         data.put("location", location);
         data.put("layers", layers);
+        data.put("zoom", zoom);
 
         String content = FreemarkerUtils.getFreemarkerString("index.ftl", data);
         asyncResponse.resume(Response.ok().entity(content).build());
@@ -179,18 +180,20 @@ public class Apis {
     @Produces(MediaType.TEXT_HTML)
     @Consumes({MediaType.APPLICATION_JSON})
     @GoogleAuth
-    public void bikePage(@Suspended final AsyncResponse asyncResponse, @QueryParam("p") String location, @QueryParam("q") String searchTerm) {
+    public void bikePage(@Suspended final AsyncResponse asyncResponse, @QueryParam("p") String location,
+                         @QueryParam("z") String zoom, @QueryParam("q") String searchTerm) {
         logger.info("/bikes");
 
-        Map<String, Object> data = Maps.newHashMap();
-        data.put("title", "Atlas");
-        data.put("page", "bikes");
+        Map<String, Object> data = FreemarkerUtils.getDefaultFreemarkerObj("bikes");
         data.put("searchPage", "true");
         data.put("searchUrl", "/apis/bike/search");
         data.put("searchText", "Bike Id or License Plate");
 
         if (TextUtils.isEmpty(location)) {
             location = "12.9160463,77.5967117";
+        }
+        if (TextUtils.isEmpty(zoom)) {
+            zoom = 17 + "";
         }
 
         if(!TextUtils.isEmpty(searchTerm)) {
@@ -201,6 +204,7 @@ public class Apis {
         }
 
         data.put("location", location);
+        data.put("zoom", zoom);
 
         String content = FreemarkerUtils.getFreemarkerString("index.ftl", data);
         asyncResponse.resume(Response.ok().entity(content).build());
@@ -211,18 +215,20 @@ public class Apis {
     @Produces(MediaType.TEXT_HTML)
     @Consumes({MediaType.APPLICATION_JSON})
     @GoogleAuth
-    public void bookingPage(@Suspended final AsyncResponse asyncResponse, @QueryParam("p") String location, @QueryParam("q") String bookingId) {
+    public void bookingPage(@Suspended final AsyncResponse asyncResponse, @QueryParam("p") String location,
+                            @QueryParam("z") String zoom, @QueryParam("q") String bookingId) {
         logger.info("/bookings");
 
-        Map<String, Object> data = Maps.newHashMap();
-        data.put("title", "Atlas");
-        data.put("page", "bookings");
+        Map<String, Object> data = FreemarkerUtils.getDefaultFreemarkerObj("bookings");
         data.put("searchPage", "true");
         data.put("searchUrl", "/apis/booking/search");
         data.put("searchText", "Booking Id");
 
         if (TextUtils.isEmpty(location)) {
             location = "12.9160463,77.5967117";
+        }
+        if (TextUtils.isEmpty(zoom)) {
+            zoom = 17 + "";
         }
 
         if(!TextUtils.isEmpty(bookingId)) {
@@ -236,6 +242,7 @@ public class Apis {
         }
 
         data.put("location", location);
+        data.put("zoom", zoom);
 
         String content = FreemarkerUtils.getFreemarkerString("index.ftl", data);
         asyncResponse.resume(Response.ok().entity(content).build());
@@ -246,14 +253,11 @@ public class Apis {
     @Produces(MediaType.TEXT_HTML)
     @Consumes({MediaType.APPLICATION_JSON})
     @GoogleAuth
-    public void trackingPage(@Suspended final AsyncResponse asyncResponse, @QueryParam("p") String location, @QueryParam("hours") String hours,
-                             @QueryParam("mins") String mins,
-                             @QueryParam("q") String bikeId) {
+    public void trackingPage(@Suspended final AsyncResponse asyncResponse, @QueryParam("p") String location,
+                             @QueryParam("z") String zoom, @QueryParam("q") String bikeId) {
         logger.info("/tracking");
 
-        Map<String, Object> data = Maps.newHashMap();
-        data.put("title", "Atlas");
-        data.put("page", "tracking");
+        Map<String, Object> data = FreemarkerUtils.getDefaultFreemarkerObj("tracking");
         data.put("searchPage", "true");
         data.put("searchUrl", "/apis/tracking/search");
         data.put("searchText", "Bike Id");
@@ -261,64 +265,37 @@ public class Apis {
         if (TextUtils.isEmpty(location)) {
             location = "12.9160463,77.5967117";
         }
+        if (TextUtils.isEmpty(zoom)) {
+            zoom = 17 + "";
+        }
         data.put("location", location);
-
-        data.put("help", "You can try filtering like this : /tracking?q=<bikeId>&hours=<number of hours from now>");
+        data.put("zoom", zoom);
 
         String imei = null;
 
         String query = bikeId;
-        BikeRecord bike = QueryUtils.getBike(Integer.parseInt(query));
-        if(bike != null) {
-            AxcessRecord axcessRecord = bike.fetchParent(Keys.BIKE__BIKE_AXCESS_ID_FKEY);
-            imei = axcessRecord.getImei();
+        if(!TextUtils.isEmpty(query)) {
+            BikeRecord bike = QueryUtils.getBike(Integer.parseInt(query));
+            if (bike != null) {
+                AxcessRecord axcessRecord = bike.fetchParent(Keys.BIKE__BIKE_AXCESS_ID_FKEY);
+                imei = axcessRecord.getImei();
+            }
         }
 
         if (!TextUtils.isEmpty(imei)) {
-            if(TextUtils.isEmpty(hours) && !TextUtils.isEmpty(hours)) {
-                hours = "24";
-            }
-            if(TextUtils.isEmpty(mins)) {
-                mins = "0";
-            }
-            int numHours = Integer.parseInt(hours);
-            int numMins = Integer.parseInt(mins);
+//            if(TextUtils.isEmpty(hours) && !TextUtils.isEmpty(hours)) {
+//                hours = "24";
+//            }
+//            if(TextUtils.isEmpty(mins)) {
+//                mins = "0";
+//            }
+//            int numHours = Integer.parseInt(hours);
+//            int numMins = Integer.parseInt(mins);
             Map<Object, Object> response = TrackingSearchApi.getTrackingRenderData(imei,
-                    new DateTime().minusHours(numHours).minusMinutes(numMins).getMillis(), System.currentTimeMillis());
+                    new DateTime().minusHours(24).minusMinutes(0).getMillis(), System.currentTimeMillis());
             FreemarkerUtils.addMarkersToFreemarkerObj((List<MarkerPojo>) response.get("markers"), data);
             FreemarkerUtils.addPathsToFreemarkerObj((List<PathPojo>) response.get("paths"), data);
         }
-
-        String content = FreemarkerUtils.getFreemarkerString("index.ftl", data);
-        asyncResponse.resume(Response.ok().entity(content).build());
-    }
-
-    @GET
-    @Path("/test")
-    @Produces(MediaType.TEXT_HTML)
-    @Consumes({MediaType.APPLICATION_JSON})
-    @GoogleAuth
-    public void test(@Suspended final AsyncResponse asyncResponse, @QueryParam("q") String location) {
-        logger.info("/test");
-
-        Map<String, Object> data = Maps.newHashMap();
-        data.put("title", "Atlas");
-        data.put("page", "test");
-
-        double lat = 12.9160463;
-        double lon = 77.5967117;
-
-        List<BikeRecord> bikes = QueryUtils.getBikes(lat, lon, 20000, 2500);
-        List<MarkerPojo> markers = MarkerPojo.getBikesAsMarkers(bikes);
-
-        List<FencePojo> fences = FencePojo.getParkingFences(lat, lon, 2500);
-        List<CirclePojo> circles = Lists.newArrayList();
-        List<PathPojo> paths = Lists.newArrayList();
-
-        FreemarkerUtils.addMarkersToFreemarkerObj(markers, data);
-        FreemarkerUtils.addFencesToFreemarkerObj(fences, data);
-        FreemarkerUtils.addCirclesToFreemarkerObj(circles, data);
-        FreemarkerUtils.addPathsToFreemarkerObj(paths, data);
 
         String content = FreemarkerUtils.getFreemarkerString("index.ftl", data);
         asyncResponse.resume(Response.ok().entity(content).build());

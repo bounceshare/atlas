@@ -249,15 +249,19 @@
 
     function setupMap() {
         var loc = $('#freemarker_location')[0].innerText;
+        var zoom = $('#freemarker_zoom')[0].innerText;
         if(loc.length > 0) {
             DEFAULT_CENTRE = [parseFloat(loc.split(",")[0]), parseFloat(loc.split(",")[1])];
+        }
+        if(zoom.length < 1) {
+            zoom = 18;
         }
         tempLayers = $('#freemarker_layers')[0].innerText;
         if(tempLayers.length > 0) {
             layers = tempLayers;
         }
 
-        map = L.map('mapDiv').setView(DEFAULT_CENTRE, 17);
+        map = L.map('mapDiv').setView(DEFAULT_CENTRE, zoom);
         map.on('moveend', onMapEvent);
         isLoading = false;
 
@@ -339,6 +343,8 @@
         }else {
             path += "?p=" + position;
         }
+
+        path += "&z=" + map.getZoom();
 
         console.log("navBarClicks : " + path)
 
