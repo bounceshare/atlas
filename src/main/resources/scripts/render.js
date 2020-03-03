@@ -5,7 +5,7 @@
     var genericPathObjs = [];
     var genericCircleObjs = [];
 
-    var DEFAULT_CENTRE = [12.9160463,77.5967117];
+    var DEFAULT_CENTRE = [];
     var DEFAULT_RADIUS = 2500;
 
     var map = null;
@@ -327,6 +327,22 @@
         var mapBoundNorthEast = map.getBounds().getNorthEast();
         var mapDistance = mapBoundNorthEast.distanceTo(map.getCenter());
         return mapDistance;
+    }
+
+    function navBarClicks(path) {
+        console.log("navBarClicks : " + path)
+        var pos = map.getCenter();
+        var position = pos.lat + "," + pos.lng;
+
+        if(path.includes("?")) {
+            path += "&p=" + position;
+        }else {
+            path += "?p=" + position;
+        }
+
+        console.log("navBarClicks : " + path)
+
+        window.location = path;
     }
 
     bootstrap();

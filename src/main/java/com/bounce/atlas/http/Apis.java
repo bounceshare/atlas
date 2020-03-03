@@ -9,7 +9,9 @@ import com.bounce.atlas.utils.QueryUtils;
 import com.bounce.utils.BounceUtils;
 import com.bounce.utils.DatabaseConnector;
 import com.bounce.utils.Log;
+import com.bounce.utils.dbmodels.public_.Keys;
 import com.bounce.utils.dbmodels.public_.tables.Booking;
+import com.bounce.utils.dbmodels.public_.tables.records.AxcessRecord;
 import com.bounce.utils.dbmodels.public_.tables.records.BikeRecord;
 import com.bounce.utils.dbmodels.public_.tables.records.BookingRecord;
 import com.bounce.utils.status.Status;
@@ -122,7 +124,7 @@ public class Apis {
     @Produces(MediaType.TEXT_HTML)
     @Consumes({MediaType.APPLICATION_JSON})
     @GoogleAuth
-    public void homeLayers(@Suspended final AsyncResponse asyncResponse, @QueryParam("loc") String location,
+    public void homeLayers(@Suspended final AsyncResponse asyncResponse, @QueryParam("p") String location,
                            @QueryParam("layers") String layers) {
         logger.info("/home");
 
@@ -151,8 +153,7 @@ public class Apis {
     @Produces(MediaType.TEXT_HTML)
     @Consumes({MediaType.APPLICATION_JSON})
     @GoogleAuth
-    public void layers(@Suspended final AsyncResponse asyncResponse, @QueryParam("loc") String location, @QueryParam(
-            "l") String layers) {
+    public void layers(@Suspended final AsyncResponse asyncResponse, @QueryParam("p") String location, @QueryParam("l") String layers) {
         logger.info("/home");
 
         Map<String, Object> data = Maps.newHashMap();
@@ -178,7 +179,7 @@ public class Apis {
     @Produces(MediaType.TEXT_HTML)
     @Consumes({MediaType.APPLICATION_JSON})
     @GoogleAuth
-    public void bikePage(@Suspended final AsyncResponse asyncResponse, @QueryParam("loc") String location, @QueryParam("q") String searchTerm) {
+    public void bikePage(@Suspended final AsyncResponse asyncResponse, @QueryParam("p") String location, @QueryParam("q") String searchTerm) {
         logger.info("/bikes");
 
         Map<String, Object> data = Maps.newHashMap();
@@ -210,7 +211,7 @@ public class Apis {
     @Produces(MediaType.TEXT_HTML)
     @Consumes({MediaType.APPLICATION_JSON})
     @GoogleAuth
-    public void bookingPage(@Suspended final AsyncResponse asyncResponse, @QueryParam("loc") String location, @QueryParam("q") String bookingId) {
+    public void bookingPage(@Suspended final AsyncResponse asyncResponse, @QueryParam("p") String location, @QueryParam("q") String bookingId) {
         logger.info("/bookings");
 
         Map<String, Object> data = Maps.newHashMap();
@@ -245,9 +246,9 @@ public class Apis {
     @Produces(MediaType.TEXT_HTML)
     @Consumes({MediaType.APPLICATION_JSON})
     @GoogleAuth
-    public void trackingPage(@Suspended final AsyncResponse asyncResponse, @QueryParam("hours") String hours,
+    public void trackingPage(@Suspended final AsyncResponse asyncResponse, @QueryParam("p") String location, @QueryParam("hours") String hours,
                              @QueryParam("mins") String mins,
-                             @QueryParam("imei") String imei) {
+                             @QueryParam("q") String bikeId) {
         logger.info("/tracking");
 
         Map<String, Object> data = Maps.newHashMap();
@@ -257,11 +258,24 @@ public class Apis {
         data.put("searchUrl", "/apis/tracking/search");
         data.put("searchText", "Bike Id");
 
-        data.put("location", "12.9160463,77.5967117");
+        if (TextUtils.isEmpty(location)) {
+            location = "12.9160463,77.5967117";
+        }
+        data.put("location", location);
+
         data.put("help", "You can try filtering like this : /tracking?imei=<imei>&hours=<number of hours from now>");
 
+        String imei = null;
+
+        String query = bikeId;
+        BikeRecord bike = QueryUtils.getBike(Integer.parseInt(query));
+        if(bike != null) {
+            AxcessRecord axcessRecord = bike.fetchParent(Keys.BIKE__BIKE_AXCESS_ID_FKEY);
+            imei = axcessRecord.getImei();
+        }
+
         if (!TextUtils.isEmpty(imei)) {
-            if(TextUtils.isEmpty(hours)) {
+            if(TextUtils.isEmpty(hours) && !TextUtils.isEmpty(hours)) {
                 hours = "24";
             }
             if(TextUtils.isEmpty(mins)) {
