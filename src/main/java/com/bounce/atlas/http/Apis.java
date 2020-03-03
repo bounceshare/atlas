@@ -263,7 +263,7 @@ public class Apis {
         }
         data.put("location", location);
 
-        data.put("help", "You can try filtering like this : /tracking?imei=<imei>&hours=<number of hours from now>");
+        data.put("help", "You can try filtering like this : /tracking?q=<bikeId>&hours=<number of hours from now>");
 
         String imei = null;
 
