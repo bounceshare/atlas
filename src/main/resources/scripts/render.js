@@ -66,7 +66,7 @@
                     }
                 }
                 popupInfo += "</div></div><br/>";
-                marker.bindPopup(popupInfo);
+                marker.bindPopup(popupInfo, {autoClose: false});
                 marker.text = markerData.title + " / " + markerData.subtext;
                 marker.alt = markerData.title + " / " + markerData.subtext;
                 markers.push(marker);
@@ -94,7 +94,7 @@
                     }
                 }
                 popupInfo += "</div></div><br/>";
-                fence.bindPopup(popupInfo);
+                fence.bindPopup(popupInfo, {autoClose: false});
                 fences.push(fence);
                 fencesGroup.addLayer(fence);
                 layerAdded = fence;
@@ -126,7 +126,7 @@
                     }
                 }
                 popupInfo += "</div></div><br/>";
-                path.bindPopup(popupInfo);
+                path.bindPopup(popupInfo, {autoClose: false});
                 paths.push(path);
                 pathsGroup.addLayer(path);
                 layerAdded = path;
@@ -156,7 +156,7 @@
                     }
                 }
                 popupInfo += "</div></div><br/>";
-                circle.bindPopup(popupInfo);
+                circle.bindPopup(popupInfo, {autoClose: false});
                 circles.push(circle);
                 circlesGroup.addLayer(circle);
                 layerAdded = circle;
