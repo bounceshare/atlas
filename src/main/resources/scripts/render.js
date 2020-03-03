@@ -20,7 +20,7 @@
     var circles = []
 
     var isLoading = false;
-    var layers = "bikes,parking"
+    var query = "";
 
 
     function bootstrap() {
@@ -256,9 +256,9 @@
         if(zoom.length < 1) {
             zoom = 18;
         }
-        tempLayers = $('#freemarker_layers')[0].innerText;
-        if(tempLayers.length > 0) {
-            layers = tempLayers;
+        tempQuery = $('#freemarker_query')[0].innerText;
+        if(tempQuery.length > 0) {
+            query = tempQuery;
         }
 
         map = L.map('mapDiv').setView(DEFAULT_CENTRE, zoom);

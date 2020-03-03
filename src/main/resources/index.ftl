@@ -7,15 +7,15 @@
 
 <div id="freemarker_location" hidden><#if location??>${location}<#else></#if></div>
 <div id="freemarker_zoom" hidden><#if zoom??>${zoom}<#else></#if></div>
-<div id="freemarker_layers" hidden><#if layers??>${layers}<#else></#if></div>
-
+<div id="freemarker_query" hidden><#if query??>${query}<#else></#if></div>
 <div id="freemarker_searchtext" hidden><#if searchText??>${searchText}<#else></#if></div>
 <div id="freemarker_searchurl" hidden><#if searchUrl??>${searchUrl}<#else></#if></div>
+<div id="freemarker_autorefresh" hidden><#if autoRefresh??>${autoRefresh}<#else></#if></div>
 
 <div id="mapDiv" style="height:100%;"></div>
 <#include "/scripts/render.js">
 <#if page == 'home'><#include "/scripts/layers.js"></#if>
-<#if page == 'layers'><#include "/scripts/layers.js"></#if>
+<#if autoRefresh??><#include "/scripts/layers.js"></#if>
 <#if searchPage??><#include "/scripts/search.js"><#else></#if>
 <#include "/scripts/modal.js">
 </main>

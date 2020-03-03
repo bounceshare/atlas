@@ -20,6 +20,7 @@
         }
         console.log("getSearchData() : " + searchQuery);
         data = {};
+        data.q = query;
         data.searchQuery = searchQuery
         if(isLoading) {
             return;

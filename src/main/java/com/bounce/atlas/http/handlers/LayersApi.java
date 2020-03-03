@@ -48,7 +48,8 @@ public class LayersApi extends BaseApiHandler {
 
             int limit = input.optInt("limit", 20000);
             int radius = input.optInt("radius", 5000);
-            String layers = input.optString("layers", "bikes,parking");
+            String layers = input.optString("q", "bikes");
+            String searchQuery = input.optString("searchQuery");
 
 
             data.put("location", "" + lat + "," + lon);
@@ -59,7 +60,7 @@ public class LayersApi extends BaseApiHandler {
             for(String layer : layerList) {
                 switch (layer) {
                     case "bikes":
-                        List<BikeRecord> bikes = QueryUtils.getBikes(lat, lon, 20000, radius);
+                        List<BikeRecord> bikes = QueryUtils.getBikes(lat, lon, 20000, radius, null, searchQuery);
                         List<MarkerPojo> bikeMarkers = MarkerPojo.getBikesAsMarkers(bikes);
                         markers.addAll(bikeMarkers);
                         break;
@@ -67,19 +68,19 @@ public class LayersApi extends BaseApiHandler {
                         fences = FencePojo.getParkingFences(lat, lon, radius);
                         break;
                     case "idle":
-                        List<BikeRecord> idleBikes = QueryUtils.getBikes(lat, lon, 10000, radius, BikeStatus.idle);
+                        List<BikeRecord> idleBikes = QueryUtils.getBikes(lat, lon, 10000, radius, BikeStatus.idle, searchQuery);
                         markers.addAll(MarkerPojo.getBikesAsMarkers(idleBikes));
                         break;
                     case "busy":
-                        List<BikeRecord> busyBikes = QueryUtils.getBikes(lat, lon, 10000, radius, BikeStatus.busy);
+                        List<BikeRecord> busyBikes = QueryUtils.getBikes(lat, lon, 10000, radius, BikeStatus.busy, searchQuery);
                         markers.addAll(MarkerPojo.getBikesAsMarkers(busyBikes));
                         break;
                     case "oos":
-                        List<BikeRecord> oosBikes = QueryUtils.getBikes(lat, lon, 10000, radius, BikeStatus.oos);
+                        List<BikeRecord> oosBikes = QueryUtils.getBikes(lat, lon, 10000, radius, BikeStatus.oos, searchQuery);
                         markers.addAll(MarkerPojo.getBikesAsMarkers(oosBikes));
                         break;
                     case "bookings":
-                        List<BikeRecord> inTripBikes = QueryUtils.getBikes(lat, lon, 1000, radius, BikeStatus.busy);
+                        List<BikeRecord> inTripBikes = QueryUtils.getBikes(lat, lon, 1000, radius, BikeStatus.busy, searchQuery);
                         List<Pair<BikeRecord, BookingRecord>> pairs = Lists.newArrayList();
                         for(BikeRecord bike : inTripBikes) {
                             BookingRecord booking = QueryUtils.getLatestBooking(bike);
@@ -88,7 +89,7 @@ public class LayersApi extends BaseApiHandler {
                         markers.addAll(MarkerPojo.getBookingMarkers(pairs));
                         break;
                     case "hubs":
-                        List<HubRecord> hubs = QueryUtils.getHubs(lat, lon, 100, radius);
+                        List<HubRecord> hubs = QueryUtils.getHubs(lat, lon, 100, radius, searchQuery);
                         circles.addAll(CirclePojo.getHubsAsCircles(hubs));
                         break;
                 }

@@ -121,7 +121,7 @@ public class Apis {
     @Consumes({MediaType.APPLICATION_JSON})
     @GoogleAuth
     public void homeLayers(@Suspended final AsyncResponse asyncResponse, @QueryParam("p") String location,
-                           @QueryParam("z") String zoom, @QueryParam("layers") String layers) {
+                           @QueryParam("z") String zoom, @QueryParam("q") String query) {
         logger.info("/home");
 
         Map<String, Object> data = FreemarkerUtils.getDefaultFreemarkerObj("home");
@@ -132,12 +132,12 @@ public class Apis {
         if (TextUtils.isEmpty(zoom)) {
             zoom = 17 + "";
         }
-        if (TextUtils.isEmpty(layers)) {
-            layers = "bikes";
+        if (TextUtils.isEmpty(query)) {
+            query = "bikes";
         }
 
         data.put("location", location);
-        data.put("layers", layers);
+        data.put("query", query);
         data.put("zoom", zoom);
 
         String content = FreemarkerUtils.getFreemarkerString("index.ftl", data);
@@ -150,10 +150,14 @@ public class Apis {
     @Consumes({MediaType.APPLICATION_JSON})
     @GoogleAuth
     public void layers(@Suspended final AsyncResponse asyncResponse, @QueryParam("p") String location,
-                       @QueryParam("z") String zoom, @QueryParam("l") String layers) {
+                       @QueryParam("z") String zoom, @QueryParam("q") String query) {
         logger.info("/home");
 
         Map<String, Object> data = FreemarkerUtils.getDefaultFreemarkerObj("layers");
+        data.put("searchPage", "true");
+        data.put("searchUrl", "/apis/search");
+        data.put("searchText", "SQL Where Query");
+        data.put("autoRefresh", "true");
 
         if (TextUtils.isEmpty(location)) {
             location = "12.9160463,77.5967117";
@@ -161,12 +165,9 @@ public class Apis {
         if (TextUtils.isEmpty(zoom)) {
             zoom = 17 + "";
         }
-        if (TextUtils.isEmpty(layers)) {
-            layers = "bikes,parking";
-        }
 
         data.put("location", location);
-        data.put("layers", layers);
+        data.put("query", query);
         data.put("zoom", zoom);
 
         String content = FreemarkerUtils.getFreemarkerString("index.ftl", data);

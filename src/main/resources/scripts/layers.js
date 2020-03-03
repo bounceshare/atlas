@@ -1,12 +1,13 @@
 <script>
 
     function refreshLayers(coords, radius) {
-        console.log("refreshFences()");
+        console.log("refreshLayers()");
         data = {};
         data.lat = coords[0];
         data.lon = coords[1];
         data.radius = radius;
-        data.layers = layers;
+
+        data.q = query;
         if(isLoading) {
             console.log("Not refreshing cause already loading");
             return;
@@ -30,11 +31,11 @@
         }
 
         setTimeout(function() {
-            search(true);
+            searchLayers(true);
         }, 1500);
     }
 
-    function search(isMapEvent) {
+    function searchLayers(isMapEvent) {
         if(isLoading) {
             return;
         }

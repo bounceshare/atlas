@@ -31,16 +31,26 @@ public class QueryUtils {
     }
 
     public static List<BikeRecord> getBikes(double lat, double lon, int limit, int radius, BikeStatus status) {
+       return getBikes(lat, lon, limit, radius, status, null);
+    }
+
+    public static List<BikeRecord> getBikes(double lat, double lon, int limit, int radius, BikeStatus status, String whereQuery) {
         try {
             String sql = null;
             if(status == null) {
                 sql = "SELECT  * FROM bike WHERE ST_DWithin(CAST(ST_MakePoint(bike.lon, bike.lat) AS geography(GEOMETRY,-1)), " +
-                                "CAST(ST_MakePoint(" + lon + "," + lat + ") AS geography(GEOMETRY,-1)), " + radius +
-                                ") " + "limit " + limit;
+                        "CAST(ST_MakePoint(" + lon + "," + lat + ") AS geography(GEOMETRY,-1)), " + radius +
+                        ") $$$$ " + "limit " + limit;
             } else {
                 sql = "SELECT  * FROM bike WHERE ST_DWithin(CAST(ST_MakePoint(bike.lon, bike.lat) AS geography(GEOMETRY,-1)), " +
                         "CAST(ST_MakePoint(" + lon + "," + lat + ") AS geography(GEOMETRY,-1)), " + radius +
-                        ") AND status = '" + status.getLiteral() + "' limit " + limit;
+                        ") AND status = '" + status.getLiteral() + "' $$$$ limit " + limit;
+            }
+
+            if(!TextUtils.isEmpty(whereQuery)) {
+                sql = sql.replace("$$$$", "AND " + whereQuery);
+            } else {
+                sql = sql.replace("$$$$", "");
             }
 
             List<BikeRecord> bikes = DatabaseConnector.getDb().getReadDbConnector().fetch(sql).into(Bike.BIKE);
@@ -53,10 +63,20 @@ public class QueryUtils {
     }
 
     public static List<HubRecord> getHubs(double lat, double lon, int limit, int radius) {
+        return getHubs(lat, lon, limit, radius, null);
+    }
+
+    public static List<HubRecord> getHubs(double lat, double lon, int limit, int radius, String whereQuery) {
         try {
             String sql = "SELECT * FROM hub WHERE ST_DWithin(CAST(ST_MakePoint(hub.lon, hub.lat) AS geography(GEOMETRY,-1)), " +
                     "CAST(ST_MakePoint(" + lon + "," + lat + ") AS geography(GEOMETRY,-1)), " + radius +
-                    ") " + "limit " + limit;
+                    ") $$$$ " + "limit " + limit;
+
+            if(!TextUtils.isEmpty(whereQuery)) {
+                sql = sql.replace("$$$$", whereQuery);
+            } else {
+                sql = sql.replace("$$$$", "");
+            }
 
             List<HubRecord> hubs = DatabaseConnector.getDb().getReadDbConnector().fetch(sql).into(Hub.HUB);
             return hubs;
