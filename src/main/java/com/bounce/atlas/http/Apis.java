@@ -125,6 +125,10 @@ public class Apis {
         logger.info("/home");
 
         Map<String, Object> data = FreemarkerUtils.getDefaultFreemarkerObj("home");
+        data.put("searchPage", "true");
+        data.put("searchUrl", "/apis/search");
+        data.put("searchText", "");
+        data.put("autoRefresh", "true");
 
         if (TextUtils.isEmpty(location)) {
             location = "12.9160463,77.5967117";

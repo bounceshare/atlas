@@ -22,6 +22,8 @@
     var isLoading = false;
     var query = "";
 
+    var refresh = true;
+
 
     function bootstrap() {
         console.log("bootstrap()")
@@ -250,6 +252,10 @@
     function setupMap() {
         var loc = $('#freemarker_location')[0].innerText;
         var zoom = $('#freemarker_zoom')[0].innerText;
+        var autoRefresh = $('#freemarker_autorefresh')[0].innerText;
+
+        refresh = parseBoolean(autoRefresh);
+
         if(loc.length > 0) {
             DEFAULT_CENTRE = [parseFloat(loc.split(",")[0]), parseFloat(loc.split(",")[1])];
         }
@@ -292,7 +298,7 @@
         }
     }
 
-    function invalidateMap(tMarkers, tFences, tCircles, tPaths, fitToBounds = false) {
+    function invalidateMap(tMarkers, tFences, tCircles, tPaths, fitToBounds = false, toRefresh = refresh) {
         console.log("fitToBounds : " + fitToBounds);
         if(tMarkers != null) {
             $('#markerData')[0].innerText = JSON.stringify(tMarkers);
@@ -325,6 +331,8 @@
         if(tMarkers != null && tMarkers.length > 0 && fitToBounds) {
             map.fitBounds(markerClusterGroup.getBounds(), {padding: [50,50]});
         }
+
+        refresh = toRefresh;
     }
 
     function getMapRadiusInMeters() {

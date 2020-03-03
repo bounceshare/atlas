@@ -14,6 +14,7 @@ import com.bounce.utils.dbmodels.public_.tables.records.BookingRecord;
 import com.bounce.utils.dbmodels.public_.tables.records.HubRecord;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import org.apache.http.util.TextUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -35,22 +36,26 @@ public class LayersApi extends BaseApiHandler {
         data.put("title", "Bounce Atlas");
         data.put("page", "home");
 
+        try {
+            super.onRequest();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         List<MarkerPojo> markers = Lists.newArrayList();
         List<FencePojo> fences = Lists.newArrayList();
         List<CirclePojo> circles = Lists.newArrayList();
         List<PathPojo> paths = Lists.newArrayList();
 
+        double lat = input.optDouble("lat", 12.9160463);
+        double lon = input.optDouble("lon", 77.5967117);
+
+        int limit = input.optInt("limit", 20000);
+        int radius = input.optInt("radius", 5000);
+        String layers = input.optString("q", "bikes");
+        String searchQuery = input.optString("searchQuery");
+
         try {
-            super.onRequest();
-
-            double lat = input.optDouble("lat", 12.9160463);
-            double lon = input.optDouble("lon", 77.5967117);
-
-            int limit = input.optInt("limit", 20000);
-            int radius = input.optInt("radius", 5000);
-            String layers = input.optString("q", "bikes");
-            String searchQuery = input.optString("searchQuery");
-
 
             data.put("location", "" + lat + "," + lon);
             data.put("layers", layers);
@@ -104,6 +109,11 @@ public class LayersApi extends BaseApiHandler {
         response.put("fences", fences);
         response.put("circles", circles);
         response.put("paths", paths);
+        if(TextUtils.isEmpty(searchQuery)) {
+            response.put("autoRefresh", true);
+        } else {
+            response.put("autoRefresh", false);
+        }
 
         sendSuccessResponse(asyncResponse, response);
     }

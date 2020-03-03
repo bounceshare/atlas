@@ -14,8 +14,10 @@
         }
         showLoader(true);
 
-        httpPost("/apis/search", data, function(response) {
-            invalidateMap(response.data.markers, response.data.fences, response.data.circles, response.data.paths);
+        var searchUrl = $('#freemarker_searchurl')[0].innerText;
+
+        httpPost(searchUrl, data, function(response) {
+            invalidateMap(response.data.markers, response.data.fences, response.data.circles, response.data.paths, false, response.data.autoRefresh);
             showLoader(false);
         }, function(jqXHR, exceptiom) {
              showLoader(false);
@@ -26,7 +28,7 @@
         console.log("Layers onMapEvent");
         console.log(event);
 
-        if(isLoading) {
+        if(isLoading || !refresh) {
             return;
         }
 
