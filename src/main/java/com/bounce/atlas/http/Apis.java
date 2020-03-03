@@ -109,9 +109,7 @@ public class Apis {
     public void login(@Suspended final AsyncResponse asyncResponse) {
         logger.info("/login");
 
-        Map<String, Object> data = Maps.newHashMap();
-        data.put("title", "Atlas");
-        data.put("page", "login");
+        Map<String, Object> data = FreemarkerUtils.getDefaultFreemarkerObj("login");
 
         String content = FreemarkerUtils.getFreemarkerString("login.ftl", data);
         asyncResponse.resume(Response.ok().entity(content).build());

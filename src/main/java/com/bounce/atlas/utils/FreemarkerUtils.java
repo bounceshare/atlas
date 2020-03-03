@@ -110,7 +110,7 @@ public class FreemarkerUtils {
         data.put("title", "ATLAS");
         data.put("page", page);
         data.put("favicon", "/resources/icons/favicon.ico");
-        data.put("icon", "/resources/icons/bounce.png");
+        data.put("logo", "/resources/icons/bounce.png");
 
         return data;
     }
