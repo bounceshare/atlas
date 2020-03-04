@@ -13,10 +13,12 @@ import com.bounce.utils.dbmodels.public_.tables.records.BikeRecord;
 import com.bounce.utils.dbmodels.public_.tables.records.BookingRecord;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import org.apache.http.util.TextUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.container.AsyncResponse;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -33,17 +35,21 @@ public class BookingSearchApi extends BaseApiHandler {
             super.onRequest();
             String searchQuery = input.optString("searchQuery");
 
-            BookingRecord booking = DatabaseConnector.getDb().getReadDbConnector().selectFrom(Booking.BOOKING)
-                    .where(Booking.BOOKING.ID.eq(Integer.parseInt(searchQuery))).fetchAny();
+            if(!TextUtils.isEmpty(searchQuery)) {
+                BookingRecord booking = DatabaseConnector.getDb().getReadDbConnector().selectFrom(Booking.BOOKING).where(Booking.BOOKING.ID.eq(Integer.parseInt(searchQuery))).fetchAny();
 
-            logger.info("Booking : " + booking);
+                logger.info("Booking : " + booking);
 
-            Map<String, Object> markersPaths = getMarkersAndPathForBooking(booking);
-            Map<Object, Object> response = Maps.newHashMap();
-            response.put("markers", markersPaths.get("markers"));
-            response.put("paths", markersPaths.get("paths"));
+                Map<String, Object> markersPaths = getMarkersAndPathForBooking(booking);
+                Map<Object, Object> response = Maps.newHashMap();
+                response.put("markers", markersPaths.get("markers"));
+                response.put("paths", markersPaths.get("paths"));
 
-            sendSuccessResponse(asyncResponse, response);
+                sendSuccessResponse(asyncResponse, response);
+            } else{
+                Map<Object, Object> response = Maps.newHashMap();
+                response.put("markers", new ArrayList<MarkerPojo>());
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
