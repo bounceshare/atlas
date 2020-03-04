@@ -38,6 +38,7 @@ public class BikeSearchApi extends BaseApiHandler {
             } else {
                 Map<Object, Object> response = Maps.newHashMap();
                 response.put("markers", new ArrayList<MarkerPojo>());
+                sendSuccessResponse(asyncResponse, response);
             }
         } catch (Exception e) {
             e.printStackTrace();
