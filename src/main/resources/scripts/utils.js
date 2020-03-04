@@ -88,6 +88,16 @@
             $('[data-toggle="popover"]').popover();
         } catch(err) {
         }
+
+        $('#refreshCheckbox').change(function() {
+            console.log("Refresh status changed : " + this.checked)
+            if(this.checked) {
+                refresh = true;
+            } else {
+                refresh = false;
+            }
+
+        });
     });
 
 </script>

@@ -15,7 +15,8 @@
           crossorigin=""/>
     <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.css"/>
     <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css"/>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
@@ -70,6 +71,16 @@
                         <a class="dropdown-item" href="#" onclick="navBarClicks('/layers?q=hubs')">Hubs</a>
                     </div>
                 </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" id="dropdown04" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">More</a>
+                    <div class="dropdown-menu" aria-labelledby="dropdown04">
+                        <a class="dropdown-item" href="#" onclick="signOut()">Logout</a>
+                        <div class="dropdown-item">
+                            <input type="checkbox" class="form-check-input text-center" id="refreshCheckbox">Auto Refresh</input>
+                        </div>
+                        <!--<label class="form-check-label dropdown-item" for="refreshCheckbox">Auto Refresh</label>-->
+                    </div>
+                </li>
                 <#if help??>
                 <li class="nav-item">
                     <a class="nav-link" href="#" data-toggle="popover" title="Help" data-content="${help}">?</a>
@@ -79,12 +90,6 @@
             <div class="form-inline mt-2 mt-md-0">
                 <input class="form-control mr-sm-2" type="text" id="searchBar" placeholder="Search" aria-label="Search"></input>
                 <button class="btn btn-outline-success my-2 my-sm-0" onclick="search()">Search</button>&nbsp;
-                <div class="dropdown">
-                    <button class="btn btn-outline-secondary dropdown-toggle" id="dropdown04" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">More</button>
-                    <div class="dropdown-menu" aria-labelledby="dropdown04">
-                        <a class="dropdown-item" href="#" onclick="signOut()">Logout</a>
-                    </div>
-                </div>
             </div>&nbsp;&nbsp;
 
         </div>

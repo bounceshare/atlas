@@ -256,6 +256,10 @@
 
         refresh = parseBoolean(autoRefresh);
 
+        if(refresh) {
+            $('#refreshCheckbox').prop('checked', true);
+        }
+
         if(loc.length > 0) {
             DEFAULT_CENTRE = [parseFloat(loc.split(",")[0]), parseFloat(loc.split(",")[1])];
         }
@@ -333,6 +337,8 @@
         }
 
         refresh = toRefresh;
+
+        $('#refreshCheckbox').prop('checked', refresh);
     }
 
     function getMapRadiusInMeters() {
