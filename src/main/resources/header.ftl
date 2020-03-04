@@ -63,12 +63,12 @@
                 <li class="nav-item dropdown <#if page == 'layers'> active </#if>">
                     <a class="nav-link dropdown-toggle" id="dropdown03" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Layers</a>
                     <div class="dropdown-menu" aria-labelledby="dropdown03">
-                        <a class="dropdown-item" href="#" onclick="navBarClicks('/layers?q=bikes')">All Bikes</a>
-                        <a class="dropdown-item" href="#" onclick="navBarClicks('/layers?q=idle')">Idle</a>
-                        <a class="dropdown-item" href="#" onclick="navBarClicks('/layers?q=busy')">Busy</a>
-                        <a class="dropdown-item" href="#" onclick="navBarClicks('/layers?q=oos')">OOS</a>
-                        <a class="dropdown-item" href="#" onclick="navBarClicks('/layers?q=parking')">Parking Fences</a>
-                        <a class="dropdown-item" href="#" onclick="navBarClicks('/layers?q=hubs')">Hubs</a>
+                        <a class="dropdown-item" href="#" onclick="navBarClicks('/layers/bikes')">All Bikes</a>
+                        <a class="dropdown-item" href="#" onclick="navBarClicks('/layers/idle')">Idle</a>
+                        <a class="dropdown-item" href="#" onclick="navBarClicks('/layers/busy')">Busy</a>
+                        <a class="dropdown-item" href="#" onclick="navBarClicks('/layers/oos')">OOS</a>
+                        <a class="dropdown-item" href="#" onclick="navBarClicks('/layers/parking')">Parking Fences</a>
+                        <a class="dropdown-item" href="#" onclick="navBarClicks('/layers/hubs')">Hubs</a>
                     </div>
                 </li>
                 <li class="nav-item dropdown">

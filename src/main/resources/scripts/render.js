@@ -20,9 +20,9 @@
     var circles = []
 
     var isLoading = false;
-    var query = "";
 
     var refresh = true;
+    var query = "";
 
 
     function bootstrap() {

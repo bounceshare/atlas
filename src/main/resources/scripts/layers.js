@@ -7,7 +7,7 @@
         data.lon = coords[1];
         data.radius = radius;
 
-        data.q = query;
+        data.searchQuery = query;
         if(isLoading && !refresh) {
             console.log("Not refreshing cause already loading");
             return;
@@ -67,7 +67,9 @@
         refreshLayers(center, radius);
     }
 
-    refreshLayers(DEFAULT_CENTRE, DEFAULT_RADIUS);
+    if(refresh || query.length > 1) {
+        refreshLayers(DEFAULT_CENTRE, DEFAULT_RADIUS);
+    }
     map.on('moveend', onMapEvent);
 
 </script>

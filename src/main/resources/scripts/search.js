@@ -19,8 +19,14 @@
             return;
         }
         console.log("getSearchData() : " + searchQuery);
+
+        pos = map.getCenter();
+        coords = [pos.lat, pos.lng];
+
         data = {};
-        data.q = query;
+        data.lat = coords[0];
+        data.lon = coords[1];
+        data.radius = getMapRadiusInMeters();
         data.searchQuery = searchQuery
         if(isLoading) {
             return;

@@ -25,17 +25,16 @@ import java.util.Map;
 
 public class LayersApi extends BaseApiHandler {
 
+    private String path;
+
     public LayersApi(String inputString, AsyncResponse asyncResponse, HttpServletRequest httpRequest,
-                     HttpServletResponse httpResponse) {
+                     HttpServletResponse httpResponse, String path) {
         super(inputString, asyncResponse, httpRequest, httpResponse);
+        this.path = path;
     }
 
     @Override
     public void onRequest(){
-        Map<String, Object> data = Maps.newHashMap();
-        data.put("title", "Bounce Atlas");
-        data.put("page", "home");
-
         try {
             super.onRequest();
         } catch (Exception e) {
@@ -49,55 +48,49 @@ public class LayersApi extends BaseApiHandler {
 
         double lat = input.optDouble("lat", 12.9160463);
         double lon = input.optDouble("lon", 77.5967117);
-
-        int limit = input.optInt("limit", 20000);
         int radius = input.optInt("radius", 5000);
-        String layers = input.optString("q", "bikes");
-        String searchQuery = input.optString("searchQuery");
+        String searchQuery = input.optString("searchQuery", null);
+
+        if(TextUtils.isEmpty(path)) {
+            path = "bikes";
+        }
 
         try {
-
-            data.put("location", "" + lat + "," + lon);
-            data.put("layers", layers);
-
-            List<String> layerList = Arrays.asList(layers.split(","));
-
-            for(String layer : layerList) {
-                switch (layer) {
-                    case "bikes":
-                        List<BikeRecord> bikes = QueryUtils.getBikes(lat, lon, 20000, radius, null, searchQuery);
-                        List<MarkerPojo> bikeMarkers = MarkerPojo.getBikesAsMarkers(bikes);
-                        markers.addAll(bikeMarkers);
-                        break;
-                    case "parking":
-                        fences = FencePojo.getParkingFences(lat, lon, radius);
-                        break;
-                    case "idle":
-                        List<BikeRecord> idleBikes = QueryUtils.getBikes(lat, lon, 10000, radius, BikeStatus.idle, searchQuery);
-                        markers.addAll(MarkerPojo.getBikesAsMarkers(idleBikes));
-                        break;
-                    case "busy":
-                        List<BikeRecord> busyBikes = QueryUtils.getBikes(lat, lon, 10000, radius, BikeStatus.busy, searchQuery);
-                        markers.addAll(MarkerPojo.getBikesAsMarkers(busyBikes));
-                        break;
-                    case "oos":
-                        List<BikeRecord> oosBikes = QueryUtils.getBikes(lat, lon, 10000, radius, BikeStatus.oos, searchQuery);
-                        markers.addAll(MarkerPojo.getBikesAsMarkers(oosBikes));
-                        break;
-                    case "bookings":
-                        List<BikeRecord> inTripBikes = QueryUtils.getBikes(lat, lon, 1000, radius, BikeStatus.busy, searchQuery);
-                        List<Pair<BikeRecord, BookingRecord>> pairs = Lists.newArrayList();
-                        for(BikeRecord bike : inTripBikes) {
-                            BookingRecord booking = QueryUtils.getLatestBooking(bike);
-                            pairs.add(new Pair<>(bike, booking));
-                        }
-                        markers.addAll(MarkerPojo.getBookingMarkers(pairs));
-                        break;
-                    case "hubs":
-                        List<HubRecord> hubs = QueryUtils.getHubs(lat, lon, 100, radius, searchQuery);
-                        circles.addAll(CirclePojo.getHubsAsCircles(hubs));
-                        break;
-                }
+            List<String> layerList = Arrays.asList(searchQuery.split(","));
+            switch (path) {
+                case "bikes":
+                    List<BikeRecord> bikes = QueryUtils.getBikes(lat, lon, 20000, radius, null, searchQuery);
+                    List<MarkerPojo> bikeMarkers = MarkerPojo.getBikesAsMarkers(bikes);
+                    markers.addAll(bikeMarkers);
+                    break;
+                case "parking":
+                    fences = FencePojo.getParkingFences(lat, lon, radius);
+                    break;
+                case "idle":
+                    List<BikeRecord> idleBikes = QueryUtils.getBikes(lat, lon, 10000, radius, BikeStatus.idle, searchQuery);
+                    markers.addAll(MarkerPojo.getBikesAsMarkers(idleBikes));
+                    break;
+                case "busy":
+                    List<BikeRecord> busyBikes = QueryUtils.getBikes(lat, lon, 10000, radius, BikeStatus.busy, searchQuery);
+                    markers.addAll(MarkerPojo.getBikesAsMarkers(busyBikes));
+                    break;
+                case "oos":
+                    List<BikeRecord> oosBikes = QueryUtils.getBikes(lat, lon, 10000, radius, BikeStatus.oos, searchQuery);
+                    markers.addAll(MarkerPojo.getBikesAsMarkers(oosBikes));
+                    break;
+                case "bookings":
+                    List<BikeRecord> inTripBikes = QueryUtils.getBikes(lat, lon, 1000, radius, BikeStatus.busy, searchQuery);
+                    List<Pair<BikeRecord, BookingRecord>> pairs = Lists.newArrayList();
+                    for(BikeRecord bike : inTripBikes) {
+                        BookingRecord booking = QueryUtils.getLatestBooking(bike);
+                        pairs.add(new Pair<>(bike, booking));
+                    }
+                    markers.addAll(MarkerPojo.getBookingMarkers(pairs));
+                    break;
+                case "hubs":
+                    List<HubRecord> hubs = QueryUtils.getHubs(lat, lon, 100, radius, searchQuery);
+                    circles.addAll(CirclePojo.getHubsAsCircles(hubs));
+                    break;
             }
         } catch (Exception e) {
             e.printStackTrace();

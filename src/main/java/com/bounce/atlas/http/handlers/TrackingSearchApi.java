@@ -10,6 +10,7 @@ import com.bounce.utils.dbmodels.public_.tables.records.AxcessRecord;
 import com.bounce.utils.dbmodels.public_.tables.records.BikeRecord;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import org.apache.http.util.TextUtils;
 import org.joda.time.DateTime;
 
 import javax.servlet.http.HttpServletRequest;
@@ -37,6 +38,15 @@ public class TrackingSearchApi extends BaseApiHandler {
             long to = input.optLong("to", System.currentTimeMillis());
 
             String searchQuery = input.optString("searchQuery");
+
+            if(TextUtils.isEmpty(searchQuery)) {
+                response.put("markers", markers);
+                response.put("paths", paths);
+
+                sendSuccessResponse(asyncResponse, response);
+                return;
+            }
+
             int bikeId = Integer.parseInt(searchQuery);
 
             BikeRecord bike = QueryUtils.getBike(bikeId);

@@ -14,10 +14,13 @@
 
 <div id="mapDiv" style="height:100%;"></div>
 <#include "/scripts/render.js">
-<#if page == 'home'><#include "/scripts/layers.js"></#if>
-<#if autoRefresh??><#include "/scripts/layers.js"></#if>
-<#if searchPage??><#include "/scripts/search.js"><#else></#if>
+<#include "/scripts/layers.js">
+<#include "/scripts/search.js">
 <#include "/scripts/modal.js">
+<!--<#if page == 'home'></#if>-->
+<!--<#if autoRefresh??><#include "/scripts/layers.js"></#if>-->
+<!--<#if searchPage??><#include "/scripts/search.js"><#else></#if>-->
+<!--<#include "/scripts/modal.js">-->
 </main>
 <#include "/footer.ftl">
 <#include "/modal.ftl">
