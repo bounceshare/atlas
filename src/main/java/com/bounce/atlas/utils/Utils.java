@@ -24,6 +24,19 @@ public class Utils {
         return -1;
     }
 
+    public static long convertSQlTimestamp(String time) {
+        try {
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+            Date date = format.parse(time);
+            DateTime dateTime = new DateTime(date.getTime()).plusHours(5).plusMinutes(30);
+            return dateTime.toInstant().getMillis();
+        } catch (ParseException e) {
+            e.printStackTrace();
+            BounceUtils.logError(e);
+        }
+        return -1;
+    }
+
     public static void main(String[] args) {
         System.out.println("Time : " + new Date(convertHawkeyeTimstamp("2020-02-28T13:24:51.225+05:30")));
     }

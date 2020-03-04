@@ -152,6 +152,7 @@ public class Apis {
             data.put("searchUrl", "/apis/search/" + layer);
             data.put("searchText", "SQL where query");
             data.put("autoRefresh", "true");
+            data.put("help", "You can write SQL query for each of the layers like - type = 'invers'");
         }
 
         switch (path) {
@@ -171,7 +172,8 @@ public class Apis {
                 data.put("page", "tracking");
                 data.put("searchPage", "true");
                 data.put("searchUrl", "/apis/tracking/search");
-                data.put("searchText", "BikeId 2020-02-13T23:59:59 2020-02-13T20:59:59");
+                data.put("searchText", "BikeId <from> <to>");
+                data.put("help", "You can search for tracking data for a bike and filter on time. The format to search for it is - <BikeId> 2020-02-13T23:59:59 2020-02-13T20:59:59");
                 break;
             case "default":
                 data.put("page", "home");

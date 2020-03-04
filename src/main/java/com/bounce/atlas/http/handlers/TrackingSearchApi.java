@@ -56,8 +56,8 @@ public class TrackingSearchApi extends BaseApiHandler {
                 String max = splits[1];
                 String min = splits[1];
 
-                to = Utils.convertHawkeyeTimstamp(max);
-                from = Utils.convertHawkeyeTimstamp(min);
+                to = Utils.convertSQlTimestamp(max);
+                from = Utils.convertSQlTimestamp(min);
             }
 
             BikeRecord bike = QueryUtils.getBike(bikeId);
