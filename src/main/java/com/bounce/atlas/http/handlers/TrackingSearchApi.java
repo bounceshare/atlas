@@ -3,6 +3,7 @@ package com.bounce.atlas.http.handlers;
 import com.bounce.atlas.pojo.MarkerPojo;
 import com.bounce.atlas.pojo.PathPojo;
 import com.bounce.atlas.utils.QueryUtils;
+import com.bounce.atlas.utils.Utils;
 import com.bounce.utils.BounceUtils;
 import com.bounce.utils.apis.BaseApiHandler;
 import com.bounce.utils.dbmodels.public_.Keys;
@@ -34,9 +35,6 @@ public class TrackingSearchApi extends BaseApiHandler {
         try {
             super.onRequest();
 
-            long from = input.optLong("from", new DateTime().minusDays(1).getMillis());
-            long to = input.optLong("to", System.currentTimeMillis());
-
             String searchQuery = input.optString("searchQuery");
 
             if(TextUtils.isEmpty(searchQuery)) {
@@ -47,7 +45,20 @@ public class TrackingSearchApi extends BaseApiHandler {
                 return;
             }
 
-            int bikeId = Integer.parseInt(searchQuery);
+            String[] splits = searchQuery.split(" ");
+
+            int bikeId = Integer.parseInt(splits[0]);
+
+            long to = System.currentTimeMillis();
+            long from = DateTime.now().minusHours(6).getMillis();
+
+            if(splits.length > 1) {
+                String max = splits[1];
+                String min = splits[1];
+
+                to = Utils.convertHawkeyeTimstamp(max);
+                from = Utils.convertHawkeyeTimstamp(min);
+            }
 
             BikeRecord bike = QueryUtils.getBike(bikeId);
             AxcessRecord axcess = bike.fetchParent(Keys.BIKE__BIKE_AXCESS_ID_FKEY);
@@ -64,7 +75,7 @@ public class TrackingSearchApi extends BaseApiHandler {
             pojo.data = Maps.newHashMap();
             pojo.data.put("From", new Date(from));
             pojo.data.put("To", new Date(to));
-            if(pojo != null) {
+            if(pojo != null && pojo.points != null && pojo.points.size() > 0) {
                 paths.add(pojo);
             }
 
