@@ -8,7 +8,7 @@
         data.radius = radius;
 
         data.q = query;
-        if(isLoading) {
+        if(isLoading && !refresh) {
             console.log("Not refreshing cause already loading");
             return;
         }
