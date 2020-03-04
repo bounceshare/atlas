@@ -58,6 +58,9 @@ public class TrackingSearchApi extends BaseApiHandler {
 
                 to = Utils.convertSQlTimestamp(max);
                 from = Utils.convertSQlTimestamp(min);
+
+                logger.info("To Date " + new Date(to));
+                logger.info("From Date " + new Date(from));
             }
 
             BikeRecord bike = QueryUtils.getBike(bikeId);
