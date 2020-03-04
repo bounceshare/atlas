@@ -54,7 +54,7 @@ public class TrackingSearchApi extends BaseApiHandler {
 
             if(splits.length > 1) {
                 String max = splits[1];
-                String min = splits[1];
+                String min = splits[2];
 
                 to = Utils.convertSQlTimestamp(max);
                 from = Utils.convertSQlTimestamp(min);
