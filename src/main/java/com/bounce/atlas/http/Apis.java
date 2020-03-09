@@ -175,6 +175,13 @@ public class Apis {
                 data.put("searchText", "BikeId <from> <to>");
                 data.put("help", "You can search for tracking data for a bike and filter on time. The format to search for it is - <BikeId> 2020-02-13T23:59:59 2020-02-13T20:59:59");
                 break;
+            case "asset_safety":
+                data.put("page", "asset_safety");
+                data.put("searchPage", "true");
+                data.put("searchUrl", "http://172.24.85.169:8081/search");
+                data.put("searchText", "BikeId <date>");
+                data.put("help", "You can search for asset safety data for a bike and filter on time. The format to search for it is - <BikeId> 2020-02-13");
+                break;
             case "default":
                 data.put("page", "home");
                 data.put("searchUrl", "/apis/search");

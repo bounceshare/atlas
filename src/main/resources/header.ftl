@@ -69,6 +69,7 @@
                         <a class="dropdown-item" href="#" onclick="navBarClicks('/layers/oos')">OOS</a>
                         <a class="dropdown-item" href="#" onclick="navBarClicks('/layers/parking')">Parking Fences</a>
                         <a class="dropdown-item" href="#" onclick="navBarClicks('/layers/hubs')">Hubs</a>
+                        <a class="dropdown-item" href="#" onclick="navBarClicks('/asset_safety')">Asset Safety</a>
                     </div>
                 </li>
                 <li class="nav-item dropdown">

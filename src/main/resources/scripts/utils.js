@@ -42,6 +42,7 @@
           "headers": {
             "Content-Type": "application/json",
             "cache-control": "no-cache",
+            "Access-Control-Allow-Origin" : "*",
             "token": token
           },
           "processData": false,
