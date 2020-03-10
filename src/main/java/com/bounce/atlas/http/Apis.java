@@ -178,7 +178,7 @@ public class Apis {
             case "asset_safety":
                 data.put("page", "asset_safety");
                 data.put("searchPage", "true");
-                data.put("searchUrl", "http://172.24.85.169:8081/search");
+                data.put("searchUrl", "http://ec2-15-206-90-83.ap-south-1.compute.amazonaws.com/search2");
                 data.put("searchText", "BikeId <date>");
                 data.put("help", "You can search for asset safety data for a bike and filter on time. The format to search for it is - <BikeId> 2020-02-13");
                 break;
