@@ -125,69 +125,84 @@ public class Apis {
 
         logger.info("" + path);
 
+        logger.info("ConfigJSON : " + FreemarkerUtils.getConfig());
+
         Map<String, Object> data = FreemarkerUtils.getDefaultFreemarkerObj("home");
+        ConfigPojo config = FreemarkerUtils.getConfig();
         if (TextUtils.isEmpty(location)) {
-            location = "12.9160463,77.5967117";
+            location = config.getDefaultLocation();
         }
         if (TextUtils.isEmpty(zoom)) {
-            zoom = 17 + "";
+            zoom = config.getZoom() + "";
         }
 
         data.put("location", location);
         data.put("query", query);
         data.put("zoom", zoom);
 
-        if(TextUtils.isEmpty(path)) {
-            data.put("page", "home");
-            data.put("searchUrl", "/apis/search/");
-            data.put("autoRefresh", "true");
-            data.remove("query");
+        path = "/" + path;
+
+        ConfigPojo.Page page = FreemarkerUtils.getPage(path);
+        if(page != null) {
+            data.put("page", page.getPageId());
+            data.put("autoRefresh", page.getAutoRefresh());
+            data.put("searchUrl", page.getSearchUrl());
+            data.put("searchPage", page.getSearchPage());
+            data.put("searchText", page.getSearchText());
+            data.put("help", page.getHelp());
         }
 
-        if(path != null && path.startsWith("layers")) {
-            String layer = path.split("/")[1];
-
-            data.put("page", "layers");
-            data.put("searchPage", "true");
-            data.put("searchUrl", "/apis/search/" + layer);
-            data.put("searchText", "SQL where query");
-            data.put("autoRefresh", "true");
-            data.put("help", "You can write SQL query for each of the layers like - type = 'invers'");
-        }
-
-        switch (path) {
-            case "bikes":
-                data.put("page", "bikes");
-                data.put("searchPage", "true");
-                data.put("searchUrl", "/apis/bike/search");
-                data.put("searchText", "Bike Id");
-                break;
-            case "bookings":
-                data.put("page", "bookings");
-                data.put("searchPage", "true");
-                data.put("searchUrl", "/apis/booking/search");
-                data.put("searchText", "Booking Id");
-                break;
-            case "tracking":
-                data.put("page", "tracking");
-                data.put("searchPage", "true");
-                data.put("searchUrl", "/apis/tracking/search");
-                data.put("searchText", "BikeId <from> <to>");
-                data.put("help", "You can search for tracking data for a bike and filter on time. The format to search for it is - <BikeId> 2020-02-13T23:59:59 2020-02-13T20:59:59");
-                break;
-            case "asset_safety":
-                data.put("page", "asset_safety");
-                data.put("searchPage", "true");
-                data.put("searchUrl", "http://ec2-15-206-90-83.ap-south-1.compute.amazonaws.com/search2");
-                data.put("searchText", "BikeId <date>");
-                data.put("help", "You can search for asset safety data for a bike and filter on time. The format to search for it is - <BikeId> 2020-02-13");
-                break;
-            case "default":
-                data.put("page", "home");
-                data.put("searchUrl", "/apis/search");
-                data.put("autoRefresh", "true");
-                break;
-        }
+//        if(TextUtils.isEmpty(path)) {
+//            data.put("page", "home");
+//            data.put("searchUrl", "/apis/search/");
+//            data.put("autoRefresh", "true");
+//            data.remove("query");
+//        }
+//
+//        if(path != null && path.startsWith("layers")) {
+//            String layer = path.split("/")[1];
+//
+//            data.put("page", "layers");
+//            data.put("searchPage", "true");
+//            data.put("searchUrl", "/apis/search/" + layer);
+//            data.put("searchText", "SQL where query");
+//            data.put("autoRefresh", "true");
+//            data.put("help", "You can write SQL query for each of the layers like - type = 'invers'");
+//        }
+//
+//        switch (path) {
+//            case "bikes":
+//                data.put("page", "bikes");
+//                data.put("searchPage", "true");
+//                data.put("searchUrl", "/apis/bike/search");
+//                data.put("searchText", "Bike Id");
+//                break;
+//            case "bookings":
+//                data.put("page", "bookings");
+//                data.put("searchPage", "true");
+//                data.put("searchUrl", "/apis/booking/search");
+//                data.put("searchText", "Booking Id");
+//                break;
+//            case "tracking":
+//                data.put("page", "tracking");
+//                data.put("searchPage", "true");
+//                data.put("searchUrl", "/apis/tracking/search");
+//                data.put("searchText", "BikeId <from> <to>");
+//                data.put("help", "You can search for tracking data for a bike and filter on time. The format to search for it is - <BikeId> 2020-02-13T23:59:59 2020-02-13T20:59:59");
+//                break;
+//            case "asset_safety":
+//                data.put("page", "asset_safety");
+//                data.put("searchPage", "true");
+//                data.put("searchUrl", "http://ec2-15-206-90-83.ap-south-1.compute.amazonaws.com/search2");
+//                data.put("searchText", "BikeId <date>");
+//                data.put("help", "You can search for asset safety data for a bike and filter on time. The format to search for it is - <BikeId> 2020-02-13");
+//                break;
+//            case "default":
+//                data.put("page", "home");
+//                data.put("searchUrl", "/apis/search");
+//                data.put("autoRefresh", "true");
+//                break;
+//        }
         String content = FreemarkerUtils.getFreemarkerString("index.ftl", data);
         asyncResponse.resume(Response.ok().entity(content).build());
     }

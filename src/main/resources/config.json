@@ -1,0 +1,113 @@
+{
+  "defaultLocation" : "12.9160463,77.5967117",
+  "title" : "ATLAS",
+  "favicon" : "/resources/icons/favicon.ico",
+  "logo" : "/resources/icons/bounce.png",
+  "zoom" : "17",
+  "tabs" : [
+    {
+      "page" : "Home",
+      "path" : "/",
+      "searchUrl" : "/apis/search/",
+      "searchPage" : "false",
+      "searchText" : "",
+      "autoRefresh" : "true",
+      "help" : "Move around the map and Atlas will load the information around those coordinates"
+    },
+    {
+      "page" : "Bikes",
+      "path" : "/bikes",
+      "searchPage" : "true",
+      "searchText" : "BikeId",
+      "searchUrl" : "/apis/bike/search",
+      "autoRefresh" : "false",
+      "help" : "You can search for bikes using either their bike ids or license plates"
+    },
+    {
+      "page" : "Booking",
+      "path" : "/bookings",
+      "searchPage" : "true",
+      "searchText" : "BookingId",
+      "searchUrl" : "/apis/booking/search",
+      "autoRefresh" : "false",
+      "help" : "You can search for bookings using their booking ids"
+    },
+    {
+      "page" : "Tracking",
+      "path" : "/tracking",
+      "searchPage" : "true",
+      "searchText" : "BikeId <from> <to>",
+      "searchUrl" : "/apis/tracking/search",
+      "autoRefresh" : "false",
+      "help" : "You can search for tracking data for a bike and filter on time. The format to search for it is - <BikeId> 2020-02-13T23:59:59 2020-02-13T20:59:59"
+    },
+    {
+      "tabName" : "Layers",
+      "pages" : [
+        {
+          "page" : "All Bikes",
+          "path" : "/layers/bikes",
+          "searchPage" : "true",
+          "searchText" : "SQL where query",
+          "searchUrl" : "/apis/search/bikes",
+          "autoRefresh" : "true",
+          "help" : "You can write SQL query for each of the layers like - type = 'invers'"
+        },
+        {
+          "page" : "Idle",
+          "path" : "/layers/idle",
+          "searchPage" : "true",
+          "searchText" : "SQL where query",
+          "searchUrl" : "/apis/search/idle",
+          "autoRefresh" : "true",
+          "help" : "You can write SQL query for each of the layers like - type = 'invers'"
+        },
+        {
+          "page" : "Busy",
+          "path" : "/layers/busy",
+          "searchPage" : "true",
+          "searchText" : "SQL where query",
+          "searchUrl" : "/apis/search/busy",
+          "autoRefresh" : "true",
+          "help" : "You can write SQL query for each of the layers like - type = 'invers'"
+        },
+        {
+          "page" : "OOS",
+          "path" : "/layers/oos",
+          "searchPage" : "true",
+          "searchText" : "SQL where query",
+          "searchUrl" : "/apis/search/oos",
+          "autoRefresh" : "true",
+          "help" : "You can write SQL query for each of the layers like - type = 'invers'"
+        },
+        {
+          "page" : "Parking Fences",
+          "path" : "/layers/parking",
+          "searchPage" : "true",
+          "searchText" : "SQL where query",
+          "searchUrl" : "/apis/search/parking",
+          "autoRefresh" : "true",
+          "help" : "You can write SQL query for each of the layers like - type = 'invers'"
+        },
+        {
+          "page" : "Hubs",
+          "path" : "/layers/hubs",
+          "searchPage" : "true",
+          "searchText" : "SQL where query",
+          "searchUrl" : "/apis/search/hubs",
+          "autoRefresh" : "true",
+          "help" : "You can write SQL query for each of the layers like - type = 'invers'"
+        },
+        {
+          "page" : "Asset Safety",
+          "path" : "/layers/asset_safety",
+          "searchPage" : "true",
+          "searchText" : "BikeId <date>",
+          "searchUrl" : "http://ec2-15-206-90-83.ap-south-1.compute.amazonaws.com/search2",
+          "autoRefresh" : "true",
+          "help" : "You can search for asset safety data for a bike and filter on time. The format to search for it is - <BikeId> 2020-02-13"
+        }
+      ]
+    }
+  ]
+}

@@ -1,9 +1,6 @@
 package com.bounce.atlas.utils;
 
-import com.bounce.atlas.pojo.CirclePojo;
-import com.bounce.atlas.pojo.FencePojo;
-import com.bounce.atlas.pojo.MarkerPojo;
-import com.bounce.atlas.pojo.PathPojo;
+import com.bounce.atlas.pojo.*;
 import com.bounce.utils.BounceUtils;
 import com.google.common.collect.Maps;
 import com.google.gson.Gson;
@@ -12,7 +9,6 @@ import freemarker.template.Template;
 import freemarker.template.Version;
 import org.apache.commons.io.IOUtils;
 
-import javax.ws.rs.NotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
@@ -107,12 +103,46 @@ public class FreemarkerUtils {
 
     public static Map<String, Object> getDefaultFreemarkerObj(String page) {
         Map<String, Object> data = Maps.newHashMap();
-        data.put("title", "ATLAS");
+
+        ConfigPojo config = getConfig();
+
+        data.put("title", config.getTitle());
         data.put("page", page);
-        data.put("favicon", "/resources/icons/favicon.ico");
-        data.put("logo", "/resources/icons/bounce.png");
+        data.put("favicon", config.getFavicon());
+        data.put("logo", config.getLogo());
 
         return data;
+    }
+
+    public static ConfigPojo getConfig() {
+        try {
+            ConfigPojo configPojo = new Gson().fromJson(getContent("config.json"), ConfigPojo.class);
+            return configPojo;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static ConfigPojo.Page getPage(String path) {
+        ConfigPojo.Page page = null;
+        for(ConfigPojo.Page item : getConfig().getTabs()) {
+            if(item.getPages() != null && item.getPages().size() > 0) {
+                for(ConfigPojo.Page subItem : item.getPages()) {
+                    if(subItem.getPath().equals(path)) {
+                        page = subItem;
+                        page.setPageId(item.getTabName());
+                    }
+                }
+            } else {
+                if(item.getPath().equals(path)) {
+                    page = item;
+                    page.setPageId(page.getPage());
+                }
+            }
+        }
+
+        return page;
     }
 
 }

@@ -45,22 +45,22 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav mr-auto">
-                <li class="nav-item <#if page == 'home'> active </#if>">
+                <li class="nav-item <#if page == 'Home'> active </#if>">
                     <a class="nav-link" href="#" onclick="navBarClicks('/')">Home <#if page == 'home'> <span class="sr-only">(current)</span> </#if> </a>
                 </li>
-                <li class="nav-item <#if page == 'bikes'> active </#if>">
+                <li class="nav-item <#if page == 'Bikes'> active </#if>">
                     <a class="nav-link" href="#" onclick="navBarClicks('/bikes')">Bikes <#if page == 'bikes'> <span class="sr-only">(current)</span> </#if> </a>
                 </li>
                 <li hidden class="nav-item <#if page == 'test'> active </#if>">
                     <a class="nav-link" href="#" onclick="navBarClicks('/test')">Test <#if page == 'test'> <span class="sr-only">(current)</span> </#if> </a>
                 </li>
-                <li class="nav-item <#if page == 'bookings'> active </#if>">
+                <li class="nav-item <#if page == 'Bookings'> active </#if>">
                     <a class="nav-link" href="#" onclick="navBarClicks('/bookings')">Bookings <#if page == 'bookings'> <span class="sr-only">(current)</span> </#if> </a>
                 </li>
-                <li class="nav-item <#if page == 'tracking'> active </#if>">
+                <li class="nav-item <#if page == 'Tracking'> active </#if>">
                     <a class="nav-link" href="#" onclick="navBarClicks('/tracking')">Tracking <#if page == 'tracking'> <span class="sr-only">(current)</span> </#if> </a>
                 </li>
-                <li class="nav-item dropdown <#if page == 'layers'> active </#if>">
+                <li class="nav-item dropdown <#if page == 'Layers'> active </#if>">
                     <a class="nav-link dropdown-toggle" id="dropdown03" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Layers</a>
                     <div class="dropdown-menu" aria-labelledby="dropdown03">
                         <a class="dropdown-item" href="#" onclick="navBarClicks('/layers/bikes')">All Bikes</a>
@@ -69,7 +69,7 @@
                         <a class="dropdown-item" href="#" onclick="navBarClicks('/layers/oos')">OOS</a>
                         <a class="dropdown-item" href="#" onclick="navBarClicks('/layers/parking')">Parking Fences</a>
                         <a class="dropdown-item" href="#" onclick="navBarClicks('/layers/hubs')">Hubs</a>
-                        <a class="dropdown-item" href="#" onclick="navBarClicks('/asset_safety')">Asset Safety</a>
+                        <a class="dropdown-item" href="#" onclick="navBarClicks('/layers/asset_safety')">Asset Safety</a>
                     </div>
                 </li>
                 <li class="nav-item dropdown">
