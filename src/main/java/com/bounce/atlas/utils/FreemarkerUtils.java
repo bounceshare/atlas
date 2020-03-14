@@ -2,11 +2,10 @@ package com.bounce.atlas.utils;
 
 import com.bounce.atlas.pojo.*;
 import com.bounce.utils.BounceUtils;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.gson.Gson;
-import freemarker.template.Configuration;
-import freemarker.template.Template;
-import freemarker.template.Version;
+import freemarker.template.*;
 import org.apache.commons.io.IOUtils;
 
 import java.io.IOException;
@@ -57,10 +56,12 @@ public class FreemarkerUtils {
 
         try {
             Version version = new Version(2, 3, 20);
+            DefaultObjectWrapper defaultObjectWrapper = new DefaultObjectWrapperBuilder(version).build();
             Configuration cfg = new Configuration(version);
             cfg.setClassForTemplateLoading(FreemarkerUtils.class, "/");
-            cfg.setIncompatibleImprovements(new Version(2, 3, 20));
+            cfg.setIncompatibleImprovements(version);
             cfg.setDefaultEncoding("UTF-8");
+            cfg.setObjectWrapper(defaultObjectWrapper);
             cfg.setLocale(Locale.US);
 
             StringWriter stringWriter = new StringWriter();
@@ -111,6 +112,9 @@ public class FreemarkerUtils {
         data.put("favicon", config.getFavicon());
         data.put("logo", config.getLogo());
 
+        data.put("tabs", getRootPages());
+        data.put("nestedTabs", getNestedPages());
+
         return data;
     }
 
@@ -122,6 +126,37 @@ public class FreemarkerUtils {
             e.printStackTrace();
         }
         return null;
+    }
+
+    private static List<ConfigPojo.Page> getRootPages() {
+        List<ConfigPojo.Page> pages = Lists.newArrayList();
+        for(ConfigPojo.Page item : getConfig().getTabs()) {
+            if(item.getPages() == null || item.getPages().size() < 1) {
+                item.setPageId(item.getPage());
+                pages.add(item);
+            }
+        }
+
+        return pages;
+    }
+
+    private static Map<String, List<ConfigPojo.Page>> getNestedPages() {
+        Map<String, List<ConfigPojo.Page>> map = Maps.newHashMap();
+        for(ConfigPojo.Page tab : getConfig().getTabs()) {
+            if(tab.getPages() != null && tab.getPages().size() > 0) {
+                for(ConfigPojo.Page page : tab.getPages()) {
+                    page.setPageId(tab.getTabName());
+                    List<ConfigPojo.Page> pages = map.get(tab.getTabName());
+                    if (pages == null) {
+                        pages = Lists.newArrayList();
+                    }
+                    pages.add(page);
+                    map.put(tab.getTabName(), pages);
+                }
+            }
+        }
+
+        return map;
     }
 
     public static ConfigPojo.Page getPage(String path) {

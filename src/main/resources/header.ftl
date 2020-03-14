@@ -33,7 +33,7 @@
 
 </head>
 <body>
-<header>
+<list>
     <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
         <a class="navbar-brand" href="/">
             <img src="${favicon}" width="20" height="20" alt="">
@@ -45,33 +45,51 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav mr-auto">
-                <li class="nav-item <#if page == 'Home'> active </#if>">
-                    <a class="nav-link" href="#" onclick="navBarClicks('/')">Home <#if page == 'home'> <span class="sr-only">(current)</span> </#if> </a>
-                </li>
-                <li class="nav-item <#if page == 'Bikes'> active </#if>">
-                    <a class="nav-link" href="#" onclick="navBarClicks('/bikes')">Bikes <#if page == 'bikes'> <span class="sr-only">(current)</span> </#if> </a>
-                </li>
-                <li hidden class="nav-item <#if page == 'test'> active </#if>">
-                    <a class="nav-link" href="#" onclick="navBarClicks('/test')">Test <#if page == 'test'> <span class="sr-only">(current)</span> </#if> </a>
-                </li>
-                <li class="nav-item <#if page == 'Bookings'> active </#if>">
-                    <a class="nav-link" href="#" onclick="navBarClicks('/bookings')">Bookings <#if page == 'bookings'> <span class="sr-only">(current)</span> </#if> </a>
-                </li>
-                <li class="nav-item <#if page == 'Tracking'> active </#if>">
-                    <a class="nav-link" href="#" onclick="navBarClicks('/tracking')">Tracking <#if page == 'tracking'> <span class="sr-only">(current)</span> </#if> </a>
-                </li>
-                <li class="nav-item dropdown <#if page == 'Layers'> active </#if>">
-                    <a class="nav-link dropdown-toggle" id="dropdown03" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Layers</a>
-                    <div class="dropdown-menu" aria-labelledby="dropdown03">
-                        <a class="dropdown-item" href="#" onclick="navBarClicks('/layers/bikes')">All Bikes</a>
-                        <a class="dropdown-item" href="#" onclick="navBarClicks('/layers/idle')">Idle</a>
-                        <a class="dropdown-item" href="#" onclick="navBarClicks('/layers/busy')">Busy</a>
-                        <a class="dropdown-item" href="#" onclick="navBarClicks('/layers/oos')">OOS</a>
-                        <a class="dropdown-item" href="#" onclick="navBarClicks('/layers/parking')">Parking Fences</a>
-                        <a class="dropdown-item" href="#" onclick="navBarClicks('/layers/hubs')">Hubs</a>
-                        <a class="dropdown-item" href="#" onclick="navBarClicks('/layers/asset_safety')">Asset Safety</a>
-                    </div>
-                </li>
+                <#if tabs??>
+                <#list tabs as tab>
+                    <li class="nav-item <#if page == '${tab.page}'> active </#if>">
+                    <a class="nav-link" href="#" onclick="navBarClicks('${tab.path}')">${tab.page}<#if page == '${tab.page}'> <span class="sr-only">(current)</span> </#if> </a>
+                    </li>
+                </#list>
+                </#if>
+
+                <#if nestedTabs??>
+                <#list nestedTabs as tabName, tabMap>
+                    <li class="nav-item dropdown <#if page == '${tabName}'> active </#if>">
+                        <a class="nav-link dropdown-toggle" id="dropdown-${tabName}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">${tabName}</a>
+                        <div class="dropdown-menu" aria-labelledby="dropdown-${tabName}">
+                            <#list tabMap as tab>
+                                <a class="dropdown-item" href="#" onclick="navBarClicks('${tab.path}')">${tab.page}</a>
+                            </#list>
+                        </div>
+                    </li>
+                </#list>
+                </#if>
+
+                <!--<li class="nav-item <#if page == 'Bikes'> active </#if>">-->
+                    <!--<a class="nav-link" href="#" onclick="navBarClicks('/bikes')">Bikes <#if page == 'bikes'> <span class="sr-only">(current)</span> </#if> </a>-->
+                <!--</li>-->
+                <!--<li hidden class="nav-item <#if page == 'test'> active </#if>">-->
+                    <!--<a class="nav-link" href="#" onclick="navBarClicks('/test')">Test <#if page == 'test'> <span class="sr-only">(current)</span> </#if> </a>-->
+                <!--</li>-->
+                <!--<li class="nav-item <#if page == 'Bookings'> active </#if>">-->
+                    <!--<a class="nav-link" href="#" onclick="navBarClicks('/bookings')">Bookings <#if page == 'bookings'> <span class="sr-only">(current)</span> </#if> </a>-->
+                <!--</li>-->
+                <!--<li class="nav-item <#if page == 'Tracking'> active </#if>">-->
+                    <!--<a class="nav-link" href="#" onclick="navBarClicks('/tracking')">Tracking <#if page == 'tracking'> <span class="sr-only">(current)</span> </#if> </a>-->
+                <!--</li>-->
+                <!--<li class="nav-item dropdown <#if page == 'Layers'> active </#if>">-->
+                    <!--<a class="nav-link dropdown-toggle" id="dropdown03" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Layers</a>-->
+                    <!--<div class="dropdown-menu" aria-labelledby="dropdown03">-->
+                        <!--<a class="dropdown-item" href="#" onclick="navBarClicks('/layers/bikes')">All Bikes</a>-->
+                        <!--<a class="dropdown-item" href="#" onclick="navBarClicks('/layers/idle')">Idle</a>-->
+                        <!--<a class="dropdown-item" href="#" onclick="navBarClicks('/layers/busy')">Busy</a>-->
+                        <!--<a class="dropdown-item" href="#" onclick="navBarClicks('/layers/oos')">OOS</a>-->
+                        <!--<a class="dropdown-item" href="#" onclick="navBarClicks('/layers/parking')">Parking Fences</a>-->
+                        <!--<a class="dropdown-item" href="#" onclick="navBarClicks('/layers/hubs')">Hubs</a>-->
+                        <!--<a class="dropdown-item" href="#" onclick="navBarClicks('/layers/asset_safety')">Asset Safety</a>-->
+                    <!--</div>-->
+                <!--</li>-->
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" id="dropdown04" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">More</a>
                     <div class="dropdown-menu" aria-labelledby="dropdown04">
