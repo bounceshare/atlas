@@ -9,7 +9,6 @@
       "page" : "Home",
       "path" : "/",
       "searchUrl" : "/apis/search/",
-      "searchPage" : "false",
       "searchText" : "",
       "autoRefresh" : "true",
       "help" : "Move around the map and Atlas will load the information around those coordinates"
