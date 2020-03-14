@@ -1,26 +1,15 @@
 package com.bounce.atlas.http;
 
-import com.bounce.atlas.http.handlers.TrackingSearchApi;
 import com.bounce.atlas.pojo.*;
-import com.bounce.atlas.utils.FreemarkerUtils;
+import com.bounce.atlas.utils.ContentUtils;
 import com.bounce.atlas.utils.GoogleAuth;
-import com.bounce.atlas.utils.QueryUtils;
 import com.bounce.utils.BounceUtils;
-import com.bounce.utils.DatabaseConnector;
 import com.bounce.utils.Log;
-import com.bounce.utils.dbmodels.public_.Keys;
-import com.bounce.utils.dbmodels.public_.tables.Booking;
-import com.bounce.utils.dbmodels.public_.tables.records.AxcessRecord;
-import com.bounce.utils.dbmodels.public_.tables.records.BikeRecord;
-import com.bounce.utils.dbmodels.public_.tables.records.BookingRecord;
 import com.bounce.utils.status.Status;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.apache.http.util.TextUtils;
 import org.apache.log4j.Logger;
-import org.joda.time.DateTime;
 import org.json.JSONObject;
 
 import javax.servlet.http.HttpServletRequest;
@@ -33,11 +22,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-
-import static com.bounce.atlas.http.handlers.BookingSearchApi.getMarkersAndPathForBooking;
 
 @Path("/")
 public class Apis {
@@ -80,7 +65,7 @@ public class Apis {
     public InputStream resource(@PathParam("path") String path) {
         logger.info("/resource/" + path);
         try {
-            return FreemarkerUtils.getContentAsStream(path);
+            return ContentUtils.getContentAsStream(path);
         } catch (IOException e) {
             e.printStackTrace();
             BounceUtils.logError(e);
@@ -95,7 +80,7 @@ public class Apis {
     public String files(@PathParam("path") String path) {
         logger.info("/files/" + path);
         try {
-            return FreemarkerUtils.getContent(path);
+            return ContentUtils.getContent(path);
         } catch (IOException e) {
             e.printStackTrace();
             BounceUtils.logError(e);
@@ -110,9 +95,9 @@ public class Apis {
     public void login(@Suspended final AsyncResponse asyncResponse) {
         logger.info("/login");
 
-        Map<String, Object> data = FreemarkerUtils.getDefaultFreemarkerObj("login");
+        Map<String, Object> data = ContentUtils.getDefaultFreemarkerObj("login");
 
-        String content = FreemarkerUtils.getFreemarkerString("login.ftl", data);
+        String content = ContentUtils.getFreemarkerString("login.ftl", data);
         asyncResponse.resume(Response.ok().entity(content).build());
     }
 
@@ -124,24 +109,45 @@ public class Apis {
     public void config(@Suspended final AsyncResponse asyncResponse) {
         logger.info("/config");
 
-        Map<String, Object> data = FreemarkerUtils.getDefaultFreemarkerObj("config");
-        data.put("config", gson.toJson(FreemarkerUtils.getConfig()));
+        Map<String, Object> data = ContentUtils.getDefaultFreemarkerObj("config");
+        data.put("config", gson.toJson(ContentUtils.getConfig()));
 
-        String content = FreemarkerUtils.getFreemarkerString("config.ftl", data);
+        String content = ContentUtils.getFreemarkerString("config.ftl", data);
         asyncResponse.resume(Response.ok().entity(content).build());
     }
 
     @POST
     @Path("/config")
-    @Produces(MediaType.TEXT_HTML)
+    @Produces(MediaType.APPLICATION_JSON)
     @Consumes({MediaType.APPLICATION_JSON})
     @GoogleAuth
     public void configPost(String inputString, @Suspended final AsyncResponse asyncResponse) {
-        logger.info("/config");
-        JSONObject jsonObject = new JSONObject(inputString);
-        String configData = jsonObject.optString("config");
-        logger.info("Config To Update : " + configData);
-        asyncResponse.resume(Response.ok().entity(gson.toJson(Status.buildSuccess())).build());
+        try {
+            logger.info("/config");
+            JSONObject jsonObject = new JSONObject(inputString);
+            String configData = jsonObject.optString("config");
+            logger.info("Config To Update : " + configData);
+            ContentUtils.updateConfigPojo(configData);
+            asyncResponse.resume(Response.ok().entity(gson.toJson(Status.buildSuccess())).build());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        asyncResponse.resume(Response.status(400).entity(gson.toJson(Status.buildFailure(400, "Couldn't update the config"))).build());
+    }
+
+    @POST
+    @Path("/test/search")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes({MediaType.APPLICATION_JSON})
+    @GoogleAuth
+    public void testSearch(String inputString, @Suspended final AsyncResponse asyncResponse) {
+        logger.info("/test/search");
+        try {
+            String sampleResponse = ContentUtils.getContent("sample_response.json");
+            asyncResponse.resume(Response.ok().entity(sampleResponse).build());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @GET
@@ -154,10 +160,10 @@ public class Apis {
 
         logger.info("" + path);
 
-        logger.info("ConfigJSON : " + FreemarkerUtils.getConfig());
+        logger.info("ConfigJSON : " + ContentUtils.getConfig());
 
-        Map<String, Object> data = FreemarkerUtils.getDefaultFreemarkerObj("home");
-        ConfigPojo config = FreemarkerUtils.getConfig();
+        Map<String, Object> data = ContentUtils.getDefaultFreemarkerObj("home");
+        ConfigPojo config = ContentUtils.getConfig();
         if (TextUtils.isEmpty(location)) {
             location = config.getDefaultLocation();
         }
@@ -171,7 +177,7 @@ public class Apis {
 
         path = "/" + path;
 
-        ConfigPojo.Page page = FreemarkerUtils.getPage(path);
+        ConfigPojo.Page page = ContentUtils.getPage(path);
         if(page != null) {
             data.put("page", page.getPageId());
             data.put("autoRefresh", page.getAutoRefresh());
@@ -181,7 +187,7 @@ public class Apis {
             data.put("help", page.getHelp());
         }
 
-        String content = FreemarkerUtils.getFreemarkerString("index.ftl", data);
+        String content = ContentUtils.getFreemarkerString("index.ftl", data);
         asyncResponse.resume(Response.ok().entity(content).build());
     }
 

@@ -1,0 +1,18 @@
+{
+  "defaultLocation" : "12.919575838058408,77.59907484054567",
+  "title" : "ATLAS",
+  "favicon" : "/resources/icons/favicon.ico",
+  "logo" : "/resources/icons/bounce.png",
+  "zoom" : "15",
+  "tabs" : [
+    {
+      "page" : "Demo",
+      "path" : "/",
+      "searchPage" : "true",
+      "searchText" : "Search",
+      "searchUrl" : "/test/search",
+      "autoRefresh" : "true",
+      "help" : "This page shows a small peek into Atlas. Go ahead and configure in Options to setup your own maps."
+    }
+  ]
+}

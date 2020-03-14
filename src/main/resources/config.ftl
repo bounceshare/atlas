@@ -9,9 +9,9 @@
     });
 
     function submit() {
-        console.log("Submitting Config Data" + $('#configTextArea')[0].innerHTML);
+        console.log("Submitting Config Data" + $('#configTextArea')[0].value);
         data = {};
-        data.config = $('#configTextArea')[0].innerHTML;
+        data.config = $('#configTextArea')[0].value;
         showLoader(true);
         httpPost("/config", data, function(response) {
             console.log("Config Updated");

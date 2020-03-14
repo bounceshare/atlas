@@ -5,8 +5,10 @@ import com.bounce.utils.BounceUtils;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 import freemarker.template.*;
 import org.apache.commons.io.IOUtils;
+import redis.clients.jedis.Jedis;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -15,16 +17,17 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-public class FreemarkerUtils {
+public class ContentUtils {
 
     public static final int VERSION = 1;
 
     public static Gson gson = new Gson();
+    private static ConfigPojo config = null;
 
-    public static String getContent(String filename) throws IOException{
+    public static String getContent(String filename) throws IOException {
         StringBuilder content = new StringBuilder();
         try {
-            InputStream inputStream = FreemarkerUtils.class.getClassLoader().getResourceAsStream(filename);
+            InputStream inputStream = ContentUtils.class.getClassLoader().getResourceAsStream(filename);
             if (inputStream != null) {
                 content.append(IOUtils.toString(inputStream));
             } else {
@@ -40,8 +43,8 @@ public class FreemarkerUtils {
     public static InputStream getContentAsStream(String filename) throws IOException {
         InputStream content = null;
         try {
-            content = FreemarkerUtils.class.getClassLoader().getResourceAsStream(filename);
-            if(content == null) {
+            content = ContentUtils.class.getClassLoader().getResourceAsStream(filename);
+            if (content == null) {
                 throw new IOException("Resource not found");
             }
         } catch (Exception e) {
@@ -58,7 +61,7 @@ public class FreemarkerUtils {
             Version version = new Version(2, 3, 20);
             DefaultObjectWrapper defaultObjectWrapper = new DefaultObjectWrapperBuilder(version).build();
             Configuration cfg = new Configuration(version);
-            cfg.setClassForTemplateLoading(FreemarkerUtils.class, "/");
+            cfg.setClassForTemplateLoading(ContentUtils.class, "/");
             cfg.setIncompatibleImprovements(version);
             cfg.setDefaultEncoding("UTF-8");
             cfg.setObjectWrapper(defaultObjectWrapper);
@@ -118,11 +121,29 @@ public class FreemarkerUtils {
         return data;
     }
 
+    public static void updateConfigPojo(String configJson) throws Exception {
+        ConfigPojo configPojo = new Gson().fromJson(configJson, ConfigPojo.class);
+        Utils.redisSet("atlas.config", gson.toJson(configPojo));
+        config = configPojo;
+    }
+
     public static ConfigPojo getConfig() {
         try {
-            ConfigPojo configPojo = new Gson().fromJson(getContent("config.json"), ConfigPojo.class);
+            try {
+                if (config == null) {
+                    String configString = Utils.redisGet("atlas.config", getContent("sample_config.json"));
+                    ConfigPojo configPojo = gson.fromJson(configString, ConfigPojo.class);
+                    config = configPojo;
+                    return configPojo;
+                } else {
+                    return config;
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            ConfigPojo configPojo = new Gson().fromJson(getContent("sample_config.json"), ConfigPojo.class);
             return configPojo;
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
@@ -130,8 +151,8 @@ public class FreemarkerUtils {
 
     private static List<ConfigPojo.Page> getRootPages() {
         List<ConfigPojo.Page> pages = Lists.newArrayList();
-        for(ConfigPojo.Page item : getConfig().getTabs()) {
-            if(item.getPages() == null || item.getPages().size() < 1) {
+        for (ConfigPojo.Page item : getConfig().getTabs()) {
+            if (item.getPages() == null || item.getPages().size() < 1) {
                 item.setPageId(item.getPage());
                 pages.add(item);
             }
@@ -142,9 +163,9 @@ public class FreemarkerUtils {
 
     private static Map<String, List<ConfigPojo.Page>> getNestedPages() {
         Map<String, List<ConfigPojo.Page>> map = Maps.newHashMap();
-        for(ConfigPojo.Page tab : getConfig().getTabs()) {
-            if(tab.getPages() != null && tab.getPages().size() > 0) {
-                for(ConfigPojo.Page page : tab.getPages()) {
+        for (ConfigPojo.Page tab : getConfig().getTabs()) {
+            if (tab.getPages() != null && tab.getPages().size() > 0) {
+                for (ConfigPojo.Page page : tab.getPages()) {
                     page.setPageId(tab.getTabName());
                     List<ConfigPojo.Page> pages = map.get(tab.getTabName());
                     if (pages == null) {
@@ -161,16 +182,16 @@ public class FreemarkerUtils {
 
     public static ConfigPojo.Page getPage(String path) {
         ConfigPojo.Page page = null;
-        for(ConfigPojo.Page item : getConfig().getTabs()) {
-            if(item.getPages() != null && item.getPages().size() > 0) {
-                for(ConfigPojo.Page subItem : item.getPages()) {
-                    if(subItem.getPath().equals(path)) {
+        for (ConfigPojo.Page item : getConfig().getTabs()) {
+            if (item.getPages() != null && item.getPages().size() > 0) {
+                for (ConfigPojo.Page subItem : item.getPages()) {
+                    if (subItem.getPath().equals(path)) {
                         page = subItem;
                         page.setPageId(item.getTabName());
                     }
                 }
             } else {
-                if(item.getPath().equals(path)) {
+                if (item.getPath().equals(path)) {
                     page = item;
                     page.setPageId(page.getPage());
                 }

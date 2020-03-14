@@ -1,0 +1,132 @@
+{
+  "statusCode": 200,
+  "message": "SUCCESS",
+  "errorReason": "",
+  "data": {
+    "fences": [
+      {
+        "points": [
+          {
+            "lat": 12.9186767,
+            "lon": 77.5914189
+          },
+          {
+            "lat": 12.9170654,
+            "lon": 77.5917329
+          },
+          {
+            "lat": 12.9170236,
+            "lon": 77.592512
+          },
+          {
+            "lat": 12.9176627,
+            "lon": 77.5923163
+          },
+          {
+            "lat": 12.9189647,
+            "lon": 77.591812
+          },
+          {
+            "lat": 12.9190013,
+            "lon": 77.5914794
+          },
+          {
+            "lat": 12.9186767,
+            "lon": 77.5914189
+          },
+          {
+            "lat": 12.9186767,
+            "lon": 77.5914189
+          }
+        ],
+        "color": "red",
+        "fillColor": "#f03",
+        "fillOpacity": 0.5,
+        "data": {
+          "Key": "Value",
+          "Another Key": "Another Value",
+          "Name": "JAIN COLLEGE"
+        }
+      }
+    ],
+    "autoRefresh": true,
+    "paths": [
+      {
+        "points": [
+          {
+            "lat": 12.932999199999998,
+            "lon": 77.5947879
+          },
+          {
+            "lat": 12.9137415,
+            "lon": 77.5947879
+          }
+        ],
+        "color": "red",
+        "data": {
+          "Booking Id": 2220857,
+          "Est. Time": 3318.0,
+          "Status": "completed",
+          "Timeline": "<b><a href='#' onclick='showTimeline(\"/apis/booking/events\", 2220857, \"Bike Event Timeline - 2220857\");'>Events</a></b>",
+          "User Id": 140620,
+          "Trip Created At": "2020-02-12 15:03:42.395",
+          "Trip Started At": "2020-02-12 15:04:17.09",
+          "Est. Distance": 16348.0,
+          "Est. Cost": 222.0
+        }
+      }
+    ],
+    "circles": [
+      {
+        "location": {
+          "lat": 12.918837,
+          "lon": 77.591446
+        },
+        "color": "blue",
+        "fillColor": "#a2cff5",
+        "radius": 20.0,
+        "fillOpacity": 0.5,
+        "data": {
+          "Key": "Value",
+          "Another Key": "Another Value",
+          "Name": "Shop in Jayanagar"
+        }
+      }
+    ],
+    "markers": [
+      {
+        "location": {
+          "lat": 12.9137415,
+          "lon": 77.5947879
+        },
+        "iconUrl": "/resources/icons/marker_blue.png",
+        "title": "Marker",
+        "subtext": "Subtext",
+        "cta": "",
+        "data": {
+          "Key": "Value",
+          "Another Key": "Another Value",
+          "Name": "Your Marker"
+        }
+      },
+      {
+        "location": {
+          "lat": 12.932999199999998,
+          "lon": 77.5947879
+        },
+        "iconUrl": "/resources/icons/marker_blue.png",
+        "title": "Actual Start Point",
+        "subtext": "2020-02-12 15:04:17.09"
+      },
+      {
+        "location": {
+          "lat": 12.9137415,
+          "lon": 77.5947879
+        },
+        "iconUrl": "/resources/icons/marker_blue.png",
+        "title": "Actual End Point",
+        "subtext": "2020-02-12 15:22:30.0"
+      }
+    ]
+  }
+}
