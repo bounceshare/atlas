@@ -2,3 +2,5 @@
 .idea/*
 target/*
 *.log
+src/main/resources/config.ini
+src/main/resources/config.json
