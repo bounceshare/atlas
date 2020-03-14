@@ -292,16 +292,6 @@
         // If move is set to true. hit api to fetch data and set it using js. Only for home page
     }
 
-    function showLoader(flag) {
-        console.log("showLoader() : " + flag)
-        isLoading = flag;
-        if(flag) {
-            $('#progressBar')[0].hidden = false;
-        } else {
-            $('#progressBar')[0].hidden = true;
-        }
-    }
-
     function invalidateMap(tMarkers, tFences, tCircles, tPaths, fitToBounds = false, toRefresh = refresh) {
         console.log("fitToBounds : " + fitToBounds);
         if(tMarkers != null) {
@@ -345,24 +335,6 @@
         var mapBoundNorthEast = map.getBounds().getNorthEast();
         var mapDistance = mapBoundNorthEast.distanceTo(map.getCenter());
         return mapDistance;
-    }
-
-    function navBarClicks(path) {
-        console.log("navBarClicks : " + path)
-        var pos = map.getCenter();
-        var position = pos.lat + "," + pos.lng;
-
-        if(path.includes("?")) {
-            path += "&p=" + position;
-        }else {
-            path += "?p=" + position;
-        }
-
-        path += "&z=" + map.getZoom();
-
-        console.log("navBarClicks : " + path)
-
-        window.location = path;
     }
 
     bootstrap();

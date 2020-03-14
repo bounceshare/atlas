@@ -21,6 +21,7 @@ import com.google.gson.GsonBuilder;
 import org.apache.http.util.TextUtils;
 import org.apache.log4j.Logger;
 import org.joda.time.DateTime;
+import org.json.JSONObject;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -113,6 +114,34 @@ public class Apis {
 
         String content = FreemarkerUtils.getFreemarkerString("login.ftl", data);
         asyncResponse.resume(Response.ok().entity(content).build());
+    }
+
+    @GET
+    @Path("/config")
+    @Produces(MediaType.TEXT_HTML)
+    @Consumes({MediaType.APPLICATION_JSON})
+    @GoogleAuth
+    public void config(@Suspended final AsyncResponse asyncResponse) {
+        logger.info("/config");
+
+        Map<String, Object> data = FreemarkerUtils.getDefaultFreemarkerObj("config");
+        data.put("config", gson.toJson(FreemarkerUtils.getConfig()));
+
+        String content = FreemarkerUtils.getFreemarkerString("config.ftl", data);
+        asyncResponse.resume(Response.ok().entity(content).build());
+    }
+
+    @POST
+    @Path("/config")
+    @Produces(MediaType.TEXT_HTML)
+    @Consumes({MediaType.APPLICATION_JSON})
+    @GoogleAuth
+    public void configPost(String inputString, @Suspended final AsyncResponse asyncResponse) {
+        logger.info("/config");
+        JSONObject jsonObject = new JSONObject(inputString);
+        String configData = jsonObject.optString("config");
+        logger.info("Config To Update : " + configData);
+        asyncResponse.resume(Response.ok().entity(gson.toJson(Status.buildSuccess())).build());
     }
 
     @GET

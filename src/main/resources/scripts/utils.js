@@ -84,6 +84,50 @@
         }
     }
 
+    function showLoader(flag) {
+        console.log("showLoader() : " + flag)
+        isLoading = flag;
+        if(flag) {
+            $('#progressBar')[0].hidden = false;
+        } else {
+            $('#progressBar')[0].hidden = true;
+        }
+    }
+
+    function showSuccessMessage(message) {
+        $('#successAlert')[0].hidden = false;
+        $('#successAlert')[0].innerHTML = message;
+        setTimeout(function() {
+            $('#successAlert')[0].hidden = true;
+        }, 2500);
+    }
+
+    function showFailureMessage(message) {
+        $('#failureAlert')[0].hidden = false;
+        $('#failureAlert')[0].innerHTML = message;
+        setTimeout(function() {
+            $('#failureAlert')[0].hidden = true;
+        }, 2500);
+    }
+
+    function navBarClicks(path) {
+        console.log("navBarClicks : " + path)
+        if(typeof map !== 'undefined') {
+            var pos = map.getCenter();
+            var position = pos.lat + "," + pos.lng;
+
+            if(path.includes("?")) {
+                path += "&p=" + position;
+            }else {
+                path += "?p=" + position;
+            }
+
+            path += "&z=" + map.getZoom();
+        }
+        console.log("navBarClicks : " + path)
+        window.location = path;
+    }
+
     $(document).ready(function(){
         try {
             $('[data-toggle="popover"]').popover();

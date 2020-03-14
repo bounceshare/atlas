@@ -66,37 +66,14 @@
                 </#list>
                 </#if>
 
-                <!--<li class="nav-item <#if page == 'Bikes'> active </#if>">-->
-                    <!--<a class="nav-link" href="#" onclick="navBarClicks('/bikes')">Bikes <#if page == 'bikes'> <span class="sr-only">(current)</span> </#if> </a>-->
-                <!--</li>-->
-                <!--<li hidden class="nav-item <#if page == 'test'> active </#if>">-->
-                    <!--<a class="nav-link" href="#" onclick="navBarClicks('/test')">Test <#if page == 'test'> <span class="sr-only">(current)</span> </#if> </a>-->
-                <!--</li>-->
-                <!--<li class="nav-item <#if page == 'Bookings'> active </#if>">-->
-                    <!--<a class="nav-link" href="#" onclick="navBarClicks('/bookings')">Bookings <#if page == 'bookings'> <span class="sr-only">(current)</span> </#if> </a>-->
-                <!--</li>-->
-                <!--<li class="nav-item <#if page == 'Tracking'> active </#if>">-->
-                    <!--<a class="nav-link" href="#" onclick="navBarClicks('/tracking')">Tracking <#if page == 'tracking'> <span class="sr-only">(current)</span> </#if> </a>-->
-                <!--</li>-->
-                <!--<li class="nav-item dropdown <#if page == 'Layers'> active </#if>">-->
-                    <!--<a class="nav-link dropdown-toggle" id="dropdown03" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Layers</a>-->
-                    <!--<div class="dropdown-menu" aria-labelledby="dropdown03">-->
-                        <!--<a class="dropdown-item" href="#" onclick="navBarClicks('/layers/bikes')">All Bikes</a>-->
-                        <!--<a class="dropdown-item" href="#" onclick="navBarClicks('/layers/idle')">Idle</a>-->
-                        <!--<a class="dropdown-item" href="#" onclick="navBarClicks('/layers/busy')">Busy</a>-->
-                        <!--<a class="dropdown-item" href="#" onclick="navBarClicks('/layers/oos')">OOS</a>-->
-                        <!--<a class="dropdown-item" href="#" onclick="navBarClicks('/layers/parking')">Parking Fences</a>-->
-                        <!--<a class="dropdown-item" href="#" onclick="navBarClicks('/layers/hubs')">Hubs</a>-->
-                        <!--<a class="dropdown-item" href="#" onclick="navBarClicks('/layers/asset_safety')">Asset Safety</a>-->
-                    <!--</div>-->
-                <!--</li>-->
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" id="dropdown04" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">More</a>
                     <div class="dropdown-menu" aria-labelledby="dropdown04">
-                        <a class="dropdown-item" href="#" onclick="signOut()">Logout</a>
+                        <a class="dropdown-item" href="/config">Config</a>
                         <div class="dropdown-item">
                             <input type="checkbox" class="form-check-input text-center" id="refreshCheckbox">Auto Refresh</input>
                         </div>
+                        <a class="dropdown-item" href="#" onclick="signOut()">Logout</a>
                         <!--<label class="form-check-label dropdown-item" for="refreshCheckbox">Auto Refresh</label>-->
                     </div>
                 </li>
@@ -116,6 +93,10 @@
     </nav>
     <br/>
     <br/>
+    <div class="alert alert-success alert-dismissible fade show" id="successAlert" role="alert" hidden>
+    </div>
+    <div class="alert alert-danger alert-dismissible fade show" id="failureAlert" role="alert" hidden>
+    </div>
     <div class="progress" id="progressBar" hidden>
         <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%"></div>
     </div>
