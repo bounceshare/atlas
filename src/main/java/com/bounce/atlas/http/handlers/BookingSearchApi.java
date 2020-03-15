@@ -3,17 +3,22 @@ package com.bounce.atlas.http.handlers;
 import com.bounce.atlas.pojo.MarkerPojo;
 import com.bounce.atlas.pojo.PathPojo;
 import com.bounce.atlas.pojo.PointPojo;
+import com.bounce.atlas.utils.Constants;
 import com.bounce.atlas.utils.QueryUtils;
 import com.bounce.utils.DatabaseConnector;
 import com.bounce.utils.apis.BaseApiHandler;
 import com.bounce.utils.dbmodels.public_.enums.BookingStatus;
 import com.bounce.utils.dbmodels.public_.tables.Bike;
 import com.bounce.utils.dbmodels.public_.tables.Booking;
+import com.bounce.utils.dbmodels.public_.tables.BookingInfo;
 import com.bounce.utils.dbmodels.public_.tables.records.BikeRecord;
+import com.bounce.utils.dbmodels.public_.tables.records.BookingInfoRecord;
 import com.bounce.utils.dbmodels.public_.tables.records.BookingRecord;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import org.apache.http.util.TextUtils;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -203,6 +208,46 @@ public class BookingSearchApi extends BaseApiHandler {
                 markers.add(endPoint);
                 paths.add(pathPojo);
             }
+
+            BookingInfoRecord bookingInfo = DatabaseConnector.getDb().getReadDbConnector().selectFrom(BookingInfo.BOOKING_INFO).
+                    where(BookingInfo.BOOKING_INFO.BOOKING_ID.eq(booking.getId())).
+                    and(BookingInfo.BOOKING_INFO.INFO_TYPE.eq(4)).fetchAny();
+
+            if(bookingInfo != null) {
+                String pathStr = bookingInfo.getInfo();
+                if(!TextUtils.isEmpty(pathStr)) {
+                    JSONArray jsonArray = new JSONArray(pathStr);
+                    PathPojo pathPojo = new PathPojo();
+                    pathPojo.points = Lists.newArrayList();
+                    for(int i = 0; i < jsonArray.length(); i++) {
+                        JSONObject pointObj = jsonArray.getJSONObject(i);
+                        pathPojo.points.add(new PointPojo(pointObj.optDouble("lat"), pointObj.optDouble("lng")));
+
+                        MarkerPojo markerPojo = new MarkerPojo();
+                        markerPojo.location = new PointPojo(pointObj.optDouble("lat"), pointObj.optDouble("lng"));
+                        markerPojo.iconUrl = "/resources/icons/dot.png";
+                        markerPojo.title = "Tracking Data";
+                        markerPojo.subtext = booking.getId() + "";
+                        markerPojo.data = Maps.newHashMap();
+                        markerPojo.data.put("created_on", pointObj.opt("created_on"));
+                        markerPojo.data.put("ts", pointObj.opt("ts"));
+                        markerPojo.data.put("odometer", pointObj.opt("odometer"));
+                        markerPojo.data.put("ignition", pointObj.opt("ignition"));
+                        markerPojo.data.put("gps_data", pointObj.opt("gps_data"));
+                        markerPojo.data.put("speed", pointObj.opt("speed"));
+
+                        markers.add(markerPojo);
+                    }
+                    pathPojo.color = Constants.Color.INFO;
+                    pathPojo.data = Maps.newHashMap();
+                    pathPojo.data.put("<b>Tracking</b>", "");
+                    pathPojo.data.put("Booking Id", booking.getId());
+                    pathPojo.data.put("Timeline", "<b><a href='#' onclick='showTimeline(\"/apis/booking/events\", " + booking.getId() +", \"Bike Event Timeline - " + booking.getId() + "\");'>Events</a></b>");
+
+                    paths.add(pathPojo);
+                }
+            }
+
             markersAndPathMap.put("markers", markers);
             markersAndPathMap.put("paths", paths);
         } catch (Exception e) {
