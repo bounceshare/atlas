@@ -6,7 +6,9 @@ import org.apache.http.util.TextUtils;
 import org.joda.time.DateTime;
 import redis.clients.jedis.Jedis;
 
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.StringReader;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -49,9 +51,9 @@ public class Utils {
 
     private static Pair<String, Integer> getRedisHostPortPair() {
         try {
-            String propFileContent = ContentUtils.getContent("config.ini");
+            InputStream inputStream = new FileInputStream("config.ini");
             Properties prop = new Properties();
-            prop.load(new StringReader(propFileContent));
+            prop.load(inputStream);
 
             String redisHost = prop.getProperty("redis.host");
             Integer redisPort = Integer.parseInt(prop.getProperty("redis.port"));
@@ -79,7 +81,8 @@ public class Utils {
     }
 
     public static String redisGet(String key, String defaultString) {
-        Jedis jedis = new Jedis("127.0.0.1", 1234);
+        Pair<String, Integer> redisHostPort = getRedisHostPortPair();
+        Jedis jedis = new Jedis(redisHostPort.getKey(), redisHostPort.getValue());
         String data = jedis.get(key);
         if(TextUtils.isEmpty(data)) {
             return defaultString;
