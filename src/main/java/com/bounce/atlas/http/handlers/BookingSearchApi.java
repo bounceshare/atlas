@@ -221,10 +221,16 @@ public class BookingSearchApi extends BaseApiHandler {
                     pathPojo.points = Lists.newArrayList();
                     for(int i = 0; i < jsonArray.length(); i++) {
                         JSONObject pointObj = jsonArray.getJSONObject(i);
-                        pathPojo.points.add(new PointPojo(pointObj.optDouble("lat"), pointObj.optDouble("lng")));
+
+                        double lat = pointObj.optDouble("lat");
+                        double lng = pointObj.optDouble("lng");
+                        if(lat == 0 || lng == 0) {
+                            continue;
+                        }
+                        pathPojo.points.add(new PointPojo(lat, lng));
 
                         MarkerPojo markerPojo = new MarkerPojo();
-                        markerPojo.location = new PointPojo(pointObj.optDouble("lat"), pointObj.optDouble("lng"));
+                        markerPojo.location = new PointPojo(lat, lng);
                         markerPojo.iconUrl = "/resources/icons/dot.png";
                         markerPojo.title = "Tracking Data";
                         markerPojo.subtext = booking.getId() + "";
