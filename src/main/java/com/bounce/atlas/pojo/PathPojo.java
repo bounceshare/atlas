@@ -11,6 +11,7 @@ public class PathPojo {
 
     public List<PointPojo> points;
     public String color = "red";
+    public int lineWeight = 6;
     public Map<String, Object> data;
 
     public static PathPojo createDefaultFence(List<PointPojo> points, Map<String, Object> data) {

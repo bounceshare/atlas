@@ -120,7 +120,11 @@
             for(var i = 0; i < genericPathObjs.length; i++) {
                 var pathData = genericPathObjs[i];
                 var points = getPoints(pathData.points);
-                var path = L.polyline(points, {color: pathData.color});
+                var lineWeight = 5
+                if(pathData.lineWeight) {
+                    weight = pathData.lineWeight;
+                }
+                var path = L.polyline(points, {color: pathData.color, weight: lineWeight});
                 var popupInfo = "<br/><div class='border'><div class='p-2 text-monospace'>";
                 if(pathData.data) {
                     for(var key in pathData.data) {
