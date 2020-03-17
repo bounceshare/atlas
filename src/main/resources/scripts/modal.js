@@ -5,9 +5,15 @@
     var timelineItems = []
     var timelineLastObjTime = null;
 
+    var IS_TIMELINE_MODAL = false;
+
     function showTimeline(url, id, title) {
         // TODO set title
-        $('#timelineModalTitle')[0].innerHTML = title;
+        if(IS_TIMELINE_MODAL) {
+            $('#timelineModalTitle')[0].innerHTML = title;
+        } else {
+            $('#sidebar-title')[0].innerHTML = title;
+        }
         fetchData(url, id);
     }
 
@@ -15,6 +21,9 @@
         if(timelineUrl != url || id != timelineObjectId) {
             timelineItems = [];
             $('#timeline-view')[0].innerHTML = "";
+        }
+        if(sidebar) {
+            sidebarClose();
         }
         timelineUrl = url;
         timelineObjectId = id;
@@ -72,26 +81,57 @@
             divElement = divElement.replace("{$body}", item.body);
             divElement = divElement.replace("{$time}", item.timeString);
 
-            $('#timeline-view')[0].innerHTML += divElement;
+            if(IS_TIMELINE_MODAL) {
+                $('#timeline-view')[0].innerHTML += divElement;
+            }else {
+                $('#sidebar-content')[0].innerHTML += divElement
+            }
             timelineItems.push(item);
         }
         timelineLastObjTime = items[items.length -1].time;
-        $('#timelineModal').modal();
-        $('#timelineModal').on('hidden.bs.modal', function (e) {
-            console.log("Clearing the timelone modal");
-            timelineUrl = null;
-            timelineObjectId = null;
-            timelineItems = []
-            timelineLastObjTime = null;
+        if(IS_TIMELINE_MODAL) {
+            $('#timelineModal').modal();
+            $('#timelineModal').on('hidden.bs.modal', function (e) {
+                console.log("Clearing the timelone modal");
+                timelineUrl = null;
+                timelineObjectId = null;
+                timelineItems = []
+                timelineLastObjTime = null;
 
-            $('#timeline-view')[0].innerHTML = "";
-        })
+                $('#timeline-view')[0].innerHTML = "";
+            })
+        } else {
+            sidebar = L.control.sidebar('sidebar', {
+                position: 'left',
+                autoPan: true,
+                closeButton: false
+            });
+            map.addControl(sidebar);
+            $('#sidebar')[0].hidden = false;
+            sidebar.toggle();
+
+            sidebar.on('hide', function () {
+                console.log('Sidebar is now hidden.');
+                timelineUrl = null;
+                timelineObjectId = null;
+                timelineItems = []
+                timelineLastObjTime = null;
+
+                $('#sidebar-content')[0].innerHTML = "";
+                $('#sidebar')[0].hidden = true;
+                sidebar = null;
+            });
+        }
     }
 
     function loadMoreTimelineItems() {
         if(timelineUrl && timelineObjectId) {
             fetchData(timelineUrl, timelineObjectId);
         }
+    }
+
+    function sidebarClose() {
+        sidebar.hide();
     }
 
 </script>

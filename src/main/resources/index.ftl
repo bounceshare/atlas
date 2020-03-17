@@ -12,6 +12,7 @@
 <div id="freemarker_searchurl" hidden><#if searchUrl??>${searchUrl}<#else></#if></div>
 <div id="freemarker_autorefresh" hidden><#if autoRefresh??>${autoRefresh}<#else>false</#if></div>
 
+<#include "/sidebar.ftl">
 <div id="mapDiv" style="height:100%;"></div>
 <#include "/scripts/render.js">
 <#include "/scripts/layers.js">

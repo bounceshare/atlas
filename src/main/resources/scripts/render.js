@@ -23,6 +23,7 @@
 
     var refresh = true;
     var query = "";
+    var sidebar = null;
 
 
     function bootstrap() {
@@ -288,6 +289,7 @@
             tileSize: 512,
             zoomOffset: -1
         }).addTo(map);
+
     }
 
     function onMapEvent(event) {
