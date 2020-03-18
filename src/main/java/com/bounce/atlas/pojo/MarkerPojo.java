@@ -56,7 +56,7 @@ public class MarkerPojo {
                 marker.data.put("Axcess Id", bikeData.get("axcess_id"));
                 marker.data.put("Secondary GPS", (bikeData.get("sec_gps_lat")+ "," + bikeData.get("sec_gps_lon")));
                 marker.data.put("Secondary GPS updated time", bikeData.get("sec_gps_updated_time"));
-                marker.data.put("Timeline", "<b><a href='#' onclick='showTimeline(\"/apis/bike/events\", " + bike.getId() +", \"Bike Event Timeline - " + bike.getId() + "\");'>Events</a></b>");
+                marker.data.put("Timeline", "<b><a href='#' onclick='showTimeline(\"/apis/bike/events\", " + bike.getId() +", \"Bike Event Timeline - " + bike.getId() + "\", true);'>Events</a></b>");
                 marker.data.put("Sensor Information", "<b><a href='#' onclick='showTimeline(\"/apis/bike/deviceData\", " + bike.getId() +", \"Bike Sensor Values - " + bike.getId() + "\");'>Here</a></b>");
                 if(bike.getStatus() == BikeStatus.oos) {
                     marker.data.put("OOS Reason", bikeData.get("oos_reason"));

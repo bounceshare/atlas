@@ -5,17 +5,16 @@
     var timelineItems = []
     var timelineLastObjTime = null;
 
-    function showTimeline(url, id, title, isSidebar = true) {
-        // TODO set title
-        if(isSidebar) {
+    function showTimeline(url, id, title, isSidebar = false) {
+        if(!isSidebar) {
             $('#timelineModalTitle')[0].innerHTML = title;
         } else {
             $('#sidebar-title')[0].innerHTML = title;
         }
-        fetchData(url, id);
+        fetchData(url, id, isSidebar);
     }
 
-    function fetchData(url, id) {
+    function fetchData(url, id, isSidebar = false) {
         if(timelineUrl != url || id != timelineObjectId) {
             timelineItems = [];
             $('#timeline-view')[0].innerHTML = "";
@@ -38,7 +37,7 @@
         showLoader(true);
         var bike = null;
         httpPost(url, data, function(response) {
-            renderTimeline(response.data.events);
+            renderTimeline(response.data.events, isSidebar);
             showLoader(false);
         }, function(jqXHR, exceptiom) {
              showLoader(false);
@@ -79,7 +78,7 @@
             divElement = divElement.replace("{$body}", item.body);
             divElement = divElement.replace("{$time}", item.timeString);
 
-            if(isSidebar) {
+            if(!isSidebar) {
                 $('#timeline-view')[0].innerHTML += divElement;
             }else {
                 $('#sidebar-content')[0].innerHTML += divElement
@@ -87,7 +86,7 @@
             timelineItems.push(item);
         }
         timelineLastObjTime = items[items.length -1].time;
-        if(isSidebar) {
+        if(!isSidebar) {
             $('#timelineModal').modal();
             $('#timelineModal').on('hidden.bs.modal', function (e) {
                 console.log("Clearing the timelone modal");

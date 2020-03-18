@@ -333,7 +333,7 @@
         }
 
         if(events != null) {
-            renderTimeline(events);
+            renderTimeline(events, isSidebar);
         }
 
         refresh = toRefresh;
