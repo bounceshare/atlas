@@ -60,6 +60,9 @@
             console.log("Error in httpPost");
             if(error != null) {
                 error(jqXHR, exception);
+                if(jqXHR != null && jqXHR.responseJSON != null && jqXHR.responseJSON.errorReason != null) {
+                    showFailureMessage(jqXHR.responseJSON.errorReason);
+                }
             }
         });
     }

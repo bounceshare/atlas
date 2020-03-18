@@ -17,6 +17,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import org.apache.http.util.TextUtils;
 import org.joda.time.DateTime;
+import org.jooq.meta.derby.sys.Sys;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import redis.clients.jedis.Jedis;
@@ -46,69 +47,8 @@ public class BikeEventsApi extends BaseApiHandler {
 
             long from = input.optLong("from", System.currentTimeMillis());
 
-            List<BookingRecord> bookings = DatabaseConnector.getDb().getReadDbConnector().selectFrom(Booking.BOOKING)
-                    .where(Booking.BOOKING.BIKE_ID.eq(bikeId))
-                    .and(Booking.BOOKING.CREATED_ON.lessThan(new Timestamp(from))).orderBy(Booking.BOOKING.CREATED_ON.desc())
-                    .limit(40).fetch();
+            bikeDetailsCards = getCards(bikeId, from);
 
-            for (BookingRecord booking : bookings) {
-                bikeDetailsCards.addAll(BikeDetailsCard.getCard(booking));
-                List<EndTripFeedbackRecord> endTripFeedbacks =
-                        DatabaseConnector.getDb().getReadDbConnector().selectFrom(EndTripFeedback.END_TRIP_FEEDBACK)
-                                .where(EndTripFeedback.END_TRIP_FEEDBACK.BOOKING_ID.eq(booking.getId())).fetch();
-
-                for (EndTripFeedbackRecord endTripFeedback : endTripFeedbacks) {
-                    bikeDetailsCards.add(BikeDetailsCard.getCard(endTripFeedback));
-                }
-            }
-
-            boolean fetchTillNow = true;
-            if (input.has("from")) {
-                fetchTillNow = false;
-            }
-
-            long bslFirstTime = 0;
-            long bslLastTime = 0;
-            if (fetchTillNow && bookings.size() > 1) {
-                bslFirstTime = System.currentTimeMillis();
-                bslLastTime = bookings.get(bookings.size() - 1).getCreatedOn().getTime();
-            } else if (!fetchTillNow && bookings.size() > 1) {
-                bslFirstTime = bookings.get(0).getCreatedOn().getTime();
-                bslLastTime = bookings.get(bookings.size() - 1).getCreatedOn().getTime();
-            } else if (fetchTillNow && bookings.size() < 1) {
-                bslFirstTime = System.currentTimeMillis();
-                bslLastTime = DateTime.now().minusDays(2).getMillis();
-            } else if (!fetchTillNow && bookings.size() < 1) {
-                bslFirstTime = from;
-                bslLastTime = new DateTime(from).minusDays(2).getMillis();
-            }
-
-            logger.info("bslFirstTime : " + bslFirstTime);
-            logger.info("bslLastTime : " + bslLastTime);
-            logger.info("bikeId : " + bikeId);
-
-            List<BikeStatusLogRecord> bikeStatusLogRecords = null;
-            if(GlobalConfigUtils.getGlobalConfigBoolean("ATLAS_USE_BSL_FROM_REDIS", true)) {
-                bikeStatusLogRecords = getBsl(bikeId, bslLastTime, bslFirstTime);
-            } else {
-                bikeStatusLogRecords = DatabaseConnector.getDb().getReadDbConnector().selectFrom(BikeStatusLog.BIKE_STATUS_LOG)
-                                .where(BikeStatusLog.BIKE_STATUS_LOG.BIKE_ID.eq(bikeId))
-                                .and(BikeStatusLog.BIKE_STATUS_LOG.CREATED_ON.greaterThan(new Timestamp(bslLastTime)))
-                                .and(BikeStatusLog.BIKE_STATUS_LOG.CREATED_ON.lessThan(new Timestamp(bslFirstTime))).fetch();
-            }
-
-            for(BikeStatusLogRecord bsl : bikeStatusLogRecords) {
-                bikeDetailsCards.add(BikeDetailsCard.getCard(bsl));
-            }
-
-            Collections.sort(bikeDetailsCards, new BikeDetailsCard.CardComparator());
-
-            JSONArray tasksArray = getTasks(bikeId);
-            if(tasksArray.length() > 0) {
-                for (int i = 0; i < tasksArray.length(); i++) {
-                    bikeDetailsCards.addAll(BikeDetailsCard.getCard(tasksArray.getJSONObject(i)));
-                }
-            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -119,6 +59,74 @@ public class BikeEventsApi extends BaseApiHandler {
         response.put("events", bikeDetailsCards);
 
         sendSuccessResponse(asyncResponse, response);
+    }
+
+    public static List<BikeDetailsCard> getCards(int bikeId, long from) {
+        List<BikeDetailsCard> bikeDetailsCards = Lists.newArrayList();
+        List<BookingRecord> bookings = DatabaseConnector.getDb().getReadDbConnector().selectFrom(Booking.BOOKING)
+                .where(Booking.BOOKING.BIKE_ID.eq(bikeId))
+                .and(Booking.BOOKING.CREATED_ON.lessThan(new Timestamp(from))).orderBy(Booking.BOOKING.CREATED_ON.desc())
+                .limit(40).fetch();
+
+        for (BookingRecord booking : bookings) {
+            bikeDetailsCards.addAll(BikeDetailsCard.getCard(booking));
+            List<EndTripFeedbackRecord> endTripFeedbacks =
+                    DatabaseConnector.getDb().getReadDbConnector().selectFrom(EndTripFeedback.END_TRIP_FEEDBACK)
+                            .where(EndTripFeedback.END_TRIP_FEEDBACK.BOOKING_ID.eq(booking.getId())).fetch();
+
+            for (EndTripFeedbackRecord endTripFeedback : endTripFeedbacks) {
+                bikeDetailsCards.add(BikeDetailsCard.getCard(endTripFeedback));
+            }
+        }
+
+        boolean fetchTillNow = true;
+        if (System.currentTimeMillis() - from > 60 * 1000 * 60) {
+            fetchTillNow = false;
+        }
+
+        long bslFirstTime = 0;
+        long bslLastTime = 0;
+        if (fetchTillNow && bookings.size() > 1) {
+            bslFirstTime = System.currentTimeMillis();
+            bslLastTime = bookings.get(bookings.size() - 1).getCreatedOn().getTime();
+        } else if (!fetchTillNow && bookings.size() > 1) {
+            bslFirstTime = bookings.get(0).getCreatedOn().getTime();
+            bslLastTime = bookings.get(bookings.size() - 1).getCreatedOn().getTime();
+        } else if (fetchTillNow && bookings.size() < 1) {
+            bslFirstTime = System.currentTimeMillis();
+            bslLastTime = DateTime.now().minusDays(2).getMillis();
+        } else if (!fetchTillNow && bookings.size() < 1) {
+            bslFirstTime = from;
+            bslLastTime = new DateTime(from).minusDays(2).getMillis();
+        }
+
+        logger.info("bslFirstTime : " + bslFirstTime);
+        logger.info("bslLastTime : " + bslLastTime);
+        logger.info("bikeId : " + bikeId);
+
+        List<BikeStatusLogRecord> bikeStatusLogRecords = null;
+        if(GlobalConfigUtils.getGlobalConfigBoolean("ATLAS_USE_BSL_FROM_REDIS", true)) {
+            bikeStatusLogRecords = getBsl(bikeId, bslLastTime, bslFirstTime);
+        } else {
+            bikeStatusLogRecords = DatabaseConnector.getDb().getReadDbConnector().selectFrom(BikeStatusLog.BIKE_STATUS_LOG)
+                    .where(BikeStatusLog.BIKE_STATUS_LOG.BIKE_ID.eq(bikeId))
+                    .and(BikeStatusLog.BIKE_STATUS_LOG.CREATED_ON.greaterThan(new Timestamp(bslLastTime)))
+                    .and(BikeStatusLog.BIKE_STATUS_LOG.CREATED_ON.lessThan(new Timestamp(bslFirstTime))).fetch();
+        }
+
+        for(BikeStatusLogRecord bsl : bikeStatusLogRecords) {
+            bikeDetailsCards.add(BikeDetailsCard.getCard(bsl));
+        }
+
+        Collections.sort(bikeDetailsCards, new BikeDetailsCard.CardComparator());
+
+        JSONArray tasksArray = getTasks(bikeId);
+        if(tasksArray.length() > 0) {
+            for (int i = 0; i < tasksArray.length(); i++) {
+                bikeDetailsCards.addAll(BikeDetailsCard.getCard(tasksArray.getJSONObject(i)));
+            }
+        }
+        return bikeDetailsCards;
     }
 
     private static JSONArray getTasks(int bikeId) {

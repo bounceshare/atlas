@@ -298,7 +298,7 @@
         // If move is set to true. hit api to fetch data and set it using js. Only for home page
     }
 
-    function invalidateMap(tMarkers, tFences, tCircles, tPaths, fitToBounds = false, toRefresh = refresh) {
+    function invalidateMap(tMarkers, tFences, tCircles, tPaths, events, fitToBounds = false, toRefresh = refresh) {
         console.log("fitToBounds : " + fitToBounds);
         if(tMarkers != null) {
             $('#markerData')[0].innerText = JSON.stringify(tMarkers);
@@ -330,6 +330,10 @@
 
         if(tMarkers != null && tMarkers.length > 0 && fitToBounds) {
             map.fitBounds(markerClusterGroup.getBounds(), {padding: [50,50]});
+        }
+
+        if(events != null) {
+            renderTimeline(events);
         }
 
         refresh = toRefresh;

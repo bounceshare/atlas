@@ -33,7 +33,7 @@
         }
         showLoader(true);
         httpPost(searchUrl, data, function(response) {
-            invalidateMap(response.data.markers, response.data.fences, response.data.circles, response.data.paths, true, response.data.autoRefresh);
+            invalidateMap(response.data.markers, response.data.fences, response.data.circles, response.data.paths, response.data.events, true, response.data.autoRefresh);
             showLoader(false);
         }, function(jqXHR, exceptiom) {
             showLoader(false);
