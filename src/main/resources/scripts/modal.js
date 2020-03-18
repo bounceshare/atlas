@@ -5,11 +5,9 @@
     var timelineItems = []
     var timelineLastObjTime = null;
 
-    var IS_TIMELINE_MODAL = false;
-
-    function showTimeline(url, id, title) {
+    function showTimeline(url, id, title, isSidebar = true) {
         // TODO set title
-        if(IS_TIMELINE_MODAL) {
+        if(isSidebar) {
             $('#timelineModalTitle')[0].innerHTML = title;
         } else {
             $('#sidebar-title')[0].innerHTML = title;
@@ -47,7 +45,7 @@
          });
     }
 
-    function renderTimeline(items) {
+    function renderTimeline(items, isSidebar = true) {
         if(items.length < 1) {
             return;
         }
@@ -81,7 +79,7 @@
             divElement = divElement.replace("{$body}", item.body);
             divElement = divElement.replace("{$time}", item.timeString);
 
-            if(IS_TIMELINE_MODAL) {
+            if(isSidebar) {
                 $('#timeline-view')[0].innerHTML += divElement;
             }else {
                 $('#sidebar-content')[0].innerHTML += divElement
@@ -89,7 +87,7 @@
             timelineItems.push(item);
         }
         timelineLastObjTime = items[items.length -1].time;
-        if(IS_TIMELINE_MODAL) {
+        if(isSidebar) {
             $('#timelineModal').modal();
             $('#timelineModal').on('hidden.bs.modal', function (e) {
                 console.log("Clearing the timelone modal");

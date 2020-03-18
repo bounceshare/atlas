@@ -17,7 +17,7 @@
         var searchUrl = $('#freemarker_searchurl')[0].innerText;
 
         httpPost(searchUrl, data, function(response) {
-            invalidateMap(response.data.markers, response.data.fences, response.data.circles, response.data.paths, response.data.events, false, response.data.autoRefresh);
+            invalidateMap(response.data.markers, response.data.fences, response.data.circles, response.data.paths, response.data.events, response.data.isSidebar, false, response.data.autoRefresh);
             showLoader(false);
         }, function(jqXHR, exceptiom) {
              showLoader(false);
