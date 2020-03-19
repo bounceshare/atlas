@@ -53,10 +53,13 @@
             markerClusterGroup = L.markerClusterGroup();
             for(var i = 0; i < genericMarkerObjs.length; i++) {
                 var markerData = genericMarkerObjs[i];
-                var markerIcon = L.icon({
+                var markerIcon = L.divIcon({
+                   className: 'bg-transparent',
+                   html: '<div class="text-center"><h6>' + markerData.title +'</h6><img src="/resources/icons/marker_green.png" style="width: 50; height: 50;"></div>',
                    iconUrl: markerData.iconUrl,
                    iconSize:     [50, 50], // size of the icon
-                });;
+                   iconAnchor: [25, 50]
+                });
 
                 var marker = L.marker([markerData.location.lat, markerData.location.lon],{icon: markerIcon});
 
