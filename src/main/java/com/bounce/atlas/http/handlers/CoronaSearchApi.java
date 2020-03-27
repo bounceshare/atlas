@@ -9,6 +9,7 @@ import com.bounce.utils.apis.BaseApiHandler;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.util.TextUtils;
 import org.json.JSONArray;
@@ -17,6 +18,7 @@ import org.json.JSONObject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.container.AsyncResponse;
+import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,7 +26,8 @@ import java.util.stream.Collectors;
 
 public class CoronaSearchApi extends BaseApiHandler {
 
-    private static Map<String, String> mapCoords;
+    private static Map<String, String> countriesCoords;
+    private static Map<String, String> statesCoords;
 
     static {
         updateMapCoords();
@@ -45,13 +48,28 @@ public class CoronaSearchApi extends BaseApiHandler {
             String worldDataResponse =
                     RestGenericRequest.httpGet("https://coronavirus-19-api.herokuapp.com/countries", new JSONObject("{}"), null);
             JSONArray worldData = new JSONArray(worldDataResponse);
+            JSONObject indiaObj = null;
             for (int i = 0; i < worldData.length(); i++) {
                 MarkerPojo marker = getMarkerPojoForCountry(worldData.getJSONObject(i));
+                if(worldData.getJSONObject((i)).optString("country").toLowerCase().equals("india")) {
+                    indiaObj = worldData.getJSONObject(i);
+                }
                 if(marker!=null) {
                     markers.add(marker);
                 }
             }
 
+            String indiaDataResponse = RestGenericRequest.httpGet("https://script.googleusercontent.com/macros/echo?user_content_key=ziTggsRx2_Si33Fqw0rto6emuJbWQnpJvN37O-CKfAtq_OiUmjepLv1s9roBJOVrHhWkoii-I4jAbiwY2JTwblGkzA4IfhJ_m5_BxDlH2jW0nuo2oDemN9CCS2h10ox_1xSncGQajx_ryfhECjZEnKXFvsR88vL4WiBr168omFadgngDnj25DLpEvLRaiIpzZr1NvbW-Bo38vshdDBv10tpytj_A4aoE&lib=Mm1FD1HVuydJN5yAB3dc_e8h00DPSBbB3", new JSONObject("{}"), null);
+            List<MarkerPojo> stateMarkers = null;
+            if(TextUtils.isEmpty(indiaDataResponse)) {
+                stateMarkers = getStateMarkers(null, indiaObj);
+            } else {
+                Type type = new TypeToken<Map<String, Integer>>() {
+                }.getType();
+                Map<String, Integer> stateResponseMap = gson.fromJson(indiaDataResponse, type);
+                stateMarkers = getStateMarkers(stateResponseMap, indiaObj);
+            }
+            markers.addAll(stateMarkers);
         } catch (Exception e) {
             e.printStackTrace();
             BounceUtils.logError(e);
@@ -62,10 +80,61 @@ public class CoronaSearchApi extends BaseApiHandler {
         sendSuccessResponse(asyncResponse, response);
     }
 
+    private List<MarkerPojo> getStateMarkers(Map<String, Integer> stateResponseMap, JSONObject indiaObj) {
+        List<MarkerPojo> markerPojos = Lists.newArrayList();
+        if(stateResponseMap != null) {
+            stateResponseMap.put("Telangana", stateResponseMap.get("Telengana"));
+            stateResponseMap.remove("Telengana");
+
+            for (Map.Entry<String, Integer> entry : stateResponseMap.entrySet()) {
+                MarkerPojo markerPojo = new MarkerPojo();
+                String location = statesCoords.get(entry.getKey());
+                if (TextUtils.isEmpty(location)) {
+                    logger.info("Location not found for state : " + entry.getKey());
+                    continue;
+                }
+                markerPojo.location = new PointPojo(Double.parseDouble(location.split(",")[0]), Double.parseDouble(location.split(",")[1]));
+                markerPojo.legend = entry.getValue() + "";
+                markerPojo.count = entry.getValue();
+                markerPojo.title = entry.getKey();
+                markerPojo.subtext = "Total Cases : " + entry.getValue();
+                markerPojo.iconUrl = "/resources/icons/marker_red.png";
+                markerPojo.data = new Gson().fromJson(indiaObj.toString(), HashMap.class);
+                markerPojo.data.put("<b>Total Cases</b>", "<b>" + indiaObj.optInt("cases") + "</b>");
+                markerPojo.data.remove("cases");
+                markerPojo.data.remove("country");
+                markerPojo.data = markerPojo.data.keySet().stream()
+                        .collect(Collectors.toMap(key -> "India " + StringUtils.capitalize(key), key -> markerPojo.data.get(key)));
+                markerPojos.add(markerPojo);
+            }
+        } else {
+            MarkerPojo markerPojo = new MarkerPojo();
+            String location = countriesCoords.get(indiaObj.optString("country"));
+            markerPojo.location = new PointPojo(Double.parseDouble(location.split(",")[0]),Double.parseDouble(location.split(",")[1]));
+            markerPojo.legend = indiaObj.optInt("cases") + "";
+            markerPojo.count = indiaObj.optInt("cases");
+            markerPojo.title =indiaObj.optString("country");
+            markerPojo.subtext = "Total Cases : " + indiaObj.optString("cases");
+            markerPojo.iconUrl = "/resources/icons/marker_red.png";
+            markerPojo.data = new Gson().fromJson(indiaObj.toString(), HashMap.class);
+            markerPojo.data.remove("cases");
+            markerPojo.data.remove("country");
+            markerPojo.data = markerPojo.data.keySet().stream()
+                    .collect(Collectors.toMap(key -> StringUtils.capitalize(key), key -> markerPojo.data.get(key)));
+            markerPojos.add(markerPojo);
+        }
+
+        return markerPojos;
+    }
+
     private MarkerPojo getMarkerPojoForCountry(JSONObject jsonObject) {
         MarkerPojo markerPojo = new MarkerPojo();
 
-        String location = mapCoords.get(jsonObject.optString("country"));
+        if(jsonObject.optString("country").toLowerCase().equals("india")) {
+            return null;
+        }
+
+        String location = countriesCoords.get(jsonObject.optString("country"));
         if(TextUtils.isEmpty(location)) {
             logger.info("Location not found for country : " + jsonObject.optString("country"));
             return null;
@@ -86,17 +155,25 @@ public class CoronaSearchApi extends BaseApiHandler {
 
     public static void main(String[] args) {
         updateMapCoords();
-        System.out.println("MapCoords : " + gson.toJson(mapCoords));
+        System.out.println("MapCoords : " + gson.toJson(countriesCoords));
     }
 
     private static void updateMapCoords() {
         try {
             String countriesString = ContentUtils.getContent("countries.json");
             JSONArray jsonArray = new JSONArray(countriesString);
-            mapCoords = Maps.newHashMap();
+            countriesCoords = Maps.newHashMap();
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject jsonObject = jsonArray.getJSONObject(i);
-                mapCoords.put(jsonObject.optString("name"), jsonObject.optString("location"));
+                countriesCoords.put(jsonObject.optString("name"), jsonObject.optString("location"));
+            }
+
+            String statesString = ContentUtils.getContent("states.json");
+            JSONArray statesArray = new JSONArray(statesString);
+            statesCoords = Maps.newHashMap();
+            for (int i = 0; i < statesArray.length(); i++) {
+                JSONObject jsonObject = statesArray.getJSONObject(i);
+                statesCoords.put(jsonObject.optString("name"), jsonObject.optString("location"));
             }
         } catch (Exception e) {
             BounceUtils.logError(e);
