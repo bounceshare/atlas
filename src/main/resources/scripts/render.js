@@ -53,9 +53,13 @@
             markerClusterGroup = L.markerClusterGroup();
             for(var i = 0; i < genericMarkerObjs.length; i++) {
                 var markerData = genericMarkerObjs[i];
+                var legend = markerData.legend;
+                if(!legend) {
+                    legend = markerData.title;
+                }
                 var markerIcon = L.divIcon({
                    className: 'bg-transparent',
-                   html: '<div class="text-center" style="order: 1; position: relative; background-color: #fff; border-radius: 5px; border-width: 2px; border-style: solid; border-color: #444; padding: 3px; white-space: nowrap;">' + markerData.title +'</div><img src="' + markerData.iconUrl + '" style="width: 50; height: 50;">',
+                   html: '<div class="text-center" style="order: 1; position: relative; background-color: #fff; border-radius: 5px; border-width: 2px; border-style: solid; border-color: #444; padding: 3px; white-space: nowrap;">' + legend +'</div><img src="' + markerData.iconUrl + '" style="width: 50; height: 50;">',
                    iconUrl: markerData.iconUrl,
                    iconSize:     [50, 50], // size of the icon
                    iconAnchor: [25, 50]

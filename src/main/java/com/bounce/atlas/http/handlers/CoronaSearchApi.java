@@ -9,6 +9,7 @@ import com.bounce.utils.apis.BaseApiHandler;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.gson.Gson;
+import org.apache.commons.lang.StringUtils;
 import org.apache.http.util.TextUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -16,10 +17,10 @@ import org.json.JSONObject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.container.AsyncResponse;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class CoronaSearchApi extends BaseApiHandler {
 
@@ -70,12 +71,15 @@ public class CoronaSearchApi extends BaseApiHandler {
             return null;
         }
         markerPojo.location = new PointPojo(Double.parseDouble(location.split(",")[0]),Double.parseDouble(location.split(",")[1]));
-        markerPojo.title = jsonObject.optInt("cases") + "";
-        markerPojo.subtext = jsonObject.optString("country");
+        markerPojo.legend = jsonObject.optInt("cases") + "";
+        markerPojo.title =jsonObject.optString("country");
+        markerPojo.subtext = "Total Cases : " + jsonObject.optString("cases");
         markerPojo.iconUrl = "/resources/icons/marker_red.png";
         markerPojo.data = new Gson().fromJson(jsonObject.toString(), HashMap.class);
         markerPojo.data.remove("cases");
         markerPojo.data.remove("country");
+        markerPojo.data = markerPojo.data.keySet().stream()
+                .collect(Collectors.toMap(key -> StringUtils.capitalize(key), key -> markerPojo.data.get(key)));
         return markerPojo;
     }
 
