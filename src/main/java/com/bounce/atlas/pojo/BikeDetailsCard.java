@@ -18,6 +18,7 @@ import java.util.Map;
 
 public class BikeDetailsCard {
 
+    public String timelineHeader;
     public String header;
     public long time;
     public String timeString;

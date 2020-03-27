@@ -59,6 +59,14 @@
             return 0;
         });
 
+        if(items[0].timelineHeader) {
+            if(!isSidebar) {
+                $('#timelineModalTitle')[0].innerHTML = items[0].timelineHeader;
+            } else {
+                $('#sidebar-title')[0].innerHTML = items[0].timelineHeader;
+            }
+        }
+
         for (var i = 0; i < items.length; i++) {
             var item = items[i];
             var detailsElement = "<div class='border'><div class='p-2 text-monospace'>{$detail-item}</div></div>";

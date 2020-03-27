@@ -1,7 +1,9 @@
 package com.bounce.atlas.http.handlers;
 
+import com.bounce.atlas.pojo.BikeDetailsCard;
 import com.bounce.atlas.pojo.MarkerPojo;
 import com.bounce.atlas.pojo.PointPojo;
+import com.bounce.atlas.utils.Constants;
 import com.bounce.atlas.utils.ContentUtils;
 import com.bounce.utils.BounceUtils;
 import com.bounce.utils.Pair;
@@ -51,6 +53,7 @@ public class CoronaSearchApi extends BaseApiHandler {
         }
         logger.info("Cache outdated. Fetching information again");
         List<MarkerPojo> markers = Lists.newArrayList();
+        List<BikeDetailsCard> cards = Lists.newArrayList();
         try {
             super.onRequest();
 
@@ -79,12 +82,50 @@ public class CoronaSearchApi extends BaseApiHandler {
                 stateMarkers = getStateMarkers(stateResponseMap, indiaObj);
             }
             markers.addAll(stateMarkers);
+
+            BikeDetailsCard globalCard = new BikeDetailsCard();
+            BikeDetailsCard indiaCard = new BikeDetailsCard();
+            JSONObject globalData =
+                    new JSONObject(RestGenericRequest.httpGet("https://coronavirus-19-api.herokuapp.com/all", new JSONObject("{}"), null));
+
+            globalCard.header = "Worldwide";
+            globalCard.timeString = "";
+            globalCard.time = System.currentTimeMillis();
+            globalCard.body = "";
+            globalCard.color = Constants.Color.INFO;
+            globalCard.timelineHeader = "Coronavirus Cases";
+            globalCard.details = Maps.newHashMap();
+            globalCard.details.put("Total Cases", globalData.optInt("cases") + "");
+            globalCard.details.put("Total Deaths", globalData.optInt("deaths") + "");
+            globalCard.details.put("Total Recovered", globalData.optInt("recovered") + "");
+
+            indiaCard.header = "India";
+            indiaCard.timeString = "";
+            indiaCard.time = System.currentTimeMillis() - 10000;
+            indiaCard.body = "";
+            indiaCard.color = Constants.Color.INFO;
+            indiaCard.timelineHeader = "Coronavirus Cases";
+            indiaCard.details = Maps.newHashMap();
+            indiaCard.details.put("Total Cases", indiaObj.optInt("cases") + "");
+            indiaCard.details.put("Today Cases", indiaObj.optInt("todayCases") + "");
+            indiaCard.details.put("Deaths", indiaObj.optInt("deaths") + "");
+            indiaCard.details.put("Today Deaths", indiaObj.optInt("todayDeaths") + "");
+            indiaCard.details.put("Recovered", indiaObj.optInt("recovered") + "");
+            indiaCard.details.put("Active", indiaObj.optInt("active") + "");
+            indiaCard.details.put("Critical", indiaObj.optInt("critical") + "");
+            indiaCard.details.put("CasesPerOneMillion", indiaObj.optInt("casesPerOneMillion") + "");
+            indiaCard.details.put("DeathsPerOneMillion", indiaObj.optInt("deathsPerOneMillion") + "");
+
+
+            cards.add(globalCard);
+            cards.add(indiaCard);
         } catch (Exception e) {
             e.printStackTrace();
             BounceUtils.logError(e);
         }
         response.put("markers", markers);
         response.put("autoRefresh", false);
+        response.put("events", cards);
 
         sendSuccessResponse(asyncResponse, response);
         responseTimestampPair = new Pair<>(response, System.currentTimeMillis());
