@@ -132,7 +132,6 @@ public class RequestApis {
     @Path("/corona/search")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes({MediaType.APPLICATION_JSON})
-    @GoogleAuth
     public void coronaSearch(String inputString, @Suspended final AsyncResponse asyncResponse) {
         logger.info("/apis/corona/search");
         CoronaSearchApi coronaSearchApi = new CoronaSearchApi(inputString, asyncResponse, httpRequest, httpResponse);

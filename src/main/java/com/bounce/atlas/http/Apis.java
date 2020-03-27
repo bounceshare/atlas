@@ -183,8 +183,12 @@ public class Apis {
 
         ConfigPojo.Page page = ContentUtils.getPage(path, isAuth);
         if(page == null) {
+            String redirectPath = "/login";
+            if(isAuth) {
+                redirectPath = "/404";
+            }
             UriBuilder builder =
-                    UriBuilder.fromPath("").path("/404");
+                    UriBuilder.fromPath("").path(redirectPath);
             asyncResponse.resume(Response.temporaryRedirect(builder.build()).build());
             return;
         }
