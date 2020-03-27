@@ -72,6 +72,7 @@ public class CoronaSearchApi extends BaseApiHandler {
         }
         markerPojo.location = new PointPojo(Double.parseDouble(location.split(",")[0]),Double.parseDouble(location.split(",")[1]));
         markerPojo.legend = jsonObject.optInt("cases") + "";
+        markerPojo.count = jsonObject.optInt("cases");
         markerPojo.title =jsonObject.optString("country");
         markerPojo.subtext = "Total Cases : " + jsonObject.optString("cases");
         markerPojo.iconUrl = "/resources/icons/marker_red.png";

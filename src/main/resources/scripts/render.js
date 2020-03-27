@@ -50,7 +50,23 @@
     function renderMarkers() {
         try{
             console.log("renderMarkers()")
-            markerClusterGroup = L.markerClusterGroup();
+            if(genericMarkerObjs.length > 0 && genericMarkerObjs[0].count > 0) {
+                markerClusterGroup = L.markerClusterGroup({
+                    iconCreateFunction: function(cluster) {
+                        var legend = 0;
+                        var markers = cluster.getAllChildMarkers();
+                        for (var i = 0; i < markers.length; i++) {
+                            legend += markers[i].count;
+                        }
+                        return L.divIcon({ html: '<div class="text-center" style="order: 1; width: 50; position: relative; background-color: #fff; border-radius: 5px; border-width: 2px; border-style: solid; border-color: #444; padding: 3px; white-space: nowrap;">' + legend +'</div>',
+                             className: 'bg-transparent'
+                        });
+                    }
+                });
+//                markerClusterGroup = L.markerClusterGroup();
+            } else {
+                markerClusterGroup = L.markerClusterGroup();
+            }
             for(var i = 0; i < genericMarkerObjs.length; i++) {
                 var markerData = genericMarkerObjs[i];
                 var legend = markerData.legend;
@@ -79,6 +95,9 @@
                 marker.bindPopup(popupInfo, {autoClose: false});
                 marker.text = markerData.title + " / " + markerData.subtext;
                 marker.alt = markerData.title + " / " + markerData.subtext;
+                if(markerData.count > 0) {
+                    marker.count = markerData.count;
+                }
                 markers.push(marker);
             }
             markerClusterGroup.addLayers(markers);
