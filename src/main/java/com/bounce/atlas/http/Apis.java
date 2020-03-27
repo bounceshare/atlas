@@ -1,6 +1,7 @@
 package com.bounce.atlas.http;
 
 import com.bounce.atlas.pojo.*;
+import com.bounce.atlas.utils.AuthUtils;
 import com.bounce.atlas.utils.ContentUtils;
 import com.bounce.atlas.utils.GoogleAuth;
 import com.bounce.utils.BounceUtils;
@@ -12,6 +13,7 @@ import org.apache.http.util.TextUtils;
 import org.apache.log4j.Logger;
 import org.json.JSONObject;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.*;
@@ -20,6 +22,7 @@ import javax.ws.rs.container.Suspended;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriBuilder;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
@@ -85,7 +88,7 @@ public class Apis {
             e.printStackTrace();
             BounceUtils.logError(e);
         }
-        return "404";
+        return "404.ftl";
     }
 
     @GET
@@ -95,7 +98,7 @@ public class Apis {
     public void login(@Suspended final AsyncResponse asyncResponse) {
         logger.info("/login");
 
-        Map<String, Object> data = ContentUtils.getDefaultFreemarkerObj("login");
+        Map<String, Object> data = ContentUtils.getDefaultFreemarkerObj("login", false);
 
         String content = ContentUtils.getFreemarkerString("login.ftl", data);
         asyncResponse.resume(Response.ok().entity(content).build());
@@ -109,10 +112,24 @@ public class Apis {
     public void config(@Suspended final AsyncResponse asyncResponse) {
         logger.info("/config");
 
-        Map<String, Object> data = ContentUtils.getDefaultFreemarkerObj("config");
+        Map<String, Object> data = ContentUtils.getDefaultFreemarkerObj("config", true);
         data.put("config", gson.toJson(ContentUtils.getConfig()));
 
         String content = ContentUtils.getFreemarkerString("config.ftl", data);
+        asyncResponse.resume(Response.ok().entity(content).build());
+    }
+
+    @GET
+    @Path("/404")
+    @Produces(MediaType.TEXT_HTML)
+    @Consumes({MediaType.APPLICATION_JSON})
+    public void notFound404(@Suspended final AsyncResponse asyncResponse) {
+        logger.info("/404");
+
+        Map<String, Object> data = ContentUtils.getDefaultFreemarkerObj("404", false);
+        data.put("config", gson.toJson(ContentUtils.getConfig()));
+
+        String content = ContentUtils.getFreemarkerString("404.ftl", data);
         asyncResponse.resume(Response.ok().entity(content).build());
     }
 
@@ -154,7 +171,6 @@ public class Apis {
     @Path("/{path:.*}")
     @Produces(MediaType.TEXT_HTML)
     @Consumes({MediaType.APPLICATION_JSON})
-    @GoogleAuth
     public void search(@Suspended final AsyncResponse asyncResponse, @QueryParam("p") String location, @QueryParam("z")
             String zoom, @QueryParam("q") String query, @PathParam("path") String path) {
 
@@ -162,22 +178,35 @@ public class Apis {
 
         logger.info("ConfigJSON : " + ContentUtils.getConfig());
 
-        Map<String, Object> data = ContentUtils.getDefaultFreemarkerObj("home");
+        path = "/" + path;
+        boolean isAuth = AuthUtils.isAuth(getToken());
+
+        ConfigPojo.Page page = ContentUtils.getPage(path, isAuth);
+        if(page == null) {
+            UriBuilder builder =
+                    UriBuilder.fromPath("").path("/404");
+            asyncResponse.resume(Response.temporaryRedirect(builder.build()).build());
+            return;
+        }
+        Map<String, Object> data = ContentUtils.getDefaultFreemarkerObj(page.getPage(), page.isAuth());
         ConfigPojo config = ContentUtils.getConfig();
         if (TextUtils.isEmpty(location)) {
             location = config.getDefaultLocation();
+            if(!TextUtils.isEmpty(page.getDefaultLocation())) {
+                location = page.getDefaultLocation();
+            }
         }
         if (TextUtils.isEmpty(zoom)) {
             zoom = config.getZoom() + "";
+            if(page.getZoom() > 0) {
+                zoom = page.getZoom() + "";
+            }
         }
 
         data.put("location", location);
         data.put("query", query);
         data.put("zoom", zoom);
 
-        path = "/" + path;
-
-        ConfigPojo.Page page = ContentUtils.getPage(path);
         if(page != null) {
             data.put("page", page.getPageId());
             data.put("autoRefresh", page.getAutoRefresh());
@@ -189,6 +218,17 @@ public class Apis {
 
         String content = ContentUtils.getFreemarkerString("index.ftl", data);
         asyncResponse.resume(Response.ok().entity(content).build());
+    }
+
+    private String getToken() {
+        if(httpRequest.getCookies() != null && httpRequest.getCookies().length > 0) {
+            for (Cookie cookie : httpRequest.getCookies()) {
+                if (cookie.getName().equals("token")) {
+                    return cookie.getValue();
+                }
+            }
+        }
+        return null;
     }
 
 }

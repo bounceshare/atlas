@@ -3,6 +3,7 @@ package com.bounce.atlas.pojo;
 import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import org.apache.http.util.TextUtils;
 
 public class ConfigPojo {
 
@@ -105,6 +106,15 @@ public class ConfigPojo {
         @SerializedName("pages")
         @Expose
         private List<Page> pages = null;
+        @SerializedName("auth")
+        @Expose
+        private String auth;
+        @SerializedName("defaultLocation")
+        @Expose
+        private String defaultLocation;
+        @SerializedName("zoom")
+        @Expose
+        private int zoom;
 
         public String getPage() {
             return page;
@@ -186,6 +196,36 @@ public class ConfigPojo {
             this.pages = pages;
         }
 
+        public boolean isAuth() {
+            if(!TextUtils.isEmpty(auth) && auth.equals("open")) {
+                return false;
+            }
+            return true;
+        }
+
+        public String getAuth() {
+            return auth;
+        }
+
+        public void setAuth(String auth) {
+            this.auth = auth;
+        }
+
+        public String getDefaultLocation() {
+            return defaultLocation;
+        }
+
+        public void setDefaultLocation(String defaultLocation) {
+            this.defaultLocation = defaultLocation;
+        }
+
+        public int getZoom() {
+            return zoom;
+        }
+
+        public void setZoom(int zoom) {
+            this.zoom = zoom;
+        }
     }
 
 }

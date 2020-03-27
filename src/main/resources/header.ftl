@@ -68,6 +68,7 @@
                 </#list>
                 </#if>
 
+                <#if auth??>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" id="dropdown04" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Options</a>
                     <div class="dropdown-menu" aria-labelledby="dropdown04">
@@ -84,6 +85,7 @@
                     <a class="nav-link" href="#" data-toggle="popover" title="Help" data-content="${help}">?</a>
                 </li>
                 <#else></#if>
+                </#if>
             </ul>
 
             <div class="form-inline mt-2 mt-md-0" <#if searchPage??><#else>hidden</#if>>

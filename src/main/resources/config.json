@@ -41,6 +41,16 @@
       "help" : "You can search for tracking data for a bike and filter on time. The format to search for it is - <BikeId> 2020-02-13T23:59:59 2020-02-13T20:59:59"
     },
     {
+      "page" : "Covid19",
+      "path" : "/covid19",
+      "autoRefresh" : "true",
+      "searchUrl" : "/apis/search/",
+      "auth" : "open",
+      "defaultLocation" : "21.12549763660629,26.367187500000004",
+      "zoom" : 3,
+      "help" : "Move around the map and Atlas will load the information around those coordinates"
+    },
+    {
       "tabName" : "Layers",
       "pages" : [
         {

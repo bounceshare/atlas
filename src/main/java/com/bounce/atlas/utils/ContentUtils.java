@@ -105,7 +105,7 @@ public class ContentUtils {
         data.put("panOut", "true");
     }
 
-    public static Map<String, Object> getDefaultFreemarkerObj(String page) {
+    public static Map<String, Object> getDefaultFreemarkerObj(String page, boolean isAuth) {
         Map<String, Object> data = Maps.newHashMap();
 
         ConfigPojo config = getConfig();
@@ -115,8 +115,11 @@ public class ContentUtils {
         data.put("favicon", config.getFavicon());
         data.put("logo", config.getLogo());
 
-        data.put("tabs", getRootPages());
-        data.put("nestedTabs", getNestedPages());
+        data.put("tabs", getRootPages(isAuth));
+        data.put("nestedTabs", getNestedPages(isAuth));
+        if(isAuth) {
+            data.put("auth", isAuth);
+        }
 
         return data;
     }
@@ -149,30 +152,49 @@ public class ContentUtils {
         return null;
     }
 
-    private static List<ConfigPojo.Page> getRootPages() {
+    private static List<ConfigPojo.Page> getRootPages(boolean isAuth) {
         List<ConfigPojo.Page> pages = Lists.newArrayList();
         for (ConfigPojo.Page item : getConfig().getTabs()) {
             if (item.getPages() == null || item.getPages().size() < 1) {
-                item.setPageId(item.getPage());
-                pages.add(item);
+                if(item.isAuth()) {
+                    if(isAuth) {
+                        item.setPageId(item.getPage());
+                        pages.add(item);
+                    }
+                } else {
+                    item.setPageId(item.getPage());
+                    pages.add(item);
+                }
             }
         }
 
         return pages;
     }
 
-    private static Map<String, List<ConfigPojo.Page>> getNestedPages() {
+    private static Map<String, List<ConfigPojo.Page>> getNestedPages(boolean isAuth) {
         Map<String, List<ConfigPojo.Page>> map = Maps.newHashMap();
         for (ConfigPojo.Page tab : getConfig().getTabs()) {
             if (tab.getPages() != null && tab.getPages().size() > 0) {
                 for (ConfigPojo.Page page : tab.getPages()) {
-                    page.setPageId(tab.getTabName());
-                    List<ConfigPojo.Page> pages = map.get(tab.getTabName());
-                    if (pages == null) {
-                        pages = Lists.newArrayList();
+                    if(page.isAuth()) {
+                        if(isAuth) {
+                            page.setPageId(tab.getTabName());
+                            List<ConfigPojo.Page> pages = map.get(tab.getTabName());
+                            if (pages == null) {
+                                pages = Lists.newArrayList();
+                            }
+                            pages.add(page);
+                            map.put(tab.getTabName(), pages);
+                        }
+                    } else {
+                        page.setPageId(tab.getTabName());
+                        List<ConfigPojo.Page> pages = map.get(tab.getTabName());
+                        if (pages == null) {
+                            pages = Lists.newArrayList();
+                        }
+                        pages.add(page);
+                        map.put(tab.getTabName(), pages);
                     }
-                    pages.add(page);
-                    map.put(tab.getTabName(), pages);
                 }
             }
         }
@@ -180,20 +202,34 @@ public class ContentUtils {
         return map;
     }
 
-    public static ConfigPojo.Page getPage(String path) {
+    public static ConfigPojo.Page getPage(String path, boolean isAuth) {
         ConfigPojo.Page page = null;
         for (ConfigPojo.Page item : getConfig().getTabs()) {
             if (item.getPages() != null && item.getPages().size() > 0) {
                 for (ConfigPojo.Page subItem : item.getPages()) {
                     if (subItem.getPath().equals(path)) {
-                        page = subItem;
-                        page.setPageId(item.getTabName());
+                        if(subItem.isAuth()) {
+                            if(isAuth) {
+                                page = subItem;
+                                page.setPageId(item.getTabName());
+                            }
+                        } else {
+                            page = subItem;
+                            page.setPageId(item.getTabName());
+                        }
                     }
                 }
             } else {
                 if (item.getPath().equals(path)) {
-                    page = item;
-                    page.setPageId(page.getPage());
+                    if(item.isAuth()) {
+                        if(isAuth) {
+                            page = item;
+                            page.setPageId(page.getPage());
+                        }
+                    } else {
+                        page = item;
+                        page.setPageId(page.getPage());
+                    }
                 }
             }
         }

@@ -44,6 +44,7 @@
     </style>
 
 </head>
+<#include "/header.ftl">
 <#include "/scripts/utils.js">
 
 <body>
