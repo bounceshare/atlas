@@ -188,7 +188,7 @@ public class Apis {
             asyncResponse.resume(Response.temporaryRedirect(builder.build()).build());
             return;
         }
-        Map<String, Object> data = ContentUtils.getDefaultFreemarkerObj(page.getPage(), page.isAuth());
+        Map<String, Object> data = ContentUtils.getDefaultFreemarkerObj(page.getPage(), isAuth);
         ConfigPojo config = ContentUtils.getConfig();
         if (TextUtils.isEmpty(location)) {
             location = config.getDefaultLocation();
