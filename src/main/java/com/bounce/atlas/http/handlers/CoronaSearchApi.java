@@ -84,7 +84,6 @@ public class CoronaSearchApi extends BaseApiHandler {
             markers.addAll(stateMarkers);
 
             BikeDetailsCard globalCard = new BikeDetailsCard();
-            BikeDetailsCard indiaCard = new BikeDetailsCard();
             JSONObject globalData =
                     new JSONObject(RestGenericRequest.httpGet("https://coronavirus-19-api.herokuapp.com/all", new JSONObject("{}"), null));
 
@@ -99,26 +98,14 @@ public class CoronaSearchApi extends BaseApiHandler {
             globalCard.details.put("Total Deaths", globalData.optInt("deaths") + "");
             globalCard.details.put("Total Recovered", globalData.optInt("recovered") + "");
 
-            indiaCard.header = "India";
-            indiaCard.timeString = "";
-            indiaCard.time = System.currentTimeMillis() - 10000;
-            indiaCard.body = "";
-            indiaCard.color = Constants.Color.INFO;
-            indiaCard.timelineHeader = "Coronavirus Cases";
-            indiaCard.details = Maps.newHashMap();
-            indiaCard.details.put("Total Cases", indiaObj.optInt("cases") + "");
-            indiaCard.details.put("Today Cases", indiaObj.optInt("todayCases") + "");
-            indiaCard.details.put("Deaths", indiaObj.optInt("deaths") + "");
-            indiaCard.details.put("Today Deaths", indiaObj.optInt("todayDeaths") + "");
-            indiaCard.details.put("Recovered", indiaObj.optInt("recovered") + "");
-            indiaCard.details.put("Active", indiaObj.optInt("active") + "");
-            indiaCard.details.put("Critical", indiaObj.optInt("critical") + "");
-            indiaCard.details.put("CasesPerOneMillion", indiaObj.optInt("casesPerOneMillion") + "");
-            indiaCard.details.put("DeathsPerOneMillion", indiaObj.optInt("deathsPerOneMillion") + "");
 
 
             cards.add(globalCard);
-            cards.add(indiaCard);
+            cards.add(getCard(indiaObj, 1));
+
+            for (int i = 0; i < 10; i++) {
+                cards.add(getCard(worldData.getJSONObject(i), i + 2));
+            }
         } catch (Exception e) {
             e.printStackTrace();
             BounceUtils.logError(e);
@@ -129,6 +116,28 @@ public class CoronaSearchApi extends BaseApiHandler {
 
         sendSuccessResponse(asyncResponse, response);
         responseTimestampPair = new Pair<>(response, System.currentTimeMillis());
+    }
+
+    private BikeDetailsCard getCard(JSONObject countryObj, int i) {
+        BikeDetailsCard countryCard = new BikeDetailsCard();
+        countryCard.header = StringUtils.capitalize(countryObj.optString("country"));
+        countryCard.timeString = "";
+        countryCard.time = System.currentTimeMillis() - i * 10000;
+        countryCard.body = "";
+        countryCard.color = Constants.Color.INFO;
+        countryCard.timelineHeader = "Coronavirus Cases";
+        countryCard.details = Maps.newHashMap();
+        countryCard.details.put("Total Cases", countryObj.optInt("cases") + "");
+        countryCard.details.put("Today Cases", countryObj.optInt("todayCases") + "");
+        countryCard.details.put("Deaths", countryObj.optInt("deaths") + "");
+        countryCard.details.put("Today Deaths", countryObj.optInt("todayDeaths") + "");
+        countryCard.details.put("Recovered", countryObj.optInt("recovered") + "");
+        countryCard.details.put("Active", countryObj.optInt("active") + "");
+        countryCard.details.put("Critical", countryObj.optInt("critical") + "");
+        countryCard.details.put("CasesPerOneMillion", countryObj.optInt("casesPerOneMillion") + "");
+        countryCard.details.put("DeathsPerOneMillion", countryObj.optInt("deathsPerOneMillion") + "");
+
+        return countryCard;
     }
 
     private List<MarkerPojo> getStateMarkers(Map<String, Integer> stateResponseMap, JSONObject indiaObj) {
