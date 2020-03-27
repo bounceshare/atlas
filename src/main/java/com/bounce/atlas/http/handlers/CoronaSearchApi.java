@@ -4,6 +4,7 @@ import com.bounce.atlas.pojo.MarkerPojo;
 import com.bounce.atlas.pojo.PointPojo;
 import com.bounce.atlas.utils.ContentUtils;
 import com.bounce.utils.BounceUtils;
+import com.bounce.utils.Pair;
 import com.bounce.utils.RestGenericRequest;
 import com.bounce.utils.apis.BaseApiHandler;
 import com.google.common.collect.Lists;
@@ -28,6 +29,7 @@ public class CoronaSearchApi extends BaseApiHandler {
 
     private static Map<String, String> countriesCoords;
     private static Map<String, String> statesCoords;
+    private static Pair<Map<Object, Object>, Long> responseTimestampPair;
 
     static {
         updateMapCoords();
@@ -41,6 +43,13 @@ public class CoronaSearchApi extends BaseApiHandler {
     @Override
     public void onRequest() {
         Map<Object, Object> response = Maps.newHashMap();
+        if(responseTimestampPair != null && (System.currentTimeMillis() - responseTimestampPair.getValue() < 1000 * 60 * 60)) {
+            logger.info("Showing cached information");
+            response = responseTimestampPair.getKey();
+            sendSuccessResponse(asyncResponse, response);
+            return;
+        }
+        logger.info("Cache outdated. Fetching information again");
         List<MarkerPojo> markers = Lists.newArrayList();
         try {
             super.onRequest();
@@ -78,6 +87,7 @@ public class CoronaSearchApi extends BaseApiHandler {
         response.put("autoRefresh", false);
 
         sendSuccessResponse(asyncResponse, response);
+        responseTimestampPair = new Pair<>(response, System.currentTimeMillis());
     }
 
     private List<MarkerPojo> getStateMarkers(Map<String, Integer> stateResponseMap, JSONObject indiaObj) {
@@ -100,11 +110,11 @@ public class CoronaSearchApi extends BaseApiHandler {
                 markerPojo.subtext = "Total Cases : " + entry.getValue();
                 markerPojo.iconUrl = "/resources/icons/marker_red.png";
                 markerPojo.data = new Gson().fromJson(indiaObj.toString(), HashMap.class);
-                markerPojo.data.put("<b>Total Cases</b>", "<b>" + indiaObj.optInt("cases") + "</b>");
                 markerPojo.data.remove("cases");
                 markerPojo.data.remove("country");
                 markerPojo.data = markerPojo.data.keySet().stream()
                         .collect(Collectors.toMap(key -> "India " + StringUtils.capitalize(key), key -> markerPojo.data.get(key)));
+                markerPojo.data.put("<b>India Total Cases</b>", "<b>" + indiaObj.optInt("cases") + "</b>");
                 markerPojos.add(markerPojo);
             }
         } else {
