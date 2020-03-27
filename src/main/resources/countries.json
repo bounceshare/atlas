@@ -1,0 +1,774 @@
+[
+  {
+    "name": "Afghanistan",
+    "location": "33,66"
+  },
+  {
+    "name": "Albania",
+    "location": "41,20"
+  },
+  {
+    "name": "Algeria",
+    "location": "28,3"
+  },
+  {
+    "name": "Andorra",
+    "location": "42.5,1.5"
+  },
+  {
+    "name": "Angola",
+    "location": "-12.5,18.5"
+  },
+  {
+    "name": "Antigua and Barbuda",
+    "location": "17.05,-61.8"
+  },
+  {
+    "name": "Argentina",
+    "location": "-34,-64"
+  },
+  {
+    "name": "Armenia",
+    "location": "40,45"
+  },
+  {
+    "name": "Australia",
+    "location": "-25,135"
+  },
+  {
+    "name": "Austria",
+    "location": "47.333333,13.333333"
+  },
+  {
+    "name": "Azerbaijan",
+    "location": "40.5,47.5"
+  },
+  {
+    "name": "Bahamas",
+    "location": "24,-76"
+  },
+  {
+    "name": "Bahrain",
+    "location": "26,50.5"
+  },
+  {
+    "name": "Bangladesh",
+    "location": "24,90"
+  },
+  {
+    "name": "Barbados",
+    "location": "13.166667,-59.533333"
+  },
+  {
+    "name": "Belarus",
+    "location": "53,28"
+  },
+  {
+    "name": "Belgium",
+    "location": "50.833333,4"
+  },
+  {
+    "name": "Belize",
+    "location": "17.25,-88.75"
+  },
+  {
+    "name": "Benin",
+    "location": "9.5,2.25"
+  },
+  {
+    "name": "Bhutan",
+    "location": "27.5,90.5"
+  },
+  {
+    "name": "Bolivia",
+    "location": "-17,-65"
+  },
+  {
+    "name": "Bosnia and Herzegovina",
+    "location": "44.25,17.833333"
+  },
+  {
+    "name": "Botswana",
+    "location": "-22,24"
+  },
+  {
+    "name": "Brazil",
+    "location": "-10,-55"
+  },
+  {
+    "name": "Brunei",
+    "location": "4.5,114.666667"
+  },
+  {
+    "name": "Bulgaria",
+    "location": "43,25"
+  },
+  {
+    "name": "Burkina Faso",
+    "location": "13,-2"
+  },
+  {
+    "name": "Burundi",
+    "location": "-3.5,30"
+  },
+  {
+    "name": "Cabo Verde",
+    "location": "16,-24"
+  },
+  {
+    "name": "Cambodia",
+    "location": "13,105"
+  },
+  {
+    "name": "Cameroon",
+    "location": "6,12"
+  },
+  {
+    "name": "Canada",
+    "location": "60,-96"
+  },
+  {
+    "name": "Central African Republic",
+    "location": "7,21"
+  },
+  {
+    "name": "Chad",
+    "location": "15,19"
+  },
+  {
+    "name": "Chile",
+    "location": "-30,-71"
+  },
+  {
+    "name": "China",
+    "location": "35,105"
+  },
+  {
+    "name": "Colombia",
+    "location": "4,72"
+  },
+  {
+    "name": "Comoros",
+    "location": "-12.166667,44.25"
+  },
+  {
+    "name": "Congo",
+    "location": "-1,15"
+  },
+  {
+    "name": "Costa Rica",
+    "location": "10,-84"
+  },
+  {
+    "name": "Ivory Coast",
+    "location": "8,-5"
+  },
+  {
+    "name": "Croatia",
+    "location": "45.166667,15.5"
+  },
+  {
+    "name": "Cuba",
+    "location": "22,-79.5"
+  },
+  {
+    "name": "Cyprus",
+    "location": "35,33"
+  },
+  {
+    "name": "Czechia",
+    "location": "49.75,15"
+  },
+  {
+    "name": "N. Korea",
+    "location": "40,127"
+  },
+  {
+    "name": "Congo",
+    "location": "0,25"
+  },
+  {
+    "name": "Denmark",
+    "location": "56,10"
+  },
+  {
+    "name": "Djibouti",
+    "location": "11.5,42.5"
+  },
+  {
+    "name": "Dominica",
+    "location": "15.5,-61.333333"
+  },
+  {
+    "name": "Dominican Republic",
+    "location": "19,-70.666667"
+  },
+  {
+    "name": "Ecuador",
+    "location": "-2,-77.5"
+  },
+  {
+    "name": "Egypt",
+    "location": "27,30"
+  },
+  {
+    "name": "El Salvador",
+    "location": "13.833333,-88.916667"
+  },
+  {
+    "name": "Equatorial Guinea",
+    "location": "2,10"
+  },
+  {
+    "name": "Eritrea",
+    "location": "15,39"
+  },
+  {
+    "name": "Estonia",
+    "location": "59,26"
+  },
+  {
+    "name": "Ethiopia",
+    "location": "8,38"
+  },
+  {
+    "name": "Fiji",
+    "location": "-18,178"
+  },
+  {
+    "name": "Finland",
+    "location": "64,26"
+  },
+  {
+    "name": "France",
+    "location": "46,2"
+  },
+  {
+    "name": "Gabon",
+    "location": "-1,11.75"
+  },
+  {
+    "name": "Gambia",
+    "location": "13.5,-15.5"
+  },
+  {
+    "name": "Georgia",
+    "location": "41.999981,43.499905"
+  },
+  {
+    "name": "Germany",
+    "location": "51.5,10.5"
+  },
+  {
+    "name": "Ghana",
+    "location": "8,-2"
+  },
+  {
+    "name": "Greece",
+    "location": "39,22"
+  },
+  {
+    "name": "Grenada",
+    "location": "12.116667,-61.666667"
+  },
+  {
+    "name": "Guatemala",
+    "location": "15.5,-90.25"
+  },
+  {
+    "name": "Guinea",
+    "location": "11,-10"
+  },
+  {
+    "name": "Guinea-Bissau",
+    "location": "12,-15"
+  },
+  {
+    "name": "Guyana",
+    "location": "5,-59"
+  },
+  {
+    "name": "Haiti",
+    "location": "19,-72.416667"
+  },
+  {
+    "name": "Honduras",
+    "location": "15,-86.5"
+  },
+  {
+    "name": "Hungary",
+    "location": "47,20"
+  },
+  {
+    "name": "Iceland",
+    "location": "65,-18"
+  },
+  {
+    "name": "India",
+    "location": "20,77"
+  },
+  {
+    "name": "Indonesia",
+    "location": "-5,120"
+  },
+  {
+    "name": "Iran",
+    "location": "32,53"
+  },
+  {
+    "name": "Iraq",
+    "location": "33,44"
+  },
+  {
+    "name": "Ireland",
+    "location": "53,-8"
+  },
+  {
+    "name": "Israel",
+    "location": "31.5,34.75"
+  },
+  {
+    "name": "Italy",
+    "location": "42.833333,12.833333"
+  },
+  {
+    "name": "Jamaica",
+    "location": "18.25,-77.5"
+  },
+  {
+    "name": "Japan",
+    "location": "36,138"
+  },
+  {
+    "name": "Jordan",
+    "location": "31,36"
+  },
+  {
+    "name": "Kazakhstan",
+    "location": "48,68"
+  },
+  {
+    "name": "Kenya",
+    "location": "1,38"
+  },
+  {
+    "name": "Kiribati",
+    "location": "-5,-170"
+  },
+  {
+    "name": "Kuwait",
+    "location": "29.5,47.75"
+  },
+  {
+    "name": "Kyrgyzstan",
+    "location": "41,75"
+  },
+  {
+    "name": "Laos",
+    "location": "18,105"
+  },
+  {
+    "name": "Latvia",
+    "location": "57,25"
+  },
+  {
+    "name": "Lebanon",
+    "location": "33.833333,35.833333"
+  },
+  {
+    "name": "Lesotho",
+    "location": "-29.5,28.25"
+  },
+  {
+    "name": "Liberia",
+    "location": "6.5,9.5"
+  },
+  {
+    "name": "Libya",
+    "location": "25,17"
+  },
+  {
+    "name": "Liechtenstein",
+    "location": "47.166667,9.533333"
+  },
+  {
+    "name": "Lithuania",
+    "location": "56,24"
+  },
+  {
+    "name": "Luxembourg",
+    "location": "49.75,6.166667"
+  },
+  {
+    "name": "Macedonia",
+    "location": "41.833333,22"
+  },
+  {
+    "name": "Madagascar",
+    "location": "-20,47"
+  },
+  {
+    "name": "Malawi",
+    "location": "-13.5,34"
+  },
+  {
+    "name": "Malaysia",
+    "location": "2.5,112.5"
+  },
+  {
+    "name": "Maldives",
+    "location": "3.2,73"
+  },
+  {
+    "name": "Mali",
+    "location": "17,-4"
+  },
+  {
+    "name": "Malta",
+    "location": "35.916667,14.433333"
+  },
+  {
+    "name": "Marshall Islands",
+    "location": "10,167"
+  },
+  {
+    "name": "Mauritania",
+    "location": "20,-12"
+  },
+  {
+    "name": "Mauritius",
+    "location": "-20.3,57.583333"
+  },
+  {
+    "name": "Mexico",
+    "location": "23,-102"
+  },
+  {
+    "name": "Federated States of Micronesia",
+    "location": "5,152"
+  },
+  {
+    "name": "Monaco",
+    "location": "43.733333,7.4"
+  },
+  {
+    "name": "Mongolia",
+    "location": "46,105"
+  },
+  {
+    "name": "Montenegro",
+    "location": "42.5,19.3"
+  },
+  {
+    "name": "Morocco",
+    "location": "32,-5"
+  },
+  {
+    "name": "Mozambique",
+    "location": "-18.25,35"
+  },
+  {
+    "name": "Myanmar",
+    "location": "22,98"
+  },
+  {
+    "name": "Namibia",
+    "location": "-22,17"
+  },
+  {
+    "name": "Nauru",
+    "location": "-0.533333,166.916667"
+  },
+  {
+    "name": "Nepal",
+    "location": "28,84"
+  },
+  {
+    "name": "Netherlands",
+    "location": "52.5,5.75"
+  },
+  {
+    "name": "New Zealand",
+    "location": "-42,174"
+  },
+  {
+    "name": "Nicaragua",
+    "location": "13,-85"
+  },
+  {
+    "name": "Niger",
+    "location": "16,8"
+  },
+  {
+    "name": "Nigeria",
+    "location": "10,8"
+  },
+  {
+    "name": "Norway",
+    "location": "62,10"
+  },
+  {
+    "name": "Oman",
+    "location": "21,57"
+  },
+  {
+    "name": "Pakistan",
+    "location": "30,70"
+  },
+  {
+    "name": "Palau",
+    "location": "6,134"
+  },
+  {
+    "name": "Panama",
+    "location": "9,-80"
+  },
+  {
+    "name": "Papua New Guinea",
+    "location": "-6,147"
+  },
+  {
+    "name": "Paraguay",
+    "location": "-22.993333,-57.996389"
+  },
+  {
+    "name": "Peru",
+    "location": "-10,-76"
+  },
+  {
+    "name": "Philippines",
+    "location": "13,122"
+  },
+  {
+    "name": "Poland",
+    "location": "52,20"
+  },
+  {
+    "name": "Portugal",
+    "location": "39.5,-8"
+  },
+  {
+    "name": "Qatar",
+    "location": "25.5,51.25"
+  },
+  {
+    "name": "S. Korea",
+    "location": "37,127.5"
+  },
+  {
+    "name": "Moldova",
+    "location": "47,29"
+  },
+  {
+    "name": "Romania",
+    "location": "46,25"
+  },
+  {
+    "name": "Russia",
+    "location": "60,100"
+  },
+  {
+    "name": "Rwanda",
+    "location": "-2,30"
+  },
+  {
+    "name": "Saint Kitts and Nevis",
+    "location": "17.333333,-62.75"
+  },
+  {
+    "name": "Saint Lucia",
+    "location": "13.883333,-60.966667"
+  },
+  {
+    "name": "Saint Vincent and the Grenadines",
+    "location": "13.083333,-61.2"
+  },
+  {
+    "name": "Samoa",
+    "location": "-13.803096,-172.178309"
+  },
+  {
+    "name": "San Marino",
+    "location": "43.933333,12.416667"
+  },
+  {
+    "name": "Sao Tome and Principe",
+    "location": "1,7"
+  },
+  {
+    "name": "Saudi Arabia",
+    "location": "25,45"
+  },
+  {
+    "name": "Senegal",
+    "location": "14,-14"
+  },
+  {
+    "name": "Serbia",
+    "location": "44,21"
+  },
+  {
+    "name": "Seychelles",
+    "location": "-4.583333,55.666667"
+  },
+  {
+    "name": "Sierra Leone",
+    "location": "8.5,-11.5"
+  },
+  {
+    "name": "Singapore",
+    "location": "1.366667,103.8"
+  },
+  {
+    "name": "Slovakia",
+    "location": "48.666667,19.5"
+  },
+  {
+    "name": "Slovenia",
+    "location": "46.25,15.166667"
+  },
+  {
+    "name": "Solomon Islands",
+    "location": "-8,159"
+  },
+  {
+    "name": "Somalia",
+    "location": "6,48"
+  },
+  {
+    "name": "South Africa",
+    "location": "-30,26"
+  },
+  {
+    "name": "South Sudan",
+    "location": "8,30"
+  },
+  {
+    "name": "Spain",
+    "location": "40,-4"
+  },
+  {
+    "name": "Sri Lanka",
+    "location": "7,81"
+  },
+  {
+    "name": "Sudan",
+    "location": "16,30"
+  },
+  {
+    "name": "Suriname",
+    "location": "4,-56"
+  },
+  {
+    "name": "Swaziland",
+    "location": "-26.5,31.5"
+  },
+  {
+    "name": "Sweden",
+    "location": "62,15"
+  },
+  {
+    "name": "Switzerland",
+    "location": "47,8"
+  },
+  {
+    "name": "Syria",
+    "location": "35,38"
+  },
+  {
+    "name": "Tajikistan",
+    "location": "39,71"
+  },
+  {
+    "name": "Tanzania",
+    "location": "-6,35"
+  },
+  {
+    "name": "Thailand",
+    "location": "15,100"
+  },
+  {
+    "name": "Timor-Leste",
+    "location": "-8.833333,125.75"
+  },
+  {
+    "name": "Togo",
+    "location": "8,1.166667"
+  },
+  {
+    "name": "Tonga",
+    "location": "-20,-175"
+  },
+  {
+    "name": "Trinidad and Tobago",
+    "location": "11,-61"
+  },
+  {
+    "name": "Tunisia",
+    "location": "34,9"
+  },
+  {
+    "name": "Turkey",
+    "location": "39.059012,34.911546"
+  },
+  {
+    "name": "Turkmenistan",
+    "location": "40,60"
+  },
+  {
+    "name": "Tuvalu",
+    "location": "-8,178"
+  },
+  {
+    "name": "Uganda",
+    "location": "2,33"
+  },
+  {
+    "name": "Ukraine",
+    "location": "49,32"
+  },
+  {
+    "name": "UAE",
+    "location": "24,54"
+  },
+  {
+    "name": "UK",
+    "location": "54,-4"
+  },
+  {
+    "name": "USA",
+    "location": "39.828175,-98.5795"
+  },
+  {
+    "name": "Uruguay",
+    "location": "-33,-56"
+  },
+  {
+    "name": "Uzbekistan",
+    "location": "41.707542,63.84911"
+  },
+  {
+    "name": "Vanuatu",
+    "location": "-16,167"
+  },
+  {
+    "name": "Venezuela",
+    "location": "8,-66"
+  },
+  {
+    "name": "Vietnam",
+    "location": "16.166667,107.833333"
+  },
+  {
+    "name": "Yemen",
+    "location": "15.5,47.5"
+  },
+  {
+    "name": "Zambia",
+    "location": "-15,30"
+  },
+  {
+    "name": "Zimbabwe",
+    "location": "-19,29"
+  }
+]
