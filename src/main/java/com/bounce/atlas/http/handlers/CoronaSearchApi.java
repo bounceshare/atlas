@@ -134,8 +134,8 @@ public class CoronaSearchApi extends BaseApiHandler {
         countryCard.details.put("Recovered", countryObj.optInt("recovered") + "");
         countryCard.details.put("Active", countryObj.optInt("active") + "");
         countryCard.details.put("Critical", countryObj.optInt("critical") + "");
-        countryCard.details.put("CasesPerOneMillion", countryObj.optInt("casesPerOneMillion") + "");
-        countryCard.details.put("DeathsPerOneMillion", countryObj.optInt("deathsPerOneMillion") + "");
+        countryCard.details.put("CasesPerOneMillion", countryObj.optDouble("casesPerOneMillion") + "");
+        countryCard.details.put("DeathsPerOneMillion", countryObj.optDouble("deathsPerOneMillion") + "");
 
         return countryCard;
     }
@@ -159,9 +159,15 @@ public class CoronaSearchApi extends BaseApiHandler {
                 markerPojo.title = entry.getKey();
                 markerPojo.subtext = "Total Cases : " + entry.getValue();
                 markerPojo.iconUrl = "/resources/icons/marker_red.png";
-                markerPojo.data = new Gson().fromJson(indiaObj.toString(), HashMap.class);
-                markerPojo.data.remove("cases");
-                markerPojo.data.remove("country");
+                markerPojo.data = Maps.newLinkedHashMap();
+                markerPojo.data.put("Today Cases", indiaObj.optInt("todayCases") + "");
+                markerPojo.data.put("Deaths", indiaObj.optInt("deaths") + "");
+                markerPojo.data.put("Today Deaths", indiaObj.optInt("todayDeaths") + "");
+                markerPojo.data.put("Recovered", indiaObj.optInt("recovered") + "");
+                markerPojo.data.put("Active", indiaObj.optInt("active") + "");
+                markerPojo.data.put("Critical", indiaObj.optInt("critical") + "");
+                markerPojo.data.put("CasesPerOneMillion", indiaObj.optDouble("casesPerOneMillion") + "");
+                markerPojo.data.put("DeathsPerOneMillion", indiaObj.optDouble("deathsPerOneMillion") + "");
                 markerPojo.data = markerPojo.data.keySet().stream()
                         .collect(Collectors.toMap(key -> "India " + StringUtils.capitalize(key), key -> markerPojo.data.get(key)));
                 markerPojo.data.put("<b>India Total Cases</b>", "<b>" + indiaObj.optInt("cases") + "</b>");
@@ -176,9 +182,15 @@ public class CoronaSearchApi extends BaseApiHandler {
             markerPojo.title =indiaObj.optString("country");
             markerPojo.subtext = "Total Cases : " + indiaObj.optString("cases");
             markerPojo.iconUrl = "/resources/icons/marker_red.png";
-            markerPojo.data = new Gson().fromJson(indiaObj.toString(), HashMap.class);
-            markerPojo.data.remove("cases");
-            markerPojo.data.remove("country");
+            markerPojo.data = Maps.newLinkedHashMap();
+            markerPojo.data.put("Today Cases", indiaObj.optInt("todayCases") + "");
+            markerPojo.data.put("Deaths", indiaObj.optInt("deaths") + "");
+            markerPojo.data.put("Today Deaths", indiaObj.optInt("todayDeaths") + "");
+            markerPojo.data.put("Recovered", indiaObj.optInt("recovered") + "");
+            markerPojo.data.put("Active", indiaObj.optInt("active") + "");
+            markerPojo.data.put("Critical", indiaObj.optInt("critical") + "");
+            markerPojo.data.put("CasesPerOneMillion", indiaObj.optDouble("casesPerOneMillion") + "");
+            markerPojo.data.put("DeathsPerOneMillion", indiaObj.optDouble("deathsPerOneMillion") + "");
             markerPojo.data = markerPojo.data.keySet().stream()
                     .collect(Collectors.toMap(key -> StringUtils.capitalize(key), key -> markerPojo.data.get(key)));
             markerPojos.add(markerPojo);
@@ -205,9 +217,15 @@ public class CoronaSearchApi extends BaseApiHandler {
         markerPojo.title =jsonObject.optString("country");
         markerPojo.subtext = "Total Cases : " + jsonObject.optString("cases");
         markerPojo.iconUrl = "/resources/icons/marker_red.png";
-        markerPojo.data = new Gson().fromJson(jsonObject.toString(), HashMap.class);
-        markerPojo.data.remove("cases");
-        markerPojo.data.remove("country");
+        markerPojo.data = Maps.newLinkedHashMap();
+        markerPojo.data.put("Today Cases", jsonObject.optInt("todayCases") + "");
+        markerPojo.data.put("Deaths", jsonObject.optInt("deaths") + "");
+        markerPojo.data.put("Today Deaths", jsonObject.optInt("todayDeaths") + "");
+        markerPojo.data.put("Recovered", jsonObject.optInt("recovered") + "");
+        markerPojo.data.put("Active", jsonObject.optInt("active") + "");
+        markerPojo.data.put("Critical", jsonObject.optInt("critical") + "");
+        markerPojo.data.put("CasesPerOneMillion", jsonObject.optDouble("casesPerOneMillion") + "");
+        markerPojo.data.put("DeathsPerOneMillion", jsonObject.optDouble("deathsPerOneMillion") + "");
         markerPojo.data = markerPojo.data.keySet().stream()
                 .collect(Collectors.toMap(key -> StringUtils.capitalize(key), key -> markerPojo.data.get(key)));
         return markerPojo;
