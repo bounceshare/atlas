@@ -76,8 +76,9 @@ public class CoronaTestCentresSearchApi extends BaseApiHandler {
     private MarkerPojo getMarkerForTestCentre(JSONObject jsonObject) {
         MarkerPojo markerPojo = new MarkerPojo();
         markerPojo.location = new PointPojo(jsonObject.optDouble("lat"), jsonObject.optDouble("lng"));
-        markerPojo.title = jsonObject.optString("title");
-        markerPojo.legend = jsonObject.optString("title");
+        String title = jsonObject.optString("title");
+        markerPojo.title = title;
+        markerPojo.legend = title.split(",")[0];
         markerPojo.subtext = "";
 
         markerPojo.data = Maps.newLinkedHashMap();

@@ -37,10 +37,10 @@
 <body>
 <list>
     <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
-        <a class="navbar-brand" href="/">
+        <a class="navbar-brand" <#if auth??> href="/" </#if> >
             <img src="${favicon}" width="20" height="20" alt="">
         </a>
-        <a class="navbar-brand" href="/">${title}</a>
+        <a class="navbar-brand" <#if auth??> href="/" </#if> >${title}</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse"
                 aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
