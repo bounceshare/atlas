@@ -184,6 +184,9 @@ public class Apis {
         ConfigPojo.Page page = ContentUtils.getPage(path, isAuth);
         if(page == null) {
             String redirectPath = "/login";
+            if(httpRequest.getRequestURL().toString().contains("covid.bounceshare") || httpRequest.getRequestURI().contains("covid.bounce.bike")) {
+                redirectPath = "/404";
+            }
             if(isAuth) {
                 redirectPath = "/404";
             }
