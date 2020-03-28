@@ -93,7 +93,7 @@ public class CoronaSearchApi extends BaseApiHandler {
             globalCard.body = "";
             globalCard.color = Constants.Color.INFO;
             globalCard.timelineHeader = "Coronavirus Cases";
-            globalCard.details = Maps.newHashMap();
+            globalCard.details = Maps.newLinkedHashMap();
             globalCard.details.put("Total Cases", globalData.optInt("cases") + "");
             globalCard.details.put("Total Deaths", globalData.optInt("deaths") + "");
             globalCard.details.put("Total Recovered", globalData.optInt("recovered") + "");
@@ -126,7 +126,7 @@ public class CoronaSearchApi extends BaseApiHandler {
         countryCard.body = "";
         countryCard.color = Constants.Color.INFO;
         countryCard.timelineHeader = "Coronavirus Cases";
-        countryCard.details = Maps.newHashMap();
+        countryCard.details = Maps.newLinkedHashMap();
         countryCard.details.put("Total Cases", countryObj.optInt("cases") + "");
         countryCard.details.put("Today Cases", countryObj.optInt("todayCases") + "");
         countryCard.details.put("Deaths", countryObj.optInt("deaths") + "");

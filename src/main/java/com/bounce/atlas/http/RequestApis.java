@@ -138,4 +138,14 @@ public class RequestApis {
         coronaSearchApi.onRequest();
     }
 
+    @POST
+    @Path("/corona/testcentres")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes({MediaType.APPLICATION_JSON})
+    public void coronaTestCentres(String inputString, @Suspended final AsyncResponse asyncResponse) {
+        logger.info("/apis/corona/testcentres");
+        CoronaTestCentresSearchApi coronaTestCentresSearchApi = new CoronaTestCentresSearchApi(inputString, asyncResponse, httpRequest, httpResponse);
+        coronaTestCentresSearchApi.onRequest();
+    }
+
 }
