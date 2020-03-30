@@ -5,12 +5,16 @@ import com.bounce.atlas.utils.AuthUtils;
 import com.bounce.atlas.utils.ContentUtils;
 import com.bounce.atlas.utils.GoogleAuth;
 import com.bounce.utils.BounceUtils;
+import com.bounce.utils.DatabaseConnector;
 import com.bounce.utils.Log;
+import com.bounce.utils.dbmodels.public_.tables.Booking;
+import com.bounce.utils.dbmodels.public_.tables.records.BookingRecord;
 import com.bounce.utils.status.Status;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.apache.http.util.TextUtils;
 import org.apache.log4j.Logger;
+import org.jooq.exception.DataAccessException;
 import org.json.JSONObject;
 
 import javax.servlet.http.Cookie;
@@ -25,6 +29,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 import java.util.Map;
 
 @Path("/")
@@ -44,7 +49,20 @@ public class Apis {
     @Consumes({MediaType.APPLICATION_JSON})
     public void health(@Suspended final AsyncResponse asyncResponse) {
         logger.info("/health");
-        asyncResponse.resume(Response.ok().entity(gson.toJson(Status.buildSuccess())).build());
+        try {
+            List<BookingRecord>
+                    bookings = DatabaseConnector.getDb().getReadDbConnector().selectFrom(Booking.BOOKING).limit(10).fetch();
+            if(bookings == null || bookings.size() < 10) {
+                asyncResponse.resume(Response.status(400).entity(gson.toJson(Status.buildFailure(400, "Error : Unable to fetch required number of records : " + bookings))).build());
+                return;
+            }
+            asyncResponse.resume(Response.ok().entity(gson.toJson(Status.buildSuccess())).build());
+            return;
+        } catch (Exception e) {
+            e.printStackTrace();
+            BounceUtils.logError(e);
+            asyncResponse.resume(Response.status(400).entity(gson.toJson(Status.buildFailure(400, "Error : " + e.getMessage()))).build());
+        }
     }
 
     /**
@@ -58,7 +76,20 @@ public class Apis {
     @Consumes({MediaType.APPLICATION_JSON})
     public void healthPost(@Suspended final AsyncResponse asyncResponse) {
         logger.info("/health");
-        asyncResponse.resume(Response.ok().entity(gson.toJson(Status.buildSuccess())).build());
+        try {
+            List<BookingRecord>
+                    bookings = DatabaseConnector.getDb().getReadDbConnector().selectFrom(Booking.BOOKING).limit(10).fetch();
+            if(bookings == null || bookings.size() < 10) {
+                asyncResponse.resume(Response.status(400).entity(gson.toJson(Status.buildFailure(400, "Error : Unable to fetch required number of records : " + bookings))).build());
+                return;
+            }
+            asyncResponse.resume(Response.ok().entity(gson.toJson(Status.buildSuccess())).build());
+            return;
+        } catch (Exception e) {
+            e.printStackTrace();
+            BounceUtils.logError(e);
+            asyncResponse.resume(Response.status(400).entity(gson.toJson(Status.buildFailure(400, "Error : " + e.getMessage()))).build());
+        }
     }
 
     @GET
