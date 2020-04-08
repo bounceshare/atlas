@@ -87,7 +87,7 @@ public class CoronaTestCentresSearchApi extends BaseApiHandler {
             markerPojo.data.put("Type", "Private");
         } else {
             markerPojo.iconUrl = "/resources/icons/marker_blue.png";
-            markerPojo.data.put("Type", "Private");
+            markerPojo.data.put("Type", "Public");
         }
         markerPojo.data.put("Description", jsonObject.optString("description"));
         markerPojo.data.put("Address", jsonObject.optString("address"));
