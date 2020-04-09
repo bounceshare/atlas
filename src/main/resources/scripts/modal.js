@@ -45,6 +45,9 @@
     }
 
     function renderTimeline(items, isSidebar = true) {
+        if(sidebar) {
+            sidebarClose();
+        }
         if(items.length < 1) {
             return;
         }
