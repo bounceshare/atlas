@@ -4,6 +4,7 @@ import com.bounce.atlas.http.handlers.*;
 import com.bounce.atlas.utils.GoogleAuth;
 import com.bounce.utils.Log;
 import com.bounce.utils.status.Status;
+import com.google.common.collect.Maps;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.apache.log4j.Logger;
@@ -16,6 +17,7 @@ import javax.ws.rs.container.Suspended;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.Map;
 
 @Path("/apis/")
 public class RequestApis {
@@ -146,6 +148,16 @@ public class RequestApis {
         logger.info("/apis/corona/testcentres");
         CoronaTestCentresSearchApi coronaTestCentresSearchApi = new CoronaTestCentresSearchApi(inputString, asyncResponse, httpRequest, httpResponse);
         coronaTestCentresSearchApi.onRequest();
+    }
+
+    @POST
+    @Path("/test/drawnObjs")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes({MediaType.APPLICATION_JSON})
+    public void testDrawnObjs(String inputString, @Suspended final AsyncResponse asyncResponse) {
+        logger.info("/apis/test/drawnObjs Data : " + inputString);
+        Map<Object, Object> response = Maps.newLinkedHashMap();
+        asyncResponse.resume(Response.ok().entity(gson.toJson(Status.buildSuccess(response))).build());
     }
 
 }

@@ -299,7 +299,8 @@
                     var editCircleObj = {};
                     editCircleObj.coords = [];
                     editCircleObj.coords.push(e.layer.getLatLng());
-                    editCircleObj.radius = e.layer.getRadius();
+                    editCircleObj.options = {};
+                    editCircleObj.options.radius = e.layer.getRadius();
                     editCircleObj.drawId = drawId;
                     editCircleObj.shape = e.shape;
                     drawnObjs.push(editCircleObj)
@@ -309,6 +310,7 @@
                     var editPolygonObj = {};
                     editPolygonObj.coords = e.layer.getLatLngs();
                     editPolygonObj.drawId = drawId;
+                    editPolygonObj.options = {};
                     editPolygonObj.shape = "Fence";
                     drawnObjs.push(editPolygonObj);
                     break;
@@ -316,6 +318,7 @@
                     var editLineObj = {};
                     editLineObj.coords = e.layer.getLatLngs();
                     editLineObj.drawId = drawId;
+                    editLineObj.options = {};
                     editLineObj.shape = e.shape;
                     drawnObjs.push(editLineObj);
                     break;
@@ -324,6 +327,7 @@
                     editMarkerObj.coords = [];
                     editMarkerObj.coords.push(e.layer.getLatLng());
                     editMarkerObj.drawId = drawId;
+                    editMarkerObj.options = {};
                     editMarkerObj.shape = e.shape;
                     drawnObjs.push(editMarkerObj);
                     break;
