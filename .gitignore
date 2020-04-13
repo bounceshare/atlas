@@ -4,3 +4,5 @@ target/*
 *.log
 src/main/resources/config.ini
 src/main/resources/config.json
+.DS_Store
+src/main/resources/.DS_Store
