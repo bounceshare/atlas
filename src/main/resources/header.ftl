@@ -17,6 +17,7 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
     <link rel="stylesheet" href="/files/css/leaflet-sidebar.css" />
+    <link rel="stylesheet" href="https://unpkg.com/@geoman-io/leaflet-geoman-free@2.5.0/dist/leaflet-geoman.css" />
 
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
@@ -32,6 +33,7 @@
     <script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js"></script>
     <script src="/files/scripts/leaflet-sidebar.js"></script>
     <script src="https://apis.google.com/js/platform.js" async defer></script>
+    <script src="https://unpkg.com/@geoman-io/leaflet-geoman-free@2.5.0/dist/leaflet-geoman.min.js"></script>
 
 </head>
 <body>
@@ -91,6 +93,9 @@
             <div class="form-inline mt-2 mt-md-0" <#if searchPage??><#else>hidden</#if>>
                 <input class="form-control mr-sm-2" type="text" id="searchBar" placeholder="Search" aria-label="Search"></input>
                 <button class="btn btn-outline-success my-2 my-sm-0" onclick="search()">Search</button>&nbsp;
+            </div>
+            <div class="form-inline mt-2 mt-md-0" <#if editFenceUrl??><#else>hidden</#if>>
+                <button class="btn btn-outline-success my-2 my-sm-0" onclick="fenceSubmit()">Submit</button>&nbsp;
             </div>&nbsp;&nbsp;
 
         </div>

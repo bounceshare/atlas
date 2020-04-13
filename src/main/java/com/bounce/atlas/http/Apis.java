@@ -245,14 +245,13 @@ public class Apis {
         data.put("query", query);
         data.put("zoom", zoom);
 
-        if(page != null) {
-            data.put("page", page.getPageId());
-            data.put("autoRefresh", page.getAutoRefresh());
-            data.put("searchUrl", page.getSearchUrl());
-            data.put("searchPage", page.getSearchPage());
-            data.put("searchText", page.getSearchText());
-            data.put("help", page.getHelp());
-        }
+        data.put("page", page.getPageId());
+        data.put("autoRefresh", page.getAutoRefresh());
+        data.put("searchUrl", page.getSearchUrl());
+        data.put("searchPage", page.getSearchPage());
+        data.put("searchText", page.getSearchText());
+        data.put("help", page.getHelp());
+        data.put("editFenceUrl", page.getEditFenceUrl());
 
         String content = ContentUtils.getFreemarkerString("index.ftl", data);
         asyncResponse.resume(Response.ok().entity(content).build());

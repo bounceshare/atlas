@@ -12,6 +12,11 @@
         $('#searchBar')[0].value = "";
     }
 
+    function fenceSubmit() {
+        editFenceUrl = $('#freemarker_editFenceUrl')[0].innerText;
+        console.log("Submitting fence data : " + editFenceUrl);
+    }
+
     function getSearchData(searchQuery) {
         var searchUrl = $('#freemarker_searchurl')[0].innerText;
         if(!searchUrl || searchUrl.length < 1) {

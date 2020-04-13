@@ -115,6 +115,9 @@ public class ConfigPojo {
         @SerializedName("zoom")
         @Expose
         private int zoom;
+        @SerializedName("editFenceUrl")
+        @Expose
+        private String editFenceUrl;
 
         public String getPage() {
             return page;
@@ -225,6 +228,14 @@ public class ConfigPojo {
 
         public void setZoom(int zoom) {
             this.zoom = zoom;
+        }
+
+        public String getEditFenceUrl() {
+            return editFenceUrl;
+        }
+
+        public void setEditFenceUrl(String editFence) {
+            this.editFenceUrl = editFence;
         }
     }
 

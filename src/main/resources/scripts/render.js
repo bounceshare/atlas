@@ -25,6 +25,7 @@
     var query = "";
     var sidebar = null;
 
+    var drawnObjs = [];
 
     function bootstrap() {
         console.log("bootstrap()")
@@ -279,10 +280,74 @@
         return genericCircleObjs;
     }
 
+    function addEditFenceControls() {
+        map.pm.addControls({
+          position: 'topleft',
+          cutPolygon: false,
+          editMode: false,
+          dragMode: false,
+          drawCircleMarker: false,
+          pinningOption: false,
+          snappingOption: false
+        });
+
+        map.on('pm:create', function(e) {
+            var drawId = e.layer._leaflet_id;
+            console.log(e);
+            switch(e.shape) {
+                case "Circle":
+                    var editCircleObj = {};
+                    editCircleObj.coords = [];
+                    editCircleObj.coords.push(e.layer.getLatLng());
+                    editCircleObj.radius = e.layer.getRadius();
+                    editCircleObj.drawId = drawId;
+                    editCircleObj.shape = e.shape;
+                    drawnObjs.push(editCircleObj)
+                    break;
+                case "Rectangle":
+                case "Polygon":
+                    var editPolygonObj = {};
+                    editPolygonObj.coords = e.layer.getLatLngs();
+                    editPolygonObj.drawId = drawId;
+                    editPolygonObj.shape = "Fence";
+                    drawnObjs.push(editPolygonObj);
+                    break;
+                case "Line":
+                    var editLineObj = {};
+                    editLineObj.coords = e.layer.getLatLngs();
+                    editLineObj.drawId = drawId;
+                    editLineObj.shape = e.shape;
+                    drawnObjs.push(editLineObj);
+                    break;
+                case "Marker":
+                    var editMarkerObj = {};
+                    editMarkerObj.coords = [];
+                    editMarkerObj.coords.push(e.layer.getLatLng());
+                    editMarkerObj.drawId = drawId;
+                    editMarkerObj.shape = e.shape;
+                    drawnObjs.push(editMarkerObj);
+                    break;
+            }
+        });
+
+        map.on('pm:remove', function(e) {
+            console.log(e);
+            var drawId = e.layer._leaflet_id;
+            for (var n = 0 ; n < drawnObjs.length ; n++) {
+                if (drawnObjs[n].drawId == drawId) {
+                  var removedObject = drawnObjs.splice(n,1);
+                  removedObject = null;
+                  break;
+                }
+            }
+        });
+    }
+
     function setupMap() {
         var loc = $('#freemarker_location')[0].innerText;
         var zoom = $('#freemarker_zoom')[0].innerText;
         var autoRefresh = $('#freemarker_autorefresh')[0].innerText;
+        var editFence = $('#freemarker_editFenceUrl')[0].innerText;
 
         refresh = parseBoolean(autoRefresh);
 
@@ -315,6 +380,9 @@
             zoomOffset: -1
         }).addTo(map);
 
+        if(editFence != 'false') {
+            addEditFenceControls();
+        }
     }
 
     function onMapEvent(event) {
