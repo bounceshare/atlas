@@ -294,44 +294,57 @@
         map.on('pm:create', function(e) {
             var drawId = e.layer._leaflet_id;
             console.log(e);
+            var drawObj = {};
             switch(e.shape) {
                 case "Circle":
-                    var editCircleObj = {};
-                    editCircleObj.coords = [];
-                    editCircleObj.coords.push(e.layer.getLatLng());
-                    editCircleObj.options = {};
-                    editCircleObj.options.radius = e.layer.getRadius();
-                    editCircleObj.drawId = drawId;
-                    editCircleObj.shape = e.shape;
-                    drawnObjs.push(editCircleObj)
+                    drawObj.coords = [];
+                    drawObj.coords.push(e.layer.getLatLng().lat + "," + e.layer.getLatLng().lng);
+                    drawObj.drawId = drawId;
+                    drawObj.options = {};
+                    drawObj.options.radius = e.layer.getRadius();
+                    drawObj.shape = e.shape;
+                    drawnObjs.push(drawObj)
                     break;
                 case "Rectangle":
                 case "Polygon":
-                    var editPolygonObj = {};
-                    editPolygonObj.coords = e.layer.getLatLngs();
-                    editPolygonObj.drawId = drawId;
-                    editPolygonObj.options = {};
-                    editPolygonObj.shape = "Fence";
-                    drawnObjs.push(editPolygonObj);
+                    drawObj.coords = [];
+                    for(var i = 0; i < e.layer.getLatLngs()[0].length; i++) {
+                        drawObj.coords.push(e.layer.getLatLngs()[0][i].lat + "," +  e.layer.getLatLngs()[0][i].lng);
+                    }
+                    drawObj.drawId = drawId;
+                    drawObj.options = {};
+                    drawObj.shape = "Fence";
+                    drawnObjs.push(drawObj);
                     break;
                 case "Line":
-                    var editLineObj = {};
-                    editLineObj.coords = e.layer.getLatLngs();
-                    editLineObj.drawId = drawId;
-                    editLineObj.options = {};
-                    editLineObj.shape = e.shape;
-                    drawnObjs.push(editLineObj);
+                    drawObj.coords = [];
+                    for(var i = 0; i < e.layer.getLatLngs().length; i++) {
+                        drawObj.coords.push(e.layer.getLatLngs()[i].lat + "," +  e.layer.getLatLngs()[i].lng);
+                    }
+                    drawObj.drawId = drawId;
+                    drawObj.options = {};
+                    drawObj.shape = e.shape;
+                    drawnObjs.push(drawObj);
                     break;
                 case "Marker":
-                    var editMarkerObj = {};
-                    editMarkerObj.coords = [];
-                    editMarkerObj.coords.push(e.layer.getLatLng());
-                    editMarkerObj.drawId = drawId;
-                    editMarkerObj.options = {};
-                    editMarkerObj.shape = e.shape;
-                    drawnObjs.push(editMarkerObj);
+                    drawObj.coords = [];
+                    drawObj.coords.push(e.layer.getLatLng().lat + "," + e.layer.getLatLng().lng);
+                    drawObj.drawId = drawId;
+                    drawObj.options = {};
+                    drawObj.shape = e.shape;
+                    drawnObjs.push(drawObj);
                     break;
             }
+            console.log(drawObj);
+            var popupInfo = "<br/><div class='border'><div class='p-2 text-monospace'>";
+            popupInfo += "<div>" + "Coords" + " : " + JSON.stringify(drawObj.coords, null, 3) + "</div>";
+            if(drawObj.options) {
+                for(var key in drawObj.options) {
+                    popupInfo += "<div>" + key + " : " + drawObj.options[key] + "</div>";
+                }
+            }
+            popupInfo += "</div></div><br/>";
+            e.layer.bindPopup(popupInfo, {autoClose: false});
         });
 
         map.on('pm:remove', function(e) {
