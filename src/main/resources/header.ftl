@@ -37,6 +37,7 @@
     <script src="/files/scripts/jsonform.js"></script>
     <script src="https://apis.google.com/js/platform.js" async defer></script>
     <script src="https://unpkg.com/@geoman-io/leaflet-geoman-free@2.5.0/dist/leaflet-geoman.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/5.4.0/bootbox.min.js"></script>
 
 </head>
 <body>
@@ -77,6 +78,7 @@
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" id="dropdown04" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Options</a>
                     <div class="dropdown-menu" aria-labelledby="dropdown04">
+                        <a class="dropdown-item" href="#" onclick="bootboxPromptRenderJSON()">Render Atlas JSON</a>
                         <a class="dropdown-item" href="/config">Config</a>
                         <div class="dropdown-item">
                             <input type="checkbox" class="form-check-input text-center" id="refreshCheckbox">Auto Refresh</input>
