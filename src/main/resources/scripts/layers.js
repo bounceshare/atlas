@@ -41,25 +41,9 @@
         if(isLoading) {
             return;
         }
-        searchQuery = $('#searchBar')[0].value;
-        if(isMapEvent || searchQuery == '' || searchQuery == null) {
-            console.log("Empty search query. So searching wherever the map is active")
-            pos = map.getCenter();
-            center = [pos.lat, pos.lng];
-        } else {
-            if(searchQuery.includes(",")) {
-                $('#searchBar')[0].value = "";
-                splits = searchQuery.split(",");
-                if(splits.length == 2) {
-                    center = [];
-                    center[0] = parseFloat(splits[0]);
-                    center[1] = parseFloat(splits[1]);
-                    map.setView(center, 17);
-                }
-            } else {
-                return;
-            }
-        }
+        console.log("Empty search query. So searching wherever the map is active")
+        pos = map.getCenter();
+        center = [pos.lat, pos.lng];
         radius = DEFAULT_RADIUS;
         if(isMapEvent) {
             radius = getMapRadiusInMeters();

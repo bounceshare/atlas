@@ -96,9 +96,20 @@
             </ul>
 
             <div class="form-inline mt-2 mt-md-0" <#if searchPage??><#else>hidden</#if>>
-                <input class="form-control mr-sm-2" type="text" id="searchBar" placeholder="Search" aria-label="Search"></input>
-                <button class="btn btn-outline-success my-2 my-sm-0" onclick="search()">Search</button>&nbsp;
+                <div id="dropdownSearch" class="dropdown">
+                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuSearch" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Search
+                </button>
+                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuSearch">
+                    <form class="px-4 py-3" id="dropdownMenuSearchDiv">
+                    </form>
+                </div>
+                </div>
             </div>
+            <!--<div class="form-inline mt-2 mt-md-0" <#if searchPage??><#else>hidden</#if>>-->
+                <!--<input class="form-control mr-sm-2" type="text" id="searchBar" placeholder="Search" aria-label="Search"></input>-->
+                <!--<button class="btn btn-outline-success my-2 my-sm-0" onclick="search()">Search</button>&nbsp;-->
+            <!--</div>-->
             <div class="form-inline mt-2 mt-md-0" <#if editFenceUrl??><#else>hidden</#if>>
                 <button class="btn btn-outline-success my-2 my-sm-0" onclick="fenceSubmit()">Submit</button>&nbsp;
             </div>&nbsp;&nbsp;

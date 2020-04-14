@@ -125,6 +125,9 @@ public class ConfigPojo {
         @SerializedName("editFenceDataSchema")
         @Expose
         private Map<String, Object> editFenceDataSchema;
+        @SerializedName("searchDataSchema")
+        @Expose
+        private Map<String, Object> searchDataSchema;
 
         public String getPage() {
             return page;
@@ -251,6 +254,14 @@ public class ConfigPojo {
 
         public void setEditFenceDataSchema(Map<String, Object> editFenceForm) {
             this.editFenceDataSchema = editFenceForm;
+        }
+
+        public String getSearchDataSchema() {
+            return new GsonBuilder().disableHtmlEscaping().create().toJson(searchDataSchema);
+        }
+
+        public void setSearchDataSchema(Map<String, Object> searchDataSchema) {
+            this.searchDataSchema = searchDataSchema;
         }
     }
 

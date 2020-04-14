@@ -1,7 +1,40 @@
 <script>
 
-    var searchText = $('#freemarker_searchtext')[0].innerText;
-    $('#searchBar')[0].placeholder = searchText;
+//    var searchText = $('#freemarker_searchtext')[0].innerText;
+//    $('#searchBar')[0].placeholder = searchText;
+
+    var searchDataSchemaStr = $('#freemarker_searchDataSchema')[0].innerText;
+    if(searchDataSchemaStr == 'null') {
+        var searchText = $('#freemarker_searchtext')[0].innerText;
+        $('#freemarker_searchDataSchema')[0].innerText = '{"searchQuery":{"type":"string","title":"Search", "description": "$desc"}}';
+        searchDataSchemaStr = $('#freemarker_searchDataSchema')[0].innerText;
+        if(searchText != 'null') {
+            searchDataSchemaStr = searchDataSchemaStr.replace("$desc", "Search for " + searchText);
+        } else {
+            searchDataSchemaStr = searchDataSchemaStr.replace("$desc", "");
+        }
+    }
+    var searchDataSchema = JSON.parse(searchDataSchemaStr);
+    console.log(searchDataSchema);
+    $('#dropdownMenuSearchDiv').jsonForm({
+        schema: searchDataSchema,
+        form: [
+                  "*",
+                  {
+                    "type": "submit",
+                    "title": "Search"
+                  }
+                ],
+        onSubmit: function (errors, values) {
+          submitSearchData(values);
+        }
+    });
+
+    function submitSearchData(values) {
+        console.log(values);
+        getSearchData(values);
+        $("body").trigger("click");
+    }
 
     function search(isMapEvent) {
         isMapEvent = false;
@@ -42,13 +75,13 @@
         });
     }
 
-    function getSearchData(searchQuery) {
+    function getSearchData(searchVals) {
         var searchUrl = $('#freemarker_searchurl')[0].innerText;
         if(!searchUrl || searchUrl.length < 1) {
             console.log("Wrong invocation of search api");
             return;
         }
-        console.log("getSearchData() : " + searchQuery);
+        console.log("getSearchData() : " + searchVals.toString());
 
         pos = map.getCenter();
         coords = [pos.lat, pos.lng];
@@ -57,7 +90,9 @@
         data.lat = coords[0];
         data.lon = coords[1];
         data.radius = getMapRadiusInMeters();
-        data.searchQuery = searchQuery
+        for(var key in searchVals) {
+            data[key] = searchVals[key];
+        }
         if(isLoading) {
             return;
         }
