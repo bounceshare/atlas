@@ -32,6 +32,9 @@
             crossorigin=""></script>
     <script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js"></script>
     <script src="/files/scripts/leaflet-sidebar.js"></script>
+    <script src="/files/scripts/underscore.js"></script>
+    <script src="/files/scripts/jsv.js"></script>
+    <script src="/files/scripts/jsonform.js"></script>
     <script src="https://apis.google.com/js/platform.js" async defer></script>
     <script src="https://unpkg.com/@geoman-io/leaflet-geoman-free@2.5.0/dist/leaflet-geoman.min.js"></script>
 

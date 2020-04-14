@@ -12,6 +12,7 @@
 <div id="freemarker_searchurl" hidden><#if searchUrl??>${searchUrl}<#else></#if></div>
 <div id="freemarker_autorefresh" hidden><#if autoRefresh??>${autoRefresh}<#else>false</#if></div>
 <div id="freemarker_editFenceUrl" hidden><#if editFenceUrl??>${editFenceUrl}<#else>false</#if></div>
+<div id="freemarker_editFenceDataSchema" hidden><#if editFenceDataSchema??>${editFenceDataSchema}<#else>false</#if></div>
 
 <#include "/sidebar.ftl">
 <div id="mapDiv" style="height:100%;"></div>
@@ -26,3 +27,4 @@
 </main>
 <#include "/footer.ftl">
 <#include "/modal.ftl">
+<#include "/edit_fence_modal.ftl">

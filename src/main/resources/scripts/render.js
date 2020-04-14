@@ -336,12 +336,18 @@
                     break;
             }
             console.log(drawObj);
+
+            var editFenceDataSchema = $('#freemarker_editFenceDataSchema')[0].innerText;
+
             var popupInfo = "<br/><div class='border'><div class='p-2 text-monospace'>";
             popupInfo += "<div>" + "Coords" + " : " + JSON.stringify(drawObj.coords, null, 3) + "</div>";
             if(drawObj.options) {
                 for(var key in drawObj.options) {
                     popupInfo += "<div>" + key + " : " + drawObj.options[key] + "</div>";
                 }
+            }
+            if(editFenceDataSchema) {
+                popupInfo += "<div>" + "Edit Data" + " : " + "<a href='#' onclick=showFenceModal(" + drawId + ");>Click Here</a>" + "</div>";
             }
             popupInfo += "</div></div><br/>";
             e.layer.bindPopup(popupInfo, {autoClose: false});

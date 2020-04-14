@@ -252,6 +252,7 @@ public class Apis {
         data.put("searchText", page.getSearchText());
         data.put("help", page.getHelp());
         data.put("editFenceUrl", page.getEditFenceUrl());
+        data.put("editFenceDataSchema", page.getEditFenceDataSchema().toString());
 
         String content = ContentUtils.getFreemarkerString("index.ftl", data);
         asyncResponse.resume(Response.ok().entity(content).build());

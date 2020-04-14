@@ -1,6 +1,10 @@
 package com.bounce.atlas.pojo;
 
 import java.util.List;
+import java.util.Map;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import org.apache.http.util.TextUtils;
@@ -118,6 +122,9 @@ public class ConfigPojo {
         @SerializedName("editFenceUrl")
         @Expose
         private String editFenceUrl;
+        @SerializedName("editFenceDataSchema")
+        @Expose
+        private Map<String, Object> editFenceDataSchema;
 
         public String getPage() {
             return page;
@@ -236,6 +243,14 @@ public class ConfigPojo {
 
         public void setEditFenceUrl(String editFence) {
             this.editFenceUrl = editFence;
+        }
+
+        public String getEditFenceDataSchema() {
+            return new GsonBuilder().disableHtmlEscaping().create().toJson(editFenceDataSchema);
+        }
+
+        public void setEditFenceDataSchema(Map<String, Object> editFenceForm) {
+            this.editFenceDataSchema = editFenceForm;
         }
     }
 
