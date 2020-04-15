@@ -37,13 +37,25 @@ public class FetchBikeAssetApi extends BaseApiHandler {
     }
 
     public static FormPojo getFormData(int bikeId) {
+        // TODO return legit data and remove dummy data
         FormPojo formPojo = new FormPojo();
-        String formSchemaStr = "{\"name\":{\"title\":\"Fence Name\",\"description\":\"Please specify a name to " +
-                "identify this geo fence\",\"type\":\"string\"},\"gender\":{\"title\":\"Type\"," +
-                "\"description\":\"Fence type\",\"type\":\"string\",\"enum\":[\"Red Zone\",\"Black Zone\",\"Blue " +
-                "Zone\"]}}";
+        String formSchemaStr = "{\"engineNumber\":{\"title\":\"Engine Number\",\"type\":\"string\"}," +
+                "\"chassisNumber\":{\"title\":\"Chassis Number\",\"type\":\"string\"}," +
+                "\"registrationCertificate\":{\"title\":\"Registration Certificate\",\"type\":\"string\"}," +
+                "\"registrationValidTill\":{\"title\":\"Registration Valid Till\",\"type\":\"datetime-local\"}," +
+                "\"insurance\":{\"title\":\"Insurance\",\"type\":\"string\"}," +
+                "\"insuranceValidFrom\":{\"title\":\"Insurance Valid From\",\"type\":\"datetime-local\"}," +
+                "\"insuranceValidTill\":{\"title\":\"Insurance Valid Till\",\"type\":\"datetime-local\"}," +
+                "\"emissionCertificate\":{\"title\":\"Emission Certificate\",\"type\":\"string\"}," +
+                "\"feeClearance\":{\"title\":\"Fee Clearance\",\"type\":\"string\"}," +
+                "\"invoice\":{\"title\":\"Invoice\",\"type\":\"string\"}}";
         formPojo.formSchema = FormPojo.fromJson(formSchemaStr);
-        formPojo.values = Maps.newLinkedHashMap();
+        formPojo.values = FormPojo.fromJson("{\"engineNumber\":\"123312213123\",\"chassisNumber\":\"5432332\"," +
+                "\"registrationCertificate\":\"http://tinyurl.com/y8zbst2y\"," +
+                "\"registrationValidTill\":\"2030-07-17T00:00\",\"insurance\":\"http://tinyurl.com/yahh76go\"," +
+                "\"insuranceValidFrom\":\"2019-07-20T00:00\",\"insuranceValidTill\":\"2021-07-20T00:00\"," +
+                "\"emissionCertificate\":\"http://tinyurl.com/ycw3s4lt\",\"feeClearance\":\"http://tinyurl" +
+                ".com/yauqpzrp\",\"invoice\":\"http://tinyurl.com/ybk3dqow\"}");
         formPojo.postUrl = "/apis/test/drawnObjs";
 
         return formPojo;
