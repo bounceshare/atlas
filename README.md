@@ -1,3 +1,18 @@
+# Build Command
+``mvn clean install -DskipTests``
+
+# Running Locally
+Go ahead and install Jetty-Runner plugin on IntelliJ if not installed. 
+
+#Setting up local config
+``./setup_local.sh <appname>``
+
+#Sample Config
+Please go though this sample config and configure one yourself with appropriate values
+
+![Sample config](https://upload.bounce.bike/devops/57218388-59e0-477a-95c5-7b438272e05f "Sample Config")
+
+
 # BOUNCE ATLAS DOCUMENTATION 
 
 >`This documentation contains information about the fields defined in Bounce Atlas and the approaches to access it.`
@@ -48,7 +63,6 @@ Value of key-value pair also supports HTML contents.
 >**Image showing markers displayed on screen:**
 ><img src="https://upload.bounce.bike/null/094d29d5-6aa2-4414-8f16-ff866e2773a3" width="80%" height="80%">
 ![](https://upload.bounce.bike/null/094d29d5-6aa2-4414-8f16-ff866e2773a3)
-![](https://i.imgur.com/FajnbXt.png)
 
 
 ### `2. Events or Timeline`:
@@ -449,5 +463,3 @@ The backend should return the atlas elements in this way
 
 ### `1. Test with JSON`:
 Developers can test if the response renders info on the map by pasting the JSON data at Options->Render Atlas Json
-
-
