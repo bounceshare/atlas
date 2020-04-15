@@ -285,8 +285,10 @@
             title: "Please add your atlas json",
             inputType: 'textarea',
             callback: function (result) {
-                var atlasObj = JSON.parse(result);
-                invalidateMap(atlasObj.markers, atlasObj.fences, atlasObj.circles, atlasObj.paths, atlasObj.events, atlasObj.isSidebar, true, false);
+                if(result) {
+                    var atlasObj = JSON.parse(result);
+                    invalidateMap(atlasObj.markers, atlasObj.fences, atlasObj.circles, atlasObj.paths, atlasObj.events, atlasObj.isSidebar, true, false);
+                }
             }
         });
     }
