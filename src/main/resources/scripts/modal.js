@@ -41,7 +41,7 @@
             showLoader(false);
         }, function(jqXHR, exceptiom) {
              showLoader(false);
-         });
+        });
     }
 
     function renderTimeline(items, isSidebar = true) {

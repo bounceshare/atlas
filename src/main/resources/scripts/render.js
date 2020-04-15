@@ -287,7 +287,7 @@
             callback: function (result) {
                 if(result) {
                     var atlasObj = JSON.parse(result);
-                    invalidateMap(atlasObj.markers, atlasObj.fences, atlasObj.circles, atlasObj.paths, atlasObj.events, atlasObj.isSidebar, true, false);
+                    invalidateMap(atlasObj.markers, atlasObj.fences, atlasObj.circles, atlasObj.paths, atlasObj.events, atlasObj.form, atlasObj.isSidebar, true, false);
                 }
             }
         });
@@ -427,7 +427,7 @@
         // If move is set to true. hit api to fetch data and set it using js. Only for home page
     }
 
-    function invalidateMap(tMarkers, tFences, tCircles, tPaths, events, isSidebar = true, fitToBounds = false, toRefresh = refresh) {
+    function invalidateMap(tMarkers, tFences, tCircles, tPaths, events, form, isSidebar = true, fitToBounds = false, toRefresh = refresh) {
         console.log("fitToBounds : " + fitToBounds);
         if(tMarkers != null) {
             $('#markerData')[0].innerText = JSON.stringify(tMarkers);
@@ -463,6 +463,10 @@
 
         if(events != null) {
             renderTimeline(events, isSidebar);
+        }
+
+        if(form != null) {
+            renderForm(form);
         }
 
         refresh = toRefresh;

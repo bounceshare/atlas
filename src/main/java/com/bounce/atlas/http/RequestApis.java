@@ -98,6 +98,18 @@ public class RequestApis {
     }
 
     @POST
+    @Path("/bike/fetchAssets")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes({MediaType.APPLICATION_JSON})
+    @GoogleAuth
+    public void fetchBikeAssets(String inputString, @Suspended final AsyncResponse asyncResponse) {
+        logger.info("/apis/bike/fetchAssets");
+        FetchBikeAssetApi
+                bikeAssetApi = new FetchBikeAssetApi(inputString, asyncResponse, httpRequest, httpResponse);
+        bikeAssetApi.onRequest();
+    }
+
+    @POST
     @Path("/booking/events")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes({MediaType.APPLICATION_JSON})

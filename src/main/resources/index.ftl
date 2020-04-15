@@ -21,6 +21,7 @@
 <#include "/scripts/layers.js">
 <#include "/scripts/search.js">
 <#include "/scripts/modal.js">
+<#include "/scripts/form.js">
 <!--<#if page == 'home'></#if>-->
 <!--<#if autoRefresh??><#include "/scripts/layers.js"></#if>-->
 <!--<#if searchPage??><#include "/scripts/search.js"><#else></#if>-->

@@ -48,7 +48,7 @@ public class MarkerPojo {
 
                 Map<String, Object> bikeData = bike.intoMap();
 
-                marker.data = Maps.newHashMap();
+                marker.data = Maps.newLinkedHashMap();
                 marker.data.put("Location", (bikeData.get("lat")+ "," + bikeData.get("lon")));
                 marker.data.put("Location Updated At", bikeData.get("loc_updated_time"));
                 marker.data.put("Type", bikeData.get("type"));
@@ -59,6 +59,7 @@ public class MarkerPojo {
                 marker.data.put("Secondary GPS", (bikeData.get("sec_gps_lat")+ "," + bikeData.get("sec_gps_lon")));
                 marker.data.put("Secondary GPS updated time", bikeData.get("sec_gps_updated_time"));
                 marker.data.put("Timeline", "<b><a href='#' onclick='showTimeline(\"/apis/bike/events\", " + bike.getId() +", \"Bike Event Timeline - " + bike.getId() + "\", true);'>Events</a></b>");
+                marker.data.put("Asset Data", "<b><a href='#' onclick='fetchForm(\"/apis/bike/fetchAssets\", " + bike.getId() +");'>Click Here</a></b>");
                 marker.data.put("Sensor Information", "<b><a href='#' onclick='showTimeline(\"/apis/bike/deviceData\", " + bike.getId() +", \"Bike Sensor Values - " + bike.getId() + "\");'>Here</a></b>");
                 if(bike.getStatus() == BikeStatus.oos) {
                     marker.data.put("OOS Reason", bikeData.get("oos_reason"));
