@@ -17,9 +17,9 @@ Please go though this sample config and configure one yourself with appropriate 
 
 >`This documentation contains information about the fields defined in Bounce Atlas and the approaches to access it.`
 
-## <u>I. Fields defined in Bounce Atlas</u>
+## I. Fields defined in Bounce Atlas
 
-### `1. Markers`:
+### 1. Markers:
 Markers are used to mark a point on the map, makes it easy to notice and identify.
 
 **markers** is an array of objects, each object containing :
@@ -61,11 +61,10 @@ Value of key-value pair also supports HTML contents.
 ]
 ```
 >**Image showing markers displayed on screen:**
-><img src="https://upload.bounce.bike/null/094d29d5-6aa2-4414-8f16-ff866e2773a3" width="80%" height="80%">
 ![](https://upload.bounce.bike/null/094d29d5-6aa2-4414-8f16-ff866e2773a3)
 
 
-### `2. Events or Timeline`:
+### 2. Events or Timeline:
 Events or Timeline is List of Cards with specific styles and parameters. It can be used to represent list of events.
 
 **events** is an array of objects, each object containing :
@@ -118,7 +117,7 @@ It is a string which is shown in top right corner of the event
 
 
 
-### `3. Paths`:
+### 3. Paths:
 Paths are the lines which connect different points on the map.
 It can be used to represent movements of the bikes
 
@@ -175,12 +174,11 @@ This defines the weight(boldness) of the line.
 ```
 
 >**Image showing a path line and infobox(data) when it is displayed**
-><img src="https://i.imgur.com/6ydCwMn.png" width="80%" height="80%">
 ![](https://i.imgur.com/6ydCwMn.png)
 
 
 
-### `4. Fences`:
+### 4. Fences:
 Fences are polygons which can be used to represent a region on map
 
 **fences** is an array of objects, each object containing :
@@ -253,11 +251,10 @@ Opacity of Color of the fence
     ]
 ```
 >Image showing fence when its displayed: 
-><img src="https://i.imgur.com/gaxZjy8.png" width="80%" height="80%">
 ![](https://i.imgur.com/gaxZjy8.png)
 
 
-### `5. Circles`:
+### 5. Circles:
 Circles can be used to represent a region on map
 
 **circles** is an array of objects, each object containing :
@@ -306,7 +303,7 @@ Opacity of Color of the fence
 ![](https://i.imgur.com/s0wwafW.png)
 
 
-## <u>II Configuration for adding your backend service to the atlas</u>
+## II Configuration for adding your backend service to the atlas
 
 In order to add your service to the Bounce Atlas, config needs to be updated by adding the following JSON in tabs[] JSON Array.
 The link for atlas config is [here](https://atlas.bounce.bike/config)
@@ -356,9 +353,9 @@ Guide for the end users
 }
 ```
 
-## <u>III. Approaches to communicate with the backend</u>
+## III. Approaches to communicate with the backend
 
-### `Approach 1`:
+### Approach 1:
 Steps:
 
 1. Select the tab corresponding to your service in the navigation bar of atlas
@@ -394,7 +391,7 @@ The backend should return the atlas elements in this way :
 >**NOTE**: Only once the configuation is done at the atlas config this approaches works
 
 
-### `Approach 2`:
+### Approach 2:
 
 There is another trigger for Timeline modal apart from Approach 1.
 This works only for timeline modal
@@ -449,17 +446,13 @@ The backend should return the atlas elements in this way
 
 
 >**Image of entire screen if events are shown in sidebar:**
->
-><img src="https://i.imgur.com/Kg807rf.png" width="100%" height="100%">
 ![](https://i.imgur.com/Kg807rf.png)
 
 
 >**Image of entire screen if events are shown at center:**
->
-><img src="https://i.imgur.com/Ij7UuuF.png" width="100%" height="100%">
 ![](https://i.imgur.com/Ij7UuuF.png)
 
-## <u>IV Debugging</u>
+## IV Debugging
 
-### `1. Test with JSON`:
+### 1. Test with JSON:
 Developers can test if the response renders info on the map by pasting the JSON data at Options->Render Atlas Json
