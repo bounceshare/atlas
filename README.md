@@ -62,6 +62,7 @@ Value of key-value pair also supports HTML contents.
 ```
 >**Image showing markers displayed on screen:**
 ><img src="https://upload.bounce.bike/null/094d29d5-6aa2-4414-8f16-ff866e2773a3" width="80%" height="80%">
+![](https://upload.bounce.bike/null/094d29d5-6aa2-4414-8f16-ff866e2773a3)
 
 
 ### `2. Events or Timeline`:
@@ -462,11 +463,3 @@ The backend should return the atlas elements in this way
 
 ### `1. Test with JSON`:
 Developers can test if the response renders info on the map by pasting the JSON data at Options->Render Atlas Json
-
-
-
-
-
-
-
-
