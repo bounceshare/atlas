@@ -63,7 +63,6 @@ Value of key-value pair also supports HTML contents.
 >**Image showing markers displayed on screen:**
 ><img src="https://upload.bounce.bike/null/094d29d5-6aa2-4414-8f16-ff866e2773a3" width="80%" height="80%">
 
-<br /> 
 
 ### `2. Events or Timeline`:
 Events or Timeline is List of Cards with specific styles and parameters. It can be used to represent list of events.
@@ -112,13 +111,11 @@ It is a string which is shown in top right corner of the event
   }
 ]
 ```
-<br /> 
 
 >**Image showing event when its displayed:** 
-><img src="https://i.imgur.com/ZvBavpR.png" width="50%" height="50%">
+![](https://i.imgur.com/ZvBavpR.png)
 
 
-<br /> 
 
 ### `3. Paths`:
 Paths are the lines which connect different points on the map.
@@ -175,13 +172,12 @@ This defines the weight(boldness) of the line.
   }
 ]
 ```
-<br /> 
 
 >**Image showing a path line and infobox(data) when it is displayed**
 ><img src="https://i.imgur.com/6ydCwMn.png" width="80%" height="80%">
+![](https://i.imgur.com/6ydCwMn.png)
 
 
-<br /> 
 
 ### `4. Fences`:
 Fences are polygons which can be used to represent a region on map
@@ -257,8 +253,8 @@ Opacity of Color of the fence
 ```
 >Image showing fence when its displayed: 
 ><img src="https://i.imgur.com/gaxZjy8.png" width="80%" height="80%">
+![](https://i.imgur.com/gaxZjy8.png)
 
-<br/>
 
 ### `5. Circles`:
 Circles can be used to represent a region on map
@@ -306,9 +302,8 @@ Opacity of Color of the fence
 ```
 
 >Image showing circle when its displayed: 
-><img src="https://i.imgur.com/s0wwafW.png" width="80%" height="80%">
+![](https://i.imgur.com/s0wwafW.png)
 
-<br>
 
 ## <u>II Configuration for adding your backend service to the atlas</u>
 
@@ -359,7 +354,6 @@ Guide for the end users
     "zoom": 0
 }
 ```
-<br/>
 
 ## <u>III. Approaches to communicate with the backend</u>
 
@@ -398,7 +392,6 @@ The backend should return the atlas elements in this way :
 
 >**NOTE**: Only once the configuation is done at the atlas config this approaches works
 
-<br/>
 
 ### `Approach 2`:
 
@@ -453,22 +446,25 @@ The backend should return the atlas elements in this way
 ```
 **NOTE**: Backend can only send "events" JSON Array. If it sends, 
 
-<br /> 
 
 >**Image of entire screen if events are shown in sidebar:**
 >
 ><img src="https://i.imgur.com/Kg807rf.png" width="100%" height="100%">
+![](https://i.imgur.com/Kg807rf.png)
 
-<br /> 
 
 >**Image of entire screen if events are shown at center:**
 >
 ><img src="https://i.imgur.com/Ij7UuuF.png" width="100%" height="100%">
+![](https://i.imgur.com/Ij7UuuF.png)
 
 ## <u>IV Debugging</u>
 
 ### `1. Test with JSON`:
 Developers can test if the response renders info on the map by pasting the JSON data at Options->Render Atlas Json
+
+
+
 
 
 
