@@ -22,6 +22,7 @@ import redis.clients.jedis.Jedis;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -418,6 +419,30 @@ public class ContentUtils {
         }
 
         return formSchema;
+    }
+
+    public static Map<String, Object> getFormValues(ConfigPojo.Page page, int id) {
+        Map<String, Object> formValues = Maps.newLinkedHashMap();
+
+        String sql = "select * from " + page.getCrudConfig().getSchema() + "." + page.getCrudConfig().getTable() + " where id=" + id;
+        Record record = DatabaseConnector.getDb()
+                .getConnector(page.getCrudConfig().getJdbcUrl(), page.getCrudConfig().getDbUsername(),
+                        page.getCrudConfig().getDbPassword())
+                .fetchOne(sql);
+
+        for(Field field : record.fields()) {
+            Object val = record.get(field.getName());
+            if(field.getDataType().getSQLDataType().getTypeName().equals("timestamp") && val != null) {
+                // convert timestamp to html time
+                long timestamp = Timestamp.valueOf(val.toString()).getTime();
+                val = Utils.toHtmlInputTimestamp(timestamp);
+
+            }
+            if(val != null) {
+                formValues.put(field.getName(), val);
+            }
+        }
+        return formValues;
     }
 
 }

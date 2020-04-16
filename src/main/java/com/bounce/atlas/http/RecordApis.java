@@ -77,8 +77,9 @@ public class RecordApis {
             FormPojo form = new FormPojo();
             form.formSchema = ContentUtils.getFormSchema(page);
             if(id >= 0) {
-//                form.values = ContentUtils.getformval
+                form.values = ContentUtils.getFormValues(page, id);
             }
+            form.postUrl = "/apis/test/drawnObjs";
 
             response.put("form", form);
             asyncResponse.resume(Response.ok().entity(gson.toJson(Status.buildSuccess(response))).build());

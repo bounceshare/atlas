@@ -32,6 +32,31 @@ public class Utils {
         return -1;
     }
 
+    public static long convertHtmlInputTimestamp(String time) {
+        try {
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
+            Date date = format.parse(time);
+            DateTime dateTime = new DateTime(date.getTime());
+            return dateTime.toInstant().getMillis();
+        } catch (ParseException e) {
+            e.printStackTrace();
+            BounceUtils.logError(e);
+        }
+        return -1;
+    }
+
+    public static String toHtmlInputTimestamp(long time) {
+        try {
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
+            String date = format.format(new Date(time));
+            return date;
+        } catch (Exception e) {
+            e.printStackTrace();
+            BounceUtils.logError(e);
+        }
+        return null;
+    }
+
     public static long convertSQlTimestamp(String time) {
         try {
             SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
@@ -46,7 +71,7 @@ public class Utils {
     }
 
     public static void main(String[] args) {
-        System.out.println("Time : " + new Date(convertSQlTimestamp("2020-03-04T22:00:00")));
+        System.out.println("Time : " + new Date(convertHtmlInputTimestamp("2020-04-17T00:59")));
     }
 
     private static Pair<String, Integer> getRedisHostPortPair() {
