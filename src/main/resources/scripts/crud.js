@@ -4,6 +4,19 @@
 
     function editRecord(pageId, id) {
         console.log("editRecord() : " + pageId + " , " + id);
+        data = {};
+        data.pagePath = $('#freemarker_pagePath')[0].innerText;
+        data.id = id;
+        if(isLoading) {
+            return;
+        }
+        showLoader(true);
+        httpPost("/records/form", data, function(response) {
+            showLoader(false);
+            renderForm(response.data.form);
+        }, function(jqXHR, exceptiom) {
+            showLoader(false);
+        });
     }
 
     function deleteRecord(pageId, id) {
