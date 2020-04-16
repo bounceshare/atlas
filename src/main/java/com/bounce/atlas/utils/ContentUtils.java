@@ -12,6 +12,7 @@ import org.apache.commons.io.IOUtils;
 import org.jooq.Field;
 import org.jooq.Record;
 import org.jooq.Result;
+import org.json.JSONObject;
 import redis.clients.jedis.Jedis;
 
 import java.io.IOException;
@@ -252,6 +253,7 @@ public class ContentUtils {
         if(records.size() > 0) {
             Record record = records.get(0);
             List<String> fieldList = Lists.newLinkedList();
+            fieldList.add("");
             for(Field f : record.fields()) {
                 fieldList.add(f.getName());
             }
@@ -259,6 +261,17 @@ public class ContentUtils {
         }
         for(Record record : records)  {
             List<String> recordList = Lists.newLinkedList();
+            JSONObject buttonFunction = new JSONObject();
+            if(page.getCrudConfig().isEditAllowed()) {
+                String pageId = page.getPageId();
+                int id = (int) record.get("id");
+                buttonFunction.put("edit", "\"" + pageId + "\"" + "," + id);
+            } if(page.getCrudConfig().isDeleteAllowed()) {
+                String pageId = page.getPageId();
+                int id = (int) record.get("id");
+                buttonFunction.put("delete", "\"" + pageId + "\"" + "," + id);
+            }
+            recordList.add(buttonFunction.toString());
             for(Field f : record.fields()) {
                 Object obj = record.get(f.getName());
                 if(obj != null) {
