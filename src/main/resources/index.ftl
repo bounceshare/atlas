@@ -14,14 +14,17 @@
 <div id="freemarker_editFenceUrl" hidden><#if editFenceUrl??>${editFenceUrl}<#else>false</#if></div>
 <div id="freemarker_editFenceDataSchema" hidden><#if editFenceDataSchema??>${editFenceDataSchema}<#else>false</#if></div>
 <div id="freemarker_searchDataSchema" hidden><#if searchDataSchema??>${searchDataSchema}<#else>false</#if></div>
+<div id="freemarker_recordsData" hidden><#if recordsDataString??>${recordsDataString}<#else></#if></div>
 
 <#include "/sidebar.ftl">
-<div id="mapDiv" style="height:100%;"></div>
+<div id="mapDiv" style="height:100%;" <#if !mapView> hidden </#if> ></div>
+<#if recordsDataString??><br/><table class="table table-striped table-bordered" id="crudTable" width="100%"></table><#else></#if>
 <#include "/scripts/render.js">
 <#include "/scripts/layers.js">
 <#include "/scripts/search.js">
 <#include "/scripts/modal.js">
 <#include "/scripts/form.js">
+<#include "/scripts/crud.js">
 <!--<#if page == 'home'></#if>-->
 <!--<#if autoRefresh??><#include "/scripts/layers.js"></#if>-->
 <!--<#if searchPage??><#include "/scripts/search.js"><#else></#if>-->

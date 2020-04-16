@@ -3,7 +3,6 @@ package com.bounce.atlas.pojo;
 import java.util.List;
 import java.util.Map;
 
-import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -128,6 +127,9 @@ public class ConfigPojo {
         @SerializedName("searchDataSchema")
         @Expose
         private Map<String, Object> searchDataSchema;
+        @SerializedName("crudConfig")
+        @Expose
+        private CrudConfig crudConfig;
 
         public String getPage() {
             return page;
@@ -262,6 +264,94 @@ public class ConfigPojo {
 
         public void setSearchDataSchema(Map<String, Object> searchDataSchema) {
             this.searchDataSchema = searchDataSchema;
+        }
+
+        public CrudConfig getCrudConfig() {
+            return crudConfig;
+        }
+
+        public void setCrudConfig(CrudConfig crudConfig) {
+            this.crudConfig = crudConfig;
+        }
+    }
+
+    public class CrudConfig {
+        @SerializedName("isEditAllowed")
+        @Expose
+        private boolean isEditAllowed;
+        @SerializedName("isDeleteAllowed")
+        @Expose
+        private boolean isDeleteAllowed;
+        @SerializedName("jdbcUrl")
+        @Expose
+        private String jdbcUrl;
+        @SerializedName("dbUsername")
+        @Expose
+        private String dbUsername;
+        @SerializedName("dbPassword")
+        @Expose
+        private String dbPassword;
+        @SerializedName("schema")
+        @Expose
+        private String schema;
+        @SerializedName("table")
+        @Expose
+        private String table;
+
+        public boolean isEditAllowed() {
+            return isEditAllowed;
+        }
+
+        public void setEditAllowed(boolean editAllowed) {
+            isEditAllowed = editAllowed;
+        }
+
+        public boolean isDeleteAllowed() {
+            return isDeleteAllowed;
+        }
+
+        public void setDeleteAllowed(boolean deleteAllowed) {
+            isDeleteAllowed = deleteAllowed;
+        }
+
+        public String getJdbcUrl() {
+            return jdbcUrl;
+        }
+
+        public void setJdbcUrl(String jdbcUrl) {
+            this.jdbcUrl = jdbcUrl;
+        }
+
+        public String getDbUsername() {
+            return dbUsername;
+        }
+
+        public void setDbUsername(String dbUsername) {
+            this.dbUsername = dbUsername;
+        }
+
+        public String getDbPassword() {
+            return dbPassword;
+        }
+
+        public void setDbPassword(String dbPassword) {
+            this.dbPassword = dbPassword;
+        }
+
+        public String getSchema() {
+            return schema;
+        }
+
+        public void setSchema(String schema) {
+            this.schema = schema;
+        }
+
+        public String getTable() {
+            return table;
+        }
+
+        public void setTable(String table) {
+            this.table = table;
         }
     }
 

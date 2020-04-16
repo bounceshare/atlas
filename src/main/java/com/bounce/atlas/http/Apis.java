@@ -10,10 +10,13 @@ import com.bounce.utils.Log;
 import com.bounce.utils.dbmodels.public_.tables.Booking;
 import com.bounce.utils.dbmodels.public_.tables.records.BookingRecord;
 import com.bounce.utils.status.Status;
+import com.google.common.collect.Lists;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.apache.http.util.TextUtils;
 import org.apache.log4j.Logger;
+import org.jooq.Record;
+import org.jooq.Result;
 import org.jooq.exception.DataAccessException;
 import org.json.JSONObject;
 
@@ -56,7 +59,12 @@ public class Apis {
                 asyncResponse.resume(Response.status(400).entity(gson.toJson(Status.buildFailure(400, "Error : Unable to fetch required number of records : " + bookings))).build());
                 return;
             }
-            asyncResponse.resume(Response.ok().entity(gson.toJson(Status.buildSuccess())).build());
+            Result<Record> var = DatabaseConnector.getDb().getReadDbConnector().fetch("select * from bike limit 100");
+            List<Map<String, Object>> obj = Lists.newArrayList();
+            for(Record record : var) {
+                obj.add(record.intoMap());
+            }
+            asyncResponse.resume(Response.ok().entity(gson.toJson(obj)).build());
             return;
         } catch (Exception e) {
             e.printStackTrace();
@@ -254,6 +262,12 @@ public class Apis {
         data.put("editFenceUrl", page.getEditFenceUrl());
         data.put("editFenceDataSchema", page.getEditFenceDataSchema());
         data.put("searchDataSchema", page.getSearchDataSchema());
+        data.put("mapView", true);
+        if(page.getCrudConfig() != null) {
+            data.put("recordsDataString", gson.toJson(ContentUtils.getDbRecords(page)));
+            data.put("recordsData", ContentUtils.getDbRecords(page));
+            data.put("mapView", false);
+        }
 
         String content = ContentUtils.getFreemarkerString("index.ftl", data);
         asyncResponse.resume(Response.ok().entity(content).build());

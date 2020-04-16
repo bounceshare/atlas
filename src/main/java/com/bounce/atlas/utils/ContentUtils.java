@@ -2,12 +2,16 @@ package com.bounce.atlas.utils;
 
 import com.bounce.atlas.pojo.*;
 import com.bounce.utils.BounceUtils;
+import com.bounce.utils.DatabaseConnector;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import freemarker.template.*;
 import org.apache.commons.io.IOUtils;
+import org.jooq.Field;
+import org.jooq.Record;
+import org.jooq.Result;
 import redis.clients.jedis.Jedis;
 
 import java.io.IOException;
@@ -235,6 +239,37 @@ public class ContentUtils {
         }
 
         return page;
+    }
+
+    public static List<List<String>> getDbRecords(ConfigPojo.Page page) {
+        Result<Record> records = DatabaseConnector.getDb()
+                .getConnector(page.getCrudConfig().getJdbcUrl(), page.getCrudConfig().getDbUsername(),
+                        page.getCrudConfig().getDbPassword())
+                .fetch("select * from " + page.getCrudConfig().getSchema() + "." + page.getCrudConfig().getTable() +
+                        " limit 100");
+
+        List<List<String>> result = Lists.newLinkedList();
+        if(records.size() > 0) {
+            Record record = records.get(0);
+            List<String> fieldList = Lists.newLinkedList();
+            for(Field f : record.fields()) {
+                fieldList.add(f.getName());
+            }
+            result.add(fieldList);
+        }
+        for(Record record : records)  {
+            List<String> recordList = Lists.newLinkedList();
+            for(Field f : record.fields()) {
+                Object obj = record.get(f.getName());
+                if(obj != null) {
+                    recordList.add(obj.toString());
+                } else {
+                    recordList.add("null");
+                }
+            }
+            result.add(recordList);
+        }
+        return result;
     }
 
 }
