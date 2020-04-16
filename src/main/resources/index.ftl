@@ -5,6 +5,7 @@
 <div id="pathData" hidden><#if pathString??>${pathString}<#else></#if></div>
 <div id="circleData" hidden><#if circleString??>${circleString}<#else></#if></div>
 
+<div id="freemarker_pagePath" hidden><#if pagePath??>${pagePath}<#else></#if></div>
 <div id="freemarker_location" hidden><#if location??>${location}<#else></#if></div>
 <div id="freemarker_zoom" hidden><#if zoom??>${zoom}<#else></#if></div>
 <div id="freemarker_query" hidden><#if query??>${query}<#else></#if></div>
@@ -15,6 +16,8 @@
 <div id="freemarker_editFenceDataSchema" hidden><#if editFenceDataSchema??>${editFenceDataSchema}<#else>false</#if></div>
 <div id="freemarker_searchDataSchema" hidden><#if searchDataSchema??>${searchDataSchema}<#else>false</#if></div>
 <div id="freemarker_recordsData" hidden><#if recordsDataString??>${recordsDataString}<#else></#if></div>
+<div id="freemarker_mapView" hidden><#if mapView>true<#else></#if></div>
+<div id="freemarker_tableView" hidden><#if tableView??>true<#else></#if></div>
 
 <#include "/sidebar.ftl">
 <div id="mapDiv" style="height:100%;" <#if !mapView> hidden </#if> ></div>

@@ -1,11 +1,21 @@
 <script>
 
+    var table = null;
+
     function editRecord(pageId, id) {
         console.log("editRecord() : " + pageId + " , " + id);
     }
 
     function deleteRecord(pageId, id) {
         console.log("deleteRecord() : " + pageId + " , " + id);
+    }
+
+    function clearRecords() {
+        if(table != null) {
+            table.clear().draw();
+            table.destroy();
+            table = null;
+        }
     }
 
     function renderRecords(recordData) {
@@ -36,7 +46,8 @@
         }
 
         recordData.shift(1);
-        $('#crudTable').DataTable({
+
+        table = $('#crudTable').DataTable({
             data: recordData,
             columns: columns,
             ordering: false,
@@ -46,5 +57,8 @@
         });
     }
 
-    renderRecords(JSON.parse($('#freemarker_recordsData')[0].innerText));
+    var recordsStr = $('#freemarker_recordsData')[0].innerText;
+    if(recordsStr && recordsStr.length > 0) {
+        renderRecords(JSON.parse($('#freemarker_recordsData')[0].innerText));
+    }
 </script>

@@ -9,9 +9,12 @@ import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import freemarker.template.*;
 import org.apache.commons.io.IOUtils;
+import org.apache.http.util.TextUtils;
 import org.jooq.Field;
 import org.jooq.Record;
 import org.jooq.Result;
+import org.jooq.exception.DataAccessException;
+import org.json.JSONException;
 import org.json.JSONObject;
 import redis.clients.jedis.Jedis;
 
@@ -242,45 +245,82 @@ public class ContentUtils {
         return page;
     }
 
-    public static List<List<String>> getDbRecords(ConfigPojo.Page page) {
-        Result<Record> records = DatabaseConnector.getDb()
-                .getConnector(page.getCrudConfig().getJdbcUrl(), page.getCrudConfig().getDbUsername(),
-                        page.getCrudConfig().getDbPassword())
-                .fetch("select * from " + page.getCrudConfig().getSchema() + "." + page.getCrudConfig().getTable() +
-                        " limit 100");
-
-        List<List<String>> result = Lists.newLinkedList();
-        if(records.size() > 0) {
-            Record record = records.get(0);
-            List<String> fieldList = Lists.newLinkedList();
-            fieldList.add("");
-            for(Field f : record.fields()) {
-                fieldList.add(f.getName());
-            }
-            result.add(fieldList);
-        }
-        for(Record record : records)  {
-            List<String> recordList = Lists.newLinkedList();
-            JSONObject buttonFunction = new JSONObject();
-            if(page.getCrudConfig().isEditAllowed()) {
-                String pageId = page.getPageId();
-                int id = (int) record.get("id");
-                buttonFunction.put("edit", "\"" + pageId + "\"" + "," + id);
-            } if(page.getCrudConfig().isDeleteAllowed()) {
-                String pageId = page.getPageId();
-                int id = (int) record.get("id");
-                buttonFunction.put("delete", "\"" + pageId + "\"" + "," + id);
-            }
-            recordList.add(buttonFunction.toString());
-            for(Field f : record.fields()) {
-                Object obj = record.get(f.getName());
-                if(obj != null) {
-                    recordList.add(obj.toString());
-                } else {
-                    recordList.add("null");
+    public static ConfigPojo.Page getPageFromPagePath(String pagePath) {
+        ConfigPojo.Page page = null;
+        for (ConfigPojo.Page item : getConfig().getTabs()) {
+            if (item.getPages() != null && item.getPages().size() > 0) {
+                for (ConfigPojo.Page subItem : item.getPages()) {
+                    if (subItem.getPath().equals(pagePath)) {
+                        return subItem;
+                    }
+                }
+            } else {
+                if (item.getPageId().equals(pagePath)) {
+                    return page;
                 }
             }
-            result.add(recordList);
+        }
+
+        return page;
+    }
+
+    public static List<List<String>> getDbRecords(ConfigPojo.Page page, String where, int limit) {
+        String sql = "select * from " + page.getCrudConfig().getSchema() + "." + page.getCrudConfig().getTable();
+        boolean isCustomQuery = false;
+        if(TextUtils.isEmpty(where)) {
+            sql += " limit " + limit;
+            isCustomQuery = true;
+        } else {
+            sql += " where " + where;
+        }
+        List<List<String>> result = Lists.newLinkedList();
+
+        try {
+            Result<Record> records = DatabaseConnector.getDb()
+                    .getConnector(page.getCrudConfig().getJdbcUrl(), page.getCrudConfig().getDbUsername(),
+                            page.getCrudConfig().getDbPassword())
+                    .fetch(sql);
+
+            if(records.size() > 0) {
+                Record record = records.get(0);
+                List<String> fieldList = Lists.newLinkedList();
+                fieldList.add("");
+                for(Field f : record.fields()) {
+                    fieldList.add(f.getName());
+                }
+                result.add(fieldList);
+            }
+            for(Record record : records)  {
+                List<String> recordList = Lists.newLinkedList();
+                JSONObject buttonFunction = new JSONObject();
+                if(page.getCrudConfig().isEditAllowed()) {
+                    String pageId = page.getPageId();
+                    int id = (int) record.get("id");
+                    buttonFunction.put("edit", "\"" + pageId + "\"" + "," + id);
+                } if(page.getCrudConfig().isDeleteAllowed()) {
+                    String pageId = page.getPageId();
+                    int id = (int) record.get("id");
+                    buttonFunction.put("delete", "\"" + pageId + "\"" + "," + id);
+                }
+                recordList.add(buttonFunction.toString());
+                for(Field f : record.fields()) {
+                    Object obj = record.get(f.getName());
+                    if(obj != null) {
+                        recordList.add(obj.toString());
+                    } else {
+                        recordList.add("null");
+                    }
+                }
+                result.add(recordList);
+            }
+            return result;
+        } catch (Exception e) {
+            e.printStackTrace();
+            BounceUtils.logError(e);
+        }
+        if(isCustomQuery) {
+            result = getDbRecords(page, null, 1);
+            result.remove(1);
         }
         return result;
     }

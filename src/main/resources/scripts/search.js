@@ -1,34 +1,93 @@
 <script>
 
-//    var searchText = $('#freemarker_searchtext')[0].innerText;
-//    $('#searchBar')[0].placeholder = searchText;
-
-    var searchDataSchemaStr = $('#freemarker_searchDataSchema')[0].innerText;
-    if(searchDataSchemaStr == 'null') {
-        var searchText = $('#freemarker_searchtext')[0].innerText;
-        $('#freemarker_searchDataSchema')[0].innerText = '{"searchQuery":{"type":"string","title":"Search", "description": "$desc"}}';
-        searchDataSchemaStr = $('#freemarker_searchDataSchema')[0].innerText;
-        if(searchText != 'null') {
-            searchDataSchemaStr = searchDataSchemaStr.replace("$desc", "Search for " + searchText);
+    function setupSearch() {
+        var tableView = $('#freemarker_tableView')[0].innerText;
+        if(!tableView || tableView != "true") {
+            setupSearchForMapView();
         } else {
-            searchDataSchemaStr = searchDataSchemaStr.replace("$desc", "");
+            var searchDataSchemaStr = $('#freemarker_searchDataSchema')[0].innerText;
+            $('#freemarker_searchDataSchema')[0].innerText = '{"where":{"type":"string","title":"Search", "description": "Search for records by typing in the where part of the query here"}}';
+            searchDataSchemaStr = $('#freemarker_searchDataSchema')[0].innerText;
+
+            var searchDataSchema = JSON.parse(searchDataSchemaStr);
+            console.log(searchDataSchema);
+            $('#dropdownMenuSearchDiv').jsonForm({
+                schema: searchDataSchema,
+                form: [
+                          "*",
+                          {
+                            "type": "submit",
+                            "title": "Search"
+                          }
+                        ],
+                onSubmit: function (errors, values) {
+                  searchTableData(values);
+                }
+            });
         }
     }
-    var searchDataSchema = JSON.parse(searchDataSchemaStr);
-    console.log(searchDataSchema);
-    $('#dropdownMenuSearchDiv').jsonForm({
-        schema: searchDataSchema,
-        form: [
-                  "*",
-                  {
-                    "type": "submit",
-                    "title": "Search"
-                  }
-                ],
-        onSubmit: function (errors, values) {
-          submitSearchData(values);
+
+    function setupSearchForMapView() {
+        var searchDataSchemaStr = $('#freemarker_searchDataSchema')[0].innerText;
+        if(searchDataSchemaStr == 'null') {
+            var searchText = $('#freemarker_searchtext')[0].innerText;
+            $('#freemarker_searchDataSchema')[0].innerText = '{"searchQuery":{"type":"string","title":"Search", "description": "$desc"}}';
+            searchDataSchemaStr = $('#freemarker_searchDataSchema')[0].innerText;
+            if(searchText != 'null') {
+                searchDataSchemaStr = searchDataSchemaStr.replace("$desc", "Search for " + searchText);
+            } else {
+                searchDataSchemaStr = searchDataSchemaStr.replace("$desc", "");
+            }
         }
-    });
+        var searchDataSchema = JSON.parse(searchDataSchemaStr);
+        console.log(searchDataSchema);
+        $('#dropdownMenuSearchDiv').jsonForm({
+            schema: searchDataSchema,
+            form: [
+                      "*",
+                      {
+                        "type": "submit",
+                        "title": "Search"
+                      }
+                    ],
+            onSubmit: function (errors, values) {
+              submitSearchData(values);
+            }
+        });
+    }
+
+    function searchTableData(searchVals) {
+        console.log(searchVals);
+        $("body").trigger("click");
+        var searchUrl = "/records/search";
+        if(!searchUrl || searchUrl.length < 1) {
+            console.log("Wrong invocation of search api");
+            return;
+        }
+        console.log("searchTableData() : " + searchVals.toString());
+
+        pos = map.getCenter();
+        coords = [pos.lat, pos.lng];
+
+        data = {};
+        data.pagePath = $('#freemarker_pagePath')[0].innerText;
+        for(var key in searchVals) {
+            data[key] = searchVals[key];
+        }
+        if(isLoading) {
+            return;
+        }
+        showLoader(true);
+        httpPost(searchUrl, data, function(response) {
+            showLoader(false);
+            clearRecords();
+            if(response.data.records.length > 0) {
+                renderRecords(response.data.records);
+            }
+        }, function(jqXHR, exceptiom) {
+            showLoader(false);
+        });
+    }
 
     function submitSearchData(values) {
         console.log(values);
@@ -105,5 +164,6 @@
         });
     }
 
+    setupSearch();
 
 </script>

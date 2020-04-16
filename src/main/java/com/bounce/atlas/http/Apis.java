@@ -11,6 +11,7 @@ import com.bounce.utils.dbmodels.public_.tables.Booking;
 import com.bounce.utils.dbmodels.public_.tables.records.BookingRecord;
 import com.bounce.utils.status.Status;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.apache.http.util.TextUtils;
@@ -192,6 +193,29 @@ public class Apis {
     }
 
     @POST
+    @Path("/records/search")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes({MediaType.APPLICATION_JSON})
+    @GoogleAuth
+    public void recordSearch(String inputString, @Suspended final AsyncResponse asyncResponse) {
+        logger.info("/records/search");
+        try {
+            JSONObject input = new JSONObject(inputString);
+            String pagePath = input.optString("pagePath");
+            String where = input.optString("where");
+
+            ConfigPojo.Page page = ContentUtils.getPageFromPagePath(pagePath);
+            List<List<String>> obj = ContentUtils.getDbRecords(page, where, 100);
+            Map<Object, Object> response = Maps.newHashMap();
+            response.put("records", obj);
+
+            asyncResponse.resume(Response.ok().entity(gson.toJson(Status.buildSuccess(response))).build());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @POST
     @Path("/test/search")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes({MediaType.APPLICATION_JSON})
@@ -254,6 +278,7 @@ public class Apis {
         data.put("zoom", zoom);
 
         data.put("page", page.getPageId());
+        data.put("pagePath", page.getPath());
         data.put("autoRefresh", page.getAutoRefresh());
         data.put("searchUrl", page.getSearchUrl());
         data.put("searchPage", page.getSearchPage());
@@ -264,9 +289,10 @@ public class Apis {
         data.put("searchDataSchema", page.getSearchDataSchema());
         data.put("mapView", true);
         if(page.getCrudConfig() != null) {
-            data.put("recordsDataString", gson.toJson(ContentUtils.getDbRecords(page)));
-            data.put("recordsData", ContentUtils.getDbRecords(page));
+            data.put("recordsDataString", gson.toJson(ContentUtils.getDbRecords(page, null, 100)));
+            data.put("recordsData", ContentUtils.getDbRecords(page, null, 100));
             data.put("mapView", false);
+            data.put("tableView", true);
         }
 
         String content = ContentUtils.getFreemarkerString("index.ftl", data);
