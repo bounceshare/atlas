@@ -403,10 +403,16 @@ public class ContentUtils {
                                     .getConnector(page.getCrudConfig().getJdbcUrl(), page.getCrudConfig().getDbUsername(),
                                             page.getCrudConfig().getDbPassword()).fetch(sql);
                             List<String> enums = Lists.newLinkedList();
+                            boolean isSpace = false;
                             for (Record record : records) {
+                                if(record.getValue(0).toString().contains(" ")) {
+                                    isSpace = true;
+                                }
                                 enums.add(record.getValue(0).toString());
                             }
-                            map.put("enum", enums);
+                            if(!isSpace) {
+                                map.put("enum", enums);
+                            }
                         } catch (Exception e) {
                             BounceUtils.logError(e);
                             e.printStackTrace();
@@ -417,6 +423,11 @@ public class ContentUtils {
             }
             formSchema.put(column.getKey(), map);
         }
+        Map<String, Object> map = Maps.newLinkedHashMap();
+        map.put("title", "pagePath");
+        map.put("type", "string");
+        map.put("readonly", true);
+        formSchema.put("pagePath", map);
 
         return formSchema;
     }
@@ -424,24 +435,55 @@ public class ContentUtils {
     public static Map<String, Object> getFormValues(ConfigPojo.Page page, int id) {
         Map<String, Object> formValues = Maps.newLinkedHashMap();
 
-        String sql = "select * from " + page.getCrudConfig().getSchema() + "." + page.getCrudConfig().getTable() + " where id=" + id;
-        Record record = DatabaseConnector.getDb()
-                .getConnector(page.getCrudConfig().getJdbcUrl(), page.getCrudConfig().getDbUsername(),
-                        page.getCrudConfig().getDbPassword())
-                .fetchOne(sql);
+        if(id >= 0) {
+            String sql = "select * from " + page.getCrudConfig().getSchema() + "." + page.getCrudConfig().getTable() +
+                    " where id=" + id;
+            Record record = DatabaseConnector.getDb()
+                    .getConnector(page.getCrudConfig().getJdbcUrl(), page.getCrudConfig().getDbUsername(),
+                            page.getCrudConfig().getDbPassword()).fetchOne(sql);
 
-        for(Field field : record.fields()) {
-            Object val = record.get(field.getName());
-            if(field.getDataType().getSQLDataType().getTypeName().equals("timestamp") && val != null) {
-                // convert timestamp to html time
-                long timestamp = Timestamp.valueOf(val.toString()).getTime();
-                val = Utils.toHtmlInputTimestamp(timestamp);
+            for (Field field : record.fields()) {
+                Object val = record.get(field.getName());
+                if (field.getDataType().getSQLDataType().getTypeName().equals("timestamp") && val != null) {
+                    // convert timestamp to html time
+                    long timestamp = Timestamp.valueOf(val.toString()).getTime();
+                    val = Utils.toHtmlInputTimestamp(timestamp);
 
-            }
-            if(val != null) {
-                formValues.put(field.getName(), val);
+                }
+
+                if(val != null) {
+                    switch (field.getDataType().getSQLDataType().getTypeName()) {
+                        case "varchar":
+                            // no change
+                            break;
+                        case "timestamp":
+                            // no change needed
+                            break;
+                        case "boolean":
+                            val = Boolean.parseBoolean(val.toString());
+                            break;
+                        case "integer":
+                            val = Double.valueOf(val.toString()).intValue();
+                            break;
+                        case "float":
+                            val = Double.valueOf(val.toString());
+                            break;
+                        case "other":
+                            val = val.toString();
+                            break;
+                        case "bigint":
+                            String longStr = val.toString().replace(".0", "");
+                            val = Long.parseLong(longStr);
+                            break;
+                        default:
+                            val = val.toString();
+                            break;
+                    }
+                    formValues.put(field.getName(), val);
+                }
             }
         }
+        formValues.put("pagePath", page.getPath());
         return formValues;
     }
 
