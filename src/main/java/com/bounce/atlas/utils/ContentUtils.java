@@ -405,14 +405,9 @@ public class ContentUtils {
                             List<String> enums = Lists.newLinkedList();
                             boolean isSpace = false;
                             for (Record record : records) {
-                                if(record.getValue(0).toString().contains(" ")) {
-                                    isSpace = true;
-                                }
                                 enums.add(record.getValue(0).toString());
                             }
-                            if(!isSpace) {
-                                map.put("enum", enums);
-                            }
+                            map.put("enum", enums);
                         } catch (Exception e) {
                             BounceUtils.logError(e);
                             e.printStackTrace();
@@ -476,7 +471,7 @@ public class ContentUtils {
                             val = Long.parseLong(longStr);
                             break;
                         default:
-                            val = val.toString();
+                            val = record.get(field, String.class);
                             break;
                     }
                     formValues.put(field.getName(), val);
