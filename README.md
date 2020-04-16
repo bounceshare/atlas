@@ -13,6 +13,21 @@ Please go though this sample config and configure one yourself with appropriate 
 ![Sample config](https://upload.bounce.bike/devops/57218388-59e0-477a-95c5-7b438272e05f "Sample Config")
 
 
+# Build Command
+``mvn clean install -DskipTests``
+
+# Running Locally
+Go ahead and install Jetty-Runner plugin on IntelliJ if not installed. 
+
+#Setting up local config
+``./setup_local.sh <appname>``
+
+#Sample Config
+Please go though this sample config and configure one yourself with appropriate values
+
+![Sample config](https://upload.bounce.bike/devops/57218388-59e0-477a-95c5-7b438272e05f "Sample Config")
+
+
 # Bounce Atlas Documentation
 
 >`This documentation contains information about the fields defined in Bounce Atlas and the approaches to access it.`
@@ -342,8 +357,22 @@ If true: Backend call is made for actions movement/zoom-in/zoom-out in map.
 * **help :** *(Type: String)*
 Guide for the end users
 
+* **zoom :** *(Type: Integer)*
+Default zoom level for the map when this page is rendered
 
-* **Example :**
+* **defaultLocation :** *(Type: String)*
+Default location in the format (12.132121, 77.65421) to indicate the default location when the map will be rendered
+
+* **editFenceUrl :** *(Type: String)*
+To indicate if a page will have edit fences/markers option. 
+
+* **editFenceDataSchema :** *(Type: Map<String, Object>)*
+Schema in the format specified [here](https://jsonform.github.io/jsonform/playground/index.html?example=schema-basic) for updating fence metadata.
+
+* **searchDataSchema :** *(Type: Map<String, Object>)*
+Schema in the format specified [here](https://jsonform.github.io/jsonform/playground/index.html?example=schema-basic) for customising search options in the manner of a form.
+
+* **Examples for config :**
 
 >**JSON showing parameters Asset safety service of Bounce**
 ```json
@@ -357,6 +386,37 @@ Guide for the end users
     "autoRefresh": "false",
     "help": "You can search for asset safety data for a bike. The format to search for it is - <BikeId or Vehicle number (KA-51-AE-4317)>",
     "zoom": 0
+}
+```
+
+>JSON showing parameters for a test page which is used to create geofences
+```json
+{
+    "page": "Test Draw Objects",
+    "pageId": "Test Stuff",
+    "path": "/draw_test",
+    "autoRefresh": "false",
+    "help": "Draw paths, fences, circles, markers",
+    "auth": "open",
+    "zoom": 5,
+    "editFenceUrl": "/apis/test/drawnObjs",
+    "editFenceDataSchema": {
+        "name": {
+            "title": "Fence Name",
+            "description": "Please specify a name to identify this geo fence",
+            "type": "string"
+        },
+        "gender": {
+            "title": "Type",
+            "description": "Fence type",
+            "type": "string",
+            "enum": [
+                "Red Zone",
+                "Black Zone",
+                "Blue Zone"
+            ]
+        }
+    }
 }
 ```
 
