@@ -70,13 +70,15 @@ public class RecordApis {
         try {
             JSONObject input = new JSONObject(inputString);
             String pagePath = input.optString("pagePath");
-            int id = input.optInt("id");
+            int id = input.optInt("id", -1);
             Map<Object, Object> response = Maps.newHashMap();
 
             ConfigPojo.Page page = ContentUtils.getPageFromPagePath(pagePath);
             FormPojo form = new FormPojo();
-
-            
+            form.formSchema = ContentUtils.getFormSchema(page);
+            if(id >= 0) {
+//                form.values = ContentUtils.getformval
+            }
 
             response.put("form", form);
             asyncResponse.resume(Response.ok().entity(gson.toJson(Status.buildSuccess(response))).build());

@@ -397,7 +397,7 @@ public class ContentUtils {
                         try {
                             //mostly enum
                             String sql = "SELECT unnest(enum_range(NULL::" +
-                                    column.getValue().getDataType().getSQLDataType().getTypeName() + "));";
+                                    column.getValue().getDataType().getSQLDataType().getTypeName() + "))::text";
                             Result<Record> records = DatabaseConnector.getDb()
                                     .getConnector(page.getCrudConfig().getJdbcUrl(), page.getCrudConfig().getDbUsername(),
                                             page.getCrudConfig().getDbPassword()).fetch(sql);

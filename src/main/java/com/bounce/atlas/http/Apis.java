@@ -60,8 +60,6 @@ public class Apis {
                 asyncResponse.resume(Response.status(400).entity(gson.toJson(Status.buildFailure(400, "Error : Unable to fetch required number of records : " + bookings))).build());
                 return;
             }
-            Map<String, Object> res = ContentUtils.getFormSchema(ContentUtils.getPageFromPagePath("/crud_test"));
-            logger.info(gson.toJson(res));
             asyncResponse.resume(Response.ok().entity(gson.toJson(Status.buildSuccess())).build());
             return;
         } catch (Exception e) {
