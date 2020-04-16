@@ -13,21 +13,6 @@ Please go though this sample config and configure one yourself with appropriate 
 ![Sample config](https://upload.bounce.bike/devops/57218388-59e0-477a-95c5-7b438272e05f "Sample Config")
 
 
-# Build Command
-``mvn clean install -DskipTests``
-
-# Running Locally
-Go ahead and install Jetty-Runner plugin on IntelliJ if not installed. 
-
-#Setting up local config
-``./setup_local.sh <appname>``
-
-#Sample Config
-Please go though this sample config and configure one yourself with appropriate values
-
-![Sample config](https://upload.bounce.bike/devops/57218388-59e0-477a-95c5-7b438272e05f "Sample Config")
-
-
 # Bounce Atlas Documentation
 
 >`This documentation contains information about the fields defined in Bounce Atlas and the approaches to access it.`
@@ -319,7 +304,7 @@ Opacity of Color of the fence
 ]
 ```
 
->**Image showing circle when its displayed: **
+**Image showing circle when its displayed: **
 
 ![](https://i.imgur.com/ogQQR4U.png)
 
