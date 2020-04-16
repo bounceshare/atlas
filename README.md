@@ -41,7 +41,7 @@ Value of key-value pair also supports HTML contents.
 
 * **Example :**
 
->**JSON showing markers content:**
+**JSON showing markers content:**
 ```json 
 "markers": [
       {
@@ -60,7 +60,7 @@ Value of key-value pair also supports HTML contents.
   }
 ]
 ```
->**Image showing markers displayed on screen:**
+**Image showing markers displayed on screen:**
 
 ![](https://i.imgur.com/ZVMQaDK.png)
 
@@ -92,7 +92,7 @@ It is a string which is shown in top right corner of the event
 
 
 * **Example :**
->**JSON showing event parameters:** 
+**JSON showing event parameters:** 
 
 ```json
 "events": [
@@ -114,7 +114,7 @@ It is a string which is shown in top right corner of the event
 ]
 ```
 
->**Image showing event when its displayed:** 
+**Image showing event when its displayed:** 
 
 ![](https://i.imgur.com/HprQ8Oz.png)
 
@@ -137,7 +137,7 @@ Value of key-value pair also supports HTML contents.
 * **lineweight** **:** *(Type: String)*
 This defines the weight(boldness) of the line.
 
->**JSON showing path content**: 
+**JSON showing path content**: 
 ```json 
 "paths": [
   {
@@ -175,7 +175,7 @@ This defines the weight(boldness) of the line.
 ]
 ```
 
->**Image showing a path line and infobox(data) when it is displayed**
+**Image showing a path line and infobox(data) when it is displayed**
 
 ![](https://i.imgur.com/srhpmHU.png)
 
@@ -203,7 +203,7 @@ Opacity of Color of the fence
 
 * **Example :**
 
->**JSON showing fence parameters: **
+**JSON showing fence parameters: **
 
 ```json
 "fences": [
@@ -253,7 +253,7 @@ Opacity of Color of the fence
       }
     ]
 ```
->**Image showing fence when its displayed: **
+**Image showing fence when its displayed: **
 
 ![](https://i.imgur.com/3hQgsoe.png)
 
@@ -283,7 +283,7 @@ Opacity of Color of the fence
 
 * **Example :**
 
->**JSON showing fence parameters: **
+**JSON showing circle parameters: **
 ```json
 "circles": [
   {
@@ -359,7 +359,7 @@ Schema in the format specified [here](https://jsonform.github.io/jsonform/playgr
 
 * **Examples for config :**
 
->**JSON showing parameters Asset safety service of Bounce**
+**JSON showing parameters Asset safety service of Bounce**
 ```json
 {
     "page": "Asset Safety",
@@ -374,7 +374,7 @@ Schema in the format specified [here](https://jsonform.github.io/jsonform/playgr
 }
 ```
 
->JSON showing parameters for a test page which is used to create geofences
+**JSON showing parameters for a test page which is used to create geofences**
 ```json
 {
     "page": "Test Draw Objects",
@@ -497,11 +497,11 @@ The backend should return the atlas elements in this way
 **NOTE**: Backend can only send "events" JSON Array
 
 
->**Image of entire screen if events are shown in sidebar:**
+**Image of entire screen if events are shown in sidebar:**
 ![](https://i.imgur.com/Kg807rf.png)
 
 
->**Image of entire screen if events are shown at center:**
+**Image of entire screen if events are shown at center:**
 ![](https://i.imgur.com/Ij7UuuF.png)
 
 ## IV Debugging
