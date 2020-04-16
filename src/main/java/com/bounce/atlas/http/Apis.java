@@ -60,12 +60,9 @@ public class Apis {
                 asyncResponse.resume(Response.status(400).entity(gson.toJson(Status.buildFailure(400, "Error : Unable to fetch required number of records : " + bookings))).build());
                 return;
             }
-            Result<Record> var = DatabaseConnector.getDb().getReadDbConnector().fetch("select * from bike limit 100");
-            List<Map<String, Object>> obj = Lists.newArrayList();
-            for(Record record : var) {
-                obj.add(record.intoMap());
-            }
-            asyncResponse.resume(Response.ok().entity(gson.toJson(obj)).build());
+            Map<String, Object> res = ContentUtils.getFormSchema(ContentUtils.getPageFromPagePath("/crud_test"));
+            logger.info(gson.toJson(res));
+            asyncResponse.resume(Response.ok().entity(gson.toJson(Status.buildSuccess())).build());
             return;
         } catch (Exception e) {
             e.printStackTrace();
@@ -190,29 +187,6 @@ public class Apis {
             e.printStackTrace();
         }
         asyncResponse.resume(Response.status(400).entity(gson.toJson(Status.buildFailure(400, "Couldn't update the config"))).build());
-    }
-
-    @POST
-    @Path("/records/search")
-    @Produces(MediaType.APPLICATION_JSON)
-    @Consumes({MediaType.APPLICATION_JSON})
-    @GoogleAuth
-    public void recordSearch(String inputString, @Suspended final AsyncResponse asyncResponse) {
-        logger.info("/records/search");
-        try {
-            JSONObject input = new JSONObject(inputString);
-            String pagePath = input.optString("pagePath");
-            String where = input.optString("where");
-
-            ConfigPojo.Page page = ContentUtils.getPageFromPagePath(pagePath);
-            List<List<String>> obj = ContentUtils.getDbRecords(page, where, 100);
-            Map<Object, Object> response = Maps.newHashMap();
-            response.put("records", obj);
-
-            asyncResponse.resume(Response.ok().entity(gson.toJson(Status.buildSuccess(response))).build());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     @POST

@@ -1,5 +1,6 @@
 package com.bounce.atlas.utils;
 
+import com.bounce.atlas.http.RecordApis;
 import com.bounce.atlas.pojo.*;
 import com.bounce.utils.BounceUtils;
 import com.bounce.utils.DatabaseConnector;
@@ -323,6 +324,100 @@ public class ContentUtils {
             result.remove(1);
         }
         return result;
+    }
+
+    public static Map<String, Field> getColumns(ConfigPojo.Page page) {
+        Map<String, Field> columns = Maps.newLinkedHashMap();
+
+        String sql = "select * from " + page.getCrudConfig().getSchema() + "." + page.getCrudConfig().getTable() + " limit 1";
+        Result<Record> records = DatabaseConnector.getDb()
+                .getConnector(page.getCrudConfig().getJdbcUrl(), page.getCrudConfig().getDbUsername(),
+                        page.getCrudConfig().getDbPassword())
+                .fetch(sql);
+
+        if(records.size() > 0) {
+            Record record = records.get(0);
+            for(Field f : record.fields()) {
+                columns.put(f.getName(), f);
+            }
+        }
+
+        return columns;
+    }
+
+    public static Map<String, Object> getFormSchema(ConfigPojo.Page page) {
+        Map<String, Object> formSchema = Maps.newLinkedHashMap();
+        Map<String, Field> columns = getColumns(page);
+
+        String infosql = "SELECT * FROM information_schema.columns WHERE table_schema = '" + page.getCrudConfig().getSchema() + "' AND table_name   = '" + page.getCrudConfig().getTable() + "';";
+        Result<Record> columnRecords = DatabaseConnector.getDb()
+                .getConnector(page.getCrudConfig().getJdbcUrl(), page.getCrudConfig().getDbUsername(),
+                        page.getCrudConfig().getDbPassword())
+                .fetch(infosql);
+
+        Map<String, Record> columnRecordMap = Maps.newLinkedHashMap();
+        for(Record columnRecord : columnRecords) {
+            columnRecordMap.put(columnRecord.get("column_name").toString(), columnRecord);
+        }
+
+        for(Map.Entry<String, Field> column : columns.entrySet()) {
+            Map<String, Object> map = Maps.newLinkedHashMap();
+            map.put("title", column.getKey());
+            if(column.getKey().equals("id")) {
+                map.put("readonly", true);
+            }
+            if(columnRecordMap.get(column.getKey()).get("is_nullable").equals("NO")) {
+                map.put("required", true);
+            }
+            switch (column.getValue().getDataType().getSQLDataType().getTypeName()) {
+                case "varchar":
+                    map.put("type", "string");
+                    break;
+                case "timestamp":
+                    map.put("type", "datetime-local");
+                    break;
+                case "boolean":
+                    map.put("type", "boolean");
+                    break;
+                case "integer":
+                    map.put("type", "integer");
+                    break;
+                case "float":
+                    map.put("type", "number");
+                    break;
+                case "other":
+                    map.put("type", "string");
+                    break;
+                case "bigint":
+                    map.put("type", "string");
+                    break;
+                default:
+                    map.put("type", "string");
+                    if(column.getValue().getDataType().isEnum()) {
+                        try {
+                            //mostly enum
+                            String sql = "SELECT unnest(enum_range(NULL::" +
+                                    column.getValue().getDataType().getSQLDataType().getTypeName() + "));";
+                            Result<Record> records = DatabaseConnector.getDb()
+                                    .getConnector(page.getCrudConfig().getJdbcUrl(), page.getCrudConfig().getDbUsername(),
+                                            page.getCrudConfig().getDbPassword()).fetch(sql);
+                            List<String> enums = Lists.newLinkedList();
+                            for (Record record : records) {
+                                enums.add(record.getValue(0).toString());
+                            }
+                            map.put("enum", enums);
+                        } catch (Exception e) {
+                            BounceUtils.logError(e);
+                            e.printStackTrace();
+                        }
+                    }
+
+                    break;
+            }
+            formSchema.put(column.getKey(), map);
+        }
+
+        return formSchema;
     }
 
 }
