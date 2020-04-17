@@ -296,7 +296,7 @@ public class ContentUtils {
                 List<String> recordList = Lists.newLinkedList();
                 JSONObject buttonFunction = new JSONObject();
                 if(page.getCrudConfig().isEditAllowed()) {
-                    String pageId = page.getPageId();
+                    String pageId = page.getPath();
                     int id = (int) record.get("id");
                     buttonFunction.put("edit", "\"" + pageId + "\"" + "," + id);
                 } if(page.getCrudConfig().isDeleteAllowed()) {

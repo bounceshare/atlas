@@ -12,6 +12,7 @@ import com.bounce.utils.status.Status;
 import com.google.common.collect.Maps;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import org.apache.http.util.TextUtils;
 import org.apache.log4j.Logger;
 import org.jooq.Field;
 import org.jooq.Record;
@@ -95,6 +96,90 @@ public class RecordApis {
             asyncResponse.resume(Response.ok().entity(gson.toJson(Status.buildSuccess(response))).build());
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    @POST
+    @Path("/create")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes({MediaType.APPLICATION_JSON})
+    @GoogleAuth
+    public void createRecord(String inputString, @Suspended final AsyncResponse asyncResponse) {
+        logger.info("/records/create");
+        try {
+            JSONObject input = new JSONObject(inputString);
+            String pagePath = input.optJSONObject("data").optString("pagePath");
+            ConfigPojo.Page page = ContentUtils.getPageFromPagePath(pagePath);
+            Map<String, Object> createData = FormPojo.fromJson(input.optJSONObject("data").toString());
+            Map<String, Field> fieldMap = ContentUtils.getColumns(page);
+            createData.remove("pagePath");
+            String insertStatement = "";
+            String columnStatement = "";
+            String valuesStatement = "";
+
+            for(Map.Entry<String, Object> entry : createData.entrySet()) {
+                String column = entry.getKey();
+                Field field = fieldMap.get(column);
+                Object val = entry.getValue();
+                if(TextUtils.isEmpty(val.toString())) {
+                    continue;
+                }
+                switch (field.getDataType().getSQLDataType().getTypeName()) {
+                    case "varchar":
+                        break;
+                    case "timestamp":
+                        long timestamp = Utils.convertHtmlInputTimestamp(val.toString());
+                        val = new Timestamp(timestamp).toString();
+                        break;
+                    case "boolean":
+                        val = Boolean.parseBoolean(val.toString());
+                        createData.put(column, val);
+                        break;
+                    case "integer":
+                        val = Double.valueOf(val.toString()).intValue();
+                        createData.put(column, val);
+                        break;
+                    case "float":
+                        val = Double.parseDouble(val.toString());
+                        createData.put(column, val);
+                        break;
+                    case "other":
+                        break;
+                    case "bigint":
+                        String longStr = val.toString().replace(".0", "");
+                        val = Long.parseLong(longStr);
+                        createData.put(column, val);
+                        break;
+                }
+                if(!TextUtils.isEmpty(val.toString()))  {
+                    columnStatement += column + ",";
+                    valuesStatement += "'" + val + "'" + ",";
+                }
+
+            }
+
+            columnStatement = columnStatement.substring(0, columnStatement.length() -1);
+            valuesStatement = valuesStatement.substring(0, valuesStatement.length() -1);
+
+            insertStatement = "INSERT INTO " + page.getCrudConfig().getSchema() + "." + page.getCrudConfig().getTable() + " ( " + columnStatement + " ) " + "VALUES ( "  + valuesStatement + " )";
+            logger.info("Insert statement : " + insertStatement);
+
+            Result result = DatabaseConnector.getDb()
+                    .getConnector(page.getCrudConfig().getJdbcUrl(), page.getCrudConfig().getDbUsername(),
+                            page.getCrudConfig().getDbPassword()).fetch(insertStatement);
+
+            if(result.size() > 0) {
+                Map<Object, Object> response = Maps.newHashMap();
+                asyncResponse.resume(Response.ok().entity(gson.toJson(Status.buildSuccess(response))).build());
+            } else {
+                asyncResponse.resume(Response.status(500).entity(gson.toJson(Status.buildFailure(500,  "Error  : No records deleted"))));
+                return;
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            BounceUtils.logError(e);
+            asyncResponse.resume(Response.status(500).entity(gson.toJson(Status.buildFailure(500,  "Error  : " + e.getMessage()))));
         }
     }
 

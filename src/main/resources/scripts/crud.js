@@ -5,8 +5,24 @@
     function editRecord(pageId, id) {
         console.log("editRecord() : " + pageId + " , " + id);
         data = {};
-        data.pagePath = $('#freemarker_pagePath')[0].innerText;
+        data.pagePath = pageId;
         data.id = id;
+        if(isLoading) {
+            return;
+        }
+        showLoader(true);
+        httpPost("/records/form", data, function(response) {
+            showLoader(false);
+            renderForm(response.data.form);
+        }, function(jqXHR, exceptiom) {
+            showLoader(false);
+        });
+    }
+
+    function createRecord(pageId) {
+        console.log("createRecord() : " + pageId);
+        data = {};
+        data.pagePath = pageId;
         if(isLoading) {
             return;
         }
@@ -31,7 +47,7 @@
     function deleteRecordConfirm(pageId, id) {
         console.log("deleteRecordConfirm() : " + pageId + " , " + id);
         data = {};
-        data.pagePath = $('#freemarker_pagePath')[0].innerText;
+        data.pagePath = pageId;
         data.id = id;
         if(isLoading) {
             return;
