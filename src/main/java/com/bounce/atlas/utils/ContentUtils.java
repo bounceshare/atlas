@@ -482,4 +482,20 @@ public class ContentUtils {
         return formValues;
     }
 
+    public static Record getRecord(ConfigPojo.Page page, int id) {
+        Map<String, Object> formValues = Maps.newLinkedHashMap();
+
+        if(id >= 0) {
+            String sql = "select * from " + page.getCrudConfig().getSchema() + "." + page.getCrudConfig().getTable() +
+                    " where id=" + id;
+            Record record = DatabaseConnector.getDb()
+                    .getConnector(page.getCrudConfig().getJdbcUrl(), page.getCrudConfig().getDbUsername(),
+                            page.getCrudConfig().getDbPassword()).fetchOne(sql);
+
+            return record;
+        }
+
+        return null;
+    }
+
 }

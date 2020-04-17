@@ -4,6 +4,8 @@ import com.bounce.atlas.pojo.ConfigPojo;
 import com.bounce.atlas.pojo.FormPojo;
 import com.bounce.atlas.utils.ContentUtils;
 import com.bounce.atlas.utils.GoogleAuth;
+import com.bounce.atlas.utils.Utils;
+import com.bounce.utils.DatabaseConnector;
 import com.bounce.utils.Log;
 import com.bounce.utils.status.Status;
 import com.google.common.collect.Maps;
@@ -11,6 +13,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.apache.log4j.Logger;
 import org.jooq.Field;
+import org.jooq.Record;
 import org.json.JSONObject;
 
 import javax.servlet.http.HttpServletRequest;
@@ -24,6 +27,7 @@ import javax.ws.rs.container.Suspended;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Map;
 
@@ -155,11 +159,50 @@ public class RecordApis {
 
             logger.info("Actual edited values : " + gson.toJson(editData));
 
+            String updateStatement = "";
+            for(Map.Entry<String, Object> entry : editData.entrySet()) {
+                String column = entry.getKey();
+                Field field = fieldMap.get(column);
+                Object val = entry.getValue();
+                switch (field.getDataType().getSQLDataType().getTypeName()) {
+                    case "varchar":
+                        break;
+                    case "timestamp":
+                        long timestamp = Utils.convertHtmlInputTimestamp(val.toString());
+                        val = new Timestamp(timestamp).toString();
+                        break;
+                    case "boolean":
+                        break;
+                    case "integer":
+                        break;
+                    case "float":
+                        break;
+                    case "other":
+                        break;
+                    case "bigint":
+                        break;
+                }
+                updateStatement += column + " = '" + val + "',";
+            }
+
+            updateStatement = updateStatement.substring(0, updateStatement.length() -1);
+            updateStatement = "update " + page.getCrudConfig().getSchema() + "." + page.getCrudConfig().getTable() +
+                    " SET " + updateStatement + " WHERE id = " + id;
+
+            DatabaseConnector.getDb()
+                    .getConnector(page.getCrudConfig().getJdbcUrl(), page.getCrudConfig().getDbUsername(),
+                            page.getCrudConfig().getDbPassword()).fetch(updateStatement);
+
+            logger.info("Update statement : " + updateStatement);
+
             Map<Object, Object> response = Maps.newHashMap();
             asyncResponse.resume(Response.ok().entity(gson.toJson(Status.buildSuccess(response))).build());
+            return;
         } catch (Exception e) {
             e.printStackTrace();
+            asyncResponse.resume(Response.status(500).entity(gson.toJson(Status.buildFailure(500,  "Error  : " + e.getMessage()))));
         }
+
     }
 
 }

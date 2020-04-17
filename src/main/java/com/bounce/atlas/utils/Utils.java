@@ -10,6 +10,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
+import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -71,7 +72,8 @@ public class Utils {
     }
 
     public static void main(String[] args) {
-        System.out.println("Time : " + new Date(convertHtmlInputTimestamp("2020-04-17T00:59")));
+//        System.out.println("Time : " + new Date(convertHtmlInputTimestamp("2020-04-17T00:59")));
+        System.out.println("Timestamp : " + new Timestamp(System.currentTimeMillis()));
     }
 
     private static Pair<String, Integer> getRedisHostPortPair() {

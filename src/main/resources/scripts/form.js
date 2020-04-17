@@ -17,8 +17,10 @@
         httpPost(postUrl, data, function(response) {
             invalidateMap(response.data.markers, response.data.fences, response.data.circles, response.data.paths, response.data.events, response.data.form, response.data.isSidebar, true, response.data.autoRefresh);
             showLoader(false);
+            showSuccessMessage("Form Update : Success")
         }, function(jqXHR, exceptiom) {
             showLoader(false);
+            showFailureMessage("Form Update : Fail");
         });
 
         // post data to the end point
