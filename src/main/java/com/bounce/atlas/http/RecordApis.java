@@ -5,6 +5,7 @@ import com.bounce.atlas.pojo.FormPojo;
 import com.bounce.atlas.utils.ContentUtils;
 import com.bounce.atlas.utils.GoogleAuth;
 import com.bounce.atlas.utils.Utils;
+import com.bounce.utils.BounceUtils;
 import com.bounce.utils.DatabaseConnector;
 import com.bounce.utils.Log;
 import com.bounce.utils.status.Status;
@@ -14,6 +15,7 @@ import com.google.gson.GsonBuilder;
 import org.apache.log4j.Logger;
 import org.jooq.Field;
 import org.jooq.Record;
+import org.jooq.Result;
 import org.json.JSONObject;
 
 import javax.servlet.http.HttpServletRequest;
@@ -188,21 +190,65 @@ public class RecordApis {
             updateStatement = updateStatement.substring(0, updateStatement.length() -1);
             updateStatement = "update " + page.getCrudConfig().getSchema() + "." + page.getCrudConfig().getTable() +
                     " SET " + updateStatement + " WHERE id = " + id;
+            logger.info("Update statement : " + updateStatement);
 
             DatabaseConnector.getDb()
                     .getConnector(page.getCrudConfig().getJdbcUrl(), page.getCrudConfig().getDbUsername(),
                             page.getCrudConfig().getDbPassword()).fetch(updateStatement);
 
-            logger.info("Update statement : " + updateStatement);
 
             Map<Object, Object> response = Maps.newHashMap();
             asyncResponse.resume(Response.ok().entity(gson.toJson(Status.buildSuccess(response))).build());
             return;
         } catch (Exception e) {
             e.printStackTrace();
+            BounceUtils.logError(e);
             asyncResponse.resume(Response.status(500).entity(gson.toJson(Status.buildFailure(500,  "Error  : " + e.getMessage()))));
         }
 
+    }
+
+    @POST
+    @Path("/delete")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes({MediaType.APPLICATION_JSON})
+    @GoogleAuth
+    public void deleteRecord(String inputString, @Suspended final AsyncResponse asyncResponse) {
+        logger.info("/records/delete");
+        try {
+            JSONObject input = new JSONObject(inputString);
+            String pagePath = input.optString("pagePath");
+            int id = input.optInt("id", -1);
+            ConfigPojo.Page page = ContentUtils.getPageFromPagePath(pagePath);
+            Map<String,Object> oldData = ContentUtils.getFormValues(page, id);
+            if(oldData.size() < 1) {
+                asyncResponse.resume(Response.status(500).entity(gson.toJson(Status.buildFailure(500,  "Error  : No record found to delete"))));
+                return;
+            }
+
+            String deleteStatement = "";
+
+            deleteStatement = "delete from " + page.getCrudConfig().getSchema() + "." + page.getCrudConfig().getTable() +
+                    " WHERE id = " + id;
+            logger.info("Delete statement : " + deleteStatement);
+
+            Result result = DatabaseConnector.getDb()
+                    .getConnector(page.getCrudConfig().getJdbcUrl(), page.getCrudConfig().getDbUsername(),
+                            page.getCrudConfig().getDbPassword()).fetch(deleteStatement);
+
+            if(result.size() > 0) {
+                Map<Object, Object> response = Maps.newHashMap();
+                asyncResponse.resume(Response.ok().entity(gson.toJson(Status.buildSuccess(response))).build());
+            } else {
+                asyncResponse.resume(Response.status(500).entity(gson.toJson(Status.buildFailure(500,  "Error  : No records deleted"))));
+                return;
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            BounceUtils.logError(e);
+            asyncResponse.resume(Response.status(500).entity(gson.toJson(Status.buildFailure(500,  "Error  : " + e.getMessage()))));
+        }
     }
 
 }

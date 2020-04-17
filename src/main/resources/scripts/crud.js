@@ -21,6 +21,29 @@
 
     function deleteRecord(pageId, id) {
         console.log("deleteRecord() : " + pageId + " , " + id);
+        bootbox.confirm("Are you sure you want to delete?", function(result){
+            if(result) {
+                deleteRecordConfirm(pageId, id);
+            }
+        });
+    }
+
+    function deleteRecordConfirm(pageId, id) {
+        console.log("deleteRecordConfirm() : " + pageId + " , " + id);
+        data = {};
+        data.pagePath = $('#freemarker_pagePath')[0].innerText;
+        data.id = id;
+        if(isLoading) {
+            return;
+        }
+        showLoader(true);
+        httpPost("/records/delete", data, function(response) {
+            showLoader(false);
+            showSuccessMessage("Delete Record : Success")
+        }, function(jqXHR, exception) {
+            showLoader(false);
+            showFailureMessage("Delete Record : Fail");
+        });
     }
 
     function clearRecords() {

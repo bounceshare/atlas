@@ -17,7 +17,7 @@
             console.log("Config Updated");
             showLoader(false);
             showSuccessMessage("Config Updated");
-        }, function(jqXHR, exceptiom) {
+        }, function(jqXHR, exception) {
             console.log("Config Update Failed");
             showLoader(false);
             showFailureMessage("Config Update Failed");
