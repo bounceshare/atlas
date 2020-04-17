@@ -18,10 +18,11 @@
 <div id="freemarker_recordsData" hidden><#if recordsDataString??>${recordsDataString}<#else></#if></div>
 <div id="freemarker_mapView" hidden><#if mapView>true<#else></#if></div>
 <div id="freemarker_tableView" hidden><#if tableView??>true<#else></#if></div>
+<div id="freemarker_isCreateAllowed" hidden><#if isCreateAllowed??>true<#else></#if></div>
 
 <#include "/sidebar.ftl">
 <div id="mapDiv" style="height:100%;" <#if !mapView> hidden </#if> ></div>
-<#if recordsDataString??><br/><table class="table table-striped table-bordered" id="crudTable" width="100%"></table><#else></#if>
+<#if recordsDataString??><br/><#if isCreateAllowed>&nbsp;&nbsp;<button type="button" class="btn btn-outline-primary" onclick="createRecord()">Add</button></#if><div><table class="table table-striped table-bordered" id="crudTable" width="100%"></table></div><#else></#if>
 <#include "/scripts/render.js">
 <#include "/scripts/layers.js">
 <#include "/scripts/search.js">

@@ -276,6 +276,9 @@ public class ConfigPojo {
     }
 
     public class CrudConfig {
+        @SerializedName("isCreateAllowed")
+        @Expose
+        private boolean isCreateAllowed;
         @SerializedName("isEditAllowed")
         @Expose
         private boolean isEditAllowed;
@@ -297,6 +300,14 @@ public class ConfigPojo {
         @SerializedName("table")
         @Expose
         private String table;
+
+        public boolean isCreateAllowed() {
+            return isCreateAllowed;
+        }
+
+        public void setCreateAllowed(boolean createAllowed) {
+            isCreateAllowed = createAllowed;
+        }
 
         public boolean isEditAllowed() {
             return isEditAllowed;

@@ -263,6 +263,7 @@ public class Apis {
         if(page.getCrudConfig() != null) {
             data.put("recordsDataString", gson.toJson(ContentUtils.getDbRecords(page, null, 100)));
             data.put("recordsData", ContentUtils.getDbRecords(page, null, 100));
+            data.put("isCreateAllowed", page.getCrudConfig().isCreateAllowed());
             data.put("mapView", false);
             data.put("tableView", true);
         }

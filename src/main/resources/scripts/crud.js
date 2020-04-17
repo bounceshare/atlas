@@ -19,7 +19,8 @@
         });
     }
 
-    function createRecord(pageId) {
+    function createRecord() {
+        var pageId = $('#freemarker_pagePath')[0].innerText;
         console.log("createRecord() : " + pageId);
         data = {};
         data.pagePath = pageId;
