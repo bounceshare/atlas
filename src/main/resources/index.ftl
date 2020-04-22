@@ -22,7 +22,7 @@
 
 <#include "/sidebar.ftl">
 <div id="mapDiv" style="height:100%;" <#if !mapView> hidden </#if> ></div>
-<#if recordsDataString??><br/><#if isCreateAllowed>&nbsp;&nbsp;<button type="button" class="btn btn-outline-primary" onclick="createRecord()">Add</button></#if><div><table class="table table-striped table-bordered" id="crudTable" width="100%"></table></div><#else></#if>
+<#if recordsDataString??><div><table class="table table-striped table-bordered" id="crudTable" width="100%"></table></div><#else></#if>
 <#include "/scripts/render.js">
 <#include "/scripts/layers.js">
 <#include "/scripts/search.js">
