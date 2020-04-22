@@ -13,13 +13,13 @@ Please go though this sample config and configure one yourself with appropriate 
 ![Sample config](https://upload.bounce.bike/devops/57218388-59e0-477a-95c5-7b438272e05f "Sample Config")
 
 
-# BOUNCE ATLAS DOCUMENTATION 
+# Bounce Atlas Documentation
 
 >`This documentation contains information about the fields defined in Bounce Atlas and the approaches to access it.`
 
-## <u>I. Fields defined in Bounce Atlas</u>
+## I. Fields defined in Bounce Atlas
 
-### `1. Markers`:
+### 1. Markers:
 Markers are used to mark a point on the map, makes it easy to notice and identify.
 
 **markers** is an array of objects, each object containing :
@@ -41,7 +41,7 @@ Value of key-value pair also supports HTML contents.
 
 * **Example :**
 
->**JSON showing markers content:**
+**JSON showing markers content:**
 ```json 
 "markers": [
       {
@@ -60,12 +60,13 @@ Value of key-value pair also supports HTML contents.
   }
 ]
 ```
->**Image showing markers displayed on screen:**
-><img src="https://upload.bounce.bike/null/094d29d5-6aa2-4414-8f16-ff866e2773a3" width="80%" height="80%">
+**Image showing markers displayed on screen:**
 
-<br /> 
+![](https://i.imgur.com/ZVMQaDK.png)
 
-### `2. Events or Timeline`:
+
+
+### 2. Events or Timeline:
 Events or Timeline is List of Cards with specific styles and parameters. It can be used to represent list of events.
 
 **events** is an array of objects, each object containing :
@@ -91,7 +92,7 @@ It is a string which is shown in top right corner of the event
 
 
 * **Example :**
->**JSON showing event parameters:** 
+**JSON showing event parameters:** 
 
 ```json
 "events": [
@@ -112,15 +113,13 @@ It is a string which is shown in top right corner of the event
   }
 ]
 ```
-<br /> 
 
->**Image showing event when its displayed:** 
-><img src="https://i.imgur.com/ZvBavpR.png" width="50%" height="50%">
+**Image showing event when its displayed:** 
+
+![](https://i.imgur.com/HprQ8Oz.png)
 
 
-<br /> 
-
-### `3. Paths`:
+### 3. Paths:
 Paths are the lines which connect different points on the map.
 It can be used to represent movements of the bikes
 
@@ -138,7 +137,7 @@ Value of key-value pair also supports HTML contents.
 * **lineweight** **:** *(Type: String)*
 This defines the weight(boldness) of the line.
 
->**JSON showing path content**: 
+**JSON showing path content**: 
 ```json 
 "paths": [
   {
@@ -175,15 +174,14 @@ This defines the weight(boldness) of the line.
   }
 ]
 ```
-<br /> 
 
->**Image showing a path line and infobox(data) when it is displayed**
-><img src="https://i.imgur.com/6ydCwMn.png" width="80%" height="80%">
+**Image showing a path line and infobox(data) when it is displayed**
+
+![](https://i.imgur.com/srhpmHU.png)
 
 
-<br /> 
 
-### `4. Fences`:
+### 4. Fences:
 Fences are polygons which can be used to represent a region on map
 
 **fences** is an array of objects, each object containing :
@@ -205,7 +203,7 @@ Opacity of Color of the fence
 
 * **Example :**
 
->JSON showing fence parameters: 
+**JSON showing fence parameters: **
 
 ```json
 "fences": [
@@ -255,12 +253,13 @@ Opacity of Color of the fence
       }
     ]
 ```
->Image showing fence when its displayed: 
-><img src="https://i.imgur.com/gaxZjy8.png" width="80%" height="80%">
+**Image showing fence when its displayed: **
 
-<br/>
+![](https://i.imgur.com/3hQgsoe.png)
 
-### `5. Circles`:
+
+
+### 5. Circles:
 Circles can be used to represent a region on map
 
 **circles** is an array of objects, each object containing :
@@ -284,7 +283,7 @@ Opacity of Color of the fence
 
 * **Example :**
 
->JSON showing fence parameters: 
+**JSON showing circle parameters: **
 ```json
 "circles": [
   {
@@ -305,12 +304,13 @@ Opacity of Color of the fence
 ]
 ```
 
->Image showing circle when its displayed: 
-><img src="https://i.imgur.com/s0wwafW.png" width="80%" height="80%">
+**Image showing circle when its displayed: **
 
-<br>
+![](https://i.imgur.com/ogQQR4U.png)
 
-## <u>II Configuration for adding your backend service to the atlas</u>
+
+
+## II. Configuration for adding your backend service to the atlas
 
 In order to add your service to the Bounce Atlas, config needs to be updated by adding the following JSON in tabs[] JSON Array.
 The link for atlas config is [here](https://atlas.bounce.bike/config)
@@ -342,10 +342,24 @@ If true: Backend call is made for actions movement/zoom-in/zoom-out in map.
 * **help :** *(Type: String)*
 Guide for the end users
 
+* **zoom :** *(Type: Integer)*
+Default zoom level for the map when this page is rendered
 
-* **Example :**
+* **defaultLocation :** *(Type: String)*
+Default location in the format (12.132121, 77.65421) to indicate the default location when the map will be rendered
 
->JSON showing parameters Asset safety service of Bounce
+* **editFenceUrl :** *(Type: String)*
+To indicate if a page will have edit fences/markers option. 
+
+* **editFenceDataSchema :** *(Type: Map<String, Object>)*
+Schema in the format specified [here](https://jsonform.github.io/jsonform/playground/index.html?example=schema-basic) for updating fence metadata.
+
+* **searchDataSchema :** *(Type: Map<String, Object>)*
+Schema in the format specified [here](https://jsonform.github.io/jsonform/playground/index.html?example=schema-basic) for customising search options in the manner of a form.
+
+* **Examples for config :**
+
+**JSON showing parameters Asset safety service of Bounce**
 ```json
 {
     "page": "Asset Safety",
@@ -359,11 +373,41 @@ Guide for the end users
     "zoom": 0
 }
 ```
-<br/>
 
-## <u>III. Approaches to communicate with the backend</u>
+**JSON showing parameters for a test page which is used to create geofences**
+```json
+{
+    "page": "Test Draw Objects",
+    "pageId": "Test Stuff",
+    "path": "/draw_test",
+    "autoRefresh": "false",
+    "help": "Draw paths, fences, circles, markers",
+    "auth": "open",
+    "zoom": 5,
+    "editFenceUrl": "/apis/test/drawnObjs",
+    "editFenceDataSchema": {
+        "name": {
+            "title": "Fence Name",
+            "description": "Please specify a name to identify this geo fence",
+            "type": "string"
+        },
+        "gender": {
+            "title": "Type",
+            "description": "Fence type",
+            "type": "string",
+            "enum": [
+                "Red Zone",
+                "Black Zone",
+                "Blue Zone"
+            ]
+        }
+    }
+}
+```
 
-### `Approach 1`:
+## III. Approaches to communicate with the backend
+
+### Approach 1:
 Steps:
 
 1. Select the tab corresponding to your service in the navigation bar of atlas
@@ -394,13 +438,12 @@ The backend should return the atlas elements in this way :
     }
 }
 ```
-[Here](https://bitbucket.org/wicked-ride/bounce-atlas/src/master/src/main/resources/sample_response.json) is the sample valid response for the refernce
+[Here](https://bitbucket.org/wicked-ride/bounce-atlas/src/master/src/main/resources/sample_response.json) is the sample valid response for the reference
 
->**NOTE**: Only once the configuation is done at the atlas config this approaches works
+>**NOTE**: Only once the configuation is done at the atlas config this approach works
 
-<br/>
 
-### `Approach 2`:
+### Approach 2:
 
 There is another trigger for Timeline modal apart from Approach 1.
 This works only for timeline modal
@@ -451,26 +494,17 @@ The backend should return the atlas elements in this way
     }
 }
 ```
-**NOTE**: Backend can only send "events" JSON Array. If it sends, 
+**NOTE**: Backend can only send "events" JSON Array
 
-<br /> 
 
->**Image of entire screen if events are shown in sidebar:**
->
-><img src="https://i.imgur.com/Kg807rf.png" width="100%" height="100%">
+**Image of entire screen if events are shown in sidebar:**
+![](https://i.imgur.com/Kg807rf.png)
 
-<br /> 
 
->**Image of entire screen if events are shown at center:**
->
-><img src="https://i.imgur.com/Ij7UuuF.png" width="100%" height="100%">
+**Image of entire screen if events are shown at center:**
+![](https://i.imgur.com/Ij7UuuF.png)
 
-## <u>IV Debugging</u>
+## IV Debugging
 
-### `1. Test with JSON`:
+### 1. Test with JSON:
 Developers can test if the response renders info on the map by pasting the JSON data at Options->Render Atlas Json
-
-
-
-
-
