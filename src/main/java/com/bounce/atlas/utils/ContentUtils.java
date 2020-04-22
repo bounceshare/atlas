@@ -295,14 +295,15 @@ public class ContentUtils {
             for(Record record : records)  {
                 List<String> recordList = Lists.newLinkedList();
                 JSONObject buttonFunction = new JSONObject();
+
+                String pageId = page.getPath();
+                String primaryKey = getPrimaryKey(page);
+                String primaryKeyVal = record.get(primaryKey).toString();
+
                 if(page.getCrudConfig().isEditAllowed()) {
-                    String pageId = page.getPath();
-                    int id = (int) record.get("id");
-                    buttonFunction.put("edit", "\"" + pageId + "\"" + "," + id);
+                    buttonFunction.put("edit", "\"" + pageId + "\"" + "," + "\"" + primaryKeyVal + "\"");
                 } if(page.getCrudConfig().isDeleteAllowed()) {
-                    String pageId = page.getPageId();
-                    int id = (int) record.get("id");
-                    buttonFunction.put("delete", "\"" + pageId + "\"" + "," + id);
+                    buttonFunction.put("delete", "\"" + pageId + "\"" + "," + "\"" + primaryKeyVal + "\"");
                 }
                 recordList.add(buttonFunction.toString());
                 for(Field f : record.fields()) {
@@ -364,7 +365,7 @@ public class ContentUtils {
         for(Map.Entry<String, Field> column : columns.entrySet()) {
             Map<String, Object> map = Maps.newLinkedHashMap();
             map.put("title", column.getKey());
-            if(column.getKey().equals("id")) {
+            if(column.getKey().equals(ContentUtils.getPrimaryKey(page))) {
                 map.put("readonly", true);
             }
             if(columnRecordMap.get(column.getKey()).get("is_nullable").equals("NO")) {
@@ -397,16 +398,7 @@ public class ContentUtils {
                     if(column.getValue().getDataType().isEnum()) {
                         try {
                             //mostly enum
-                            String sql = "SELECT unnest(enum_range(NULL::" +
-                                    column.getValue().getDataType().getSQLDataType().getTypeName() + "))::text";
-                            Result<Record> records = DatabaseConnector.getDb()
-                                    .getConnector(page.getCrudConfig().getJdbcUrl(), page.getCrudConfig().getDbUsername(),
-                                            page.getCrudConfig().getDbPassword()).fetch(sql);
-                            List<String> enums = Lists.newLinkedList();
-                            boolean isSpace = false;
-                            for (Record record : records) {
-                                enums.add(record.getValue(0).toString());
-                            }
+                            List<String> enums = getEnumValues(page, column.getValue().getDataType().getSQLDataType().getTypeName());
                             map.put("enum", enums);
                         } catch (Exception e) {
                             BounceUtils.logError(e);
@@ -427,12 +419,39 @@ public class ContentUtils {
         return formSchema;
     }
 
-    public static Map<String, Object> getFormValues(ConfigPojo.Page page, int id) {
+    public static String getPrimaryKey(ConfigPojo.Page page) {
+        String sql = "SELECT pg_attribute.attname, format_type(pg_attribute.atttypid, pg_attribute.atttypmod) FROM pg_index, pg_class, pg_attribute, pg_namespace WHERE pg_class.oid = '%s'::regclass AND indrelid = pg_class.oid AND nspname = '%s' AND pg_class.relnamespace = pg_namespace.oid AND pg_attribute.attrelid = pg_class.oid AND pg_attribute.attnum = any(pg_index.indkey) AND indisprimary";
+        sql = String.format(sql, page.getCrudConfig().getTable(), page.getCrudConfig().getSchema());
+
+        Record record = DatabaseConnector.getDb()
+                .getConnector(page.getCrudConfig().getJdbcUrl(), page.getCrudConfig().getDbUsername(),
+                        page.getCrudConfig().getDbPassword()).fetchOne(sql);
+        if(record != null) {
+            return record.getValue("attname").toString();
+        }
+        return null;
+    }
+
+    public static List<String> getEnumValues(ConfigPojo.Page page, String enumName) {
+        String sql = "SELECT unnest(enum_range(NULL::" +
+                enumName + "))::text";
+        Result<Record> records = DatabaseConnector.getDb()
+                .getConnector(page.getCrudConfig().getJdbcUrl(), page.getCrudConfig().getDbUsername(),
+                        page.getCrudConfig().getDbPassword()).fetch(sql);
+        List<String> enums = Lists.newLinkedList();
+        boolean isSpace = false;
+        for (Record record : records) {
+            enums.add(record.getValue(0).toString());
+        }
+        return enums;
+    }
+
+    public static Map<String, Object> getFormValues(ConfigPojo.Page page, String primaryKeyVal) {
         Map<String, Object> formValues = Maps.newLinkedHashMap();
 
-        if(id >= 0) {
+        if(!TextUtils.isEmpty(primaryKeyVal)) {
             String sql = "select * from " + page.getCrudConfig().getSchema() + "." + page.getCrudConfig().getTable() +
-                    " where id=" + id;
+                    " where " + getPrimaryKey(page) + " = " + primaryKeyVal;
             Record record = DatabaseConnector.getDb()
                     .getConnector(page.getCrudConfig().getJdbcUrl(), page.getCrudConfig().getDbUsername(),
                             page.getCrudConfig().getDbPassword()).fetchOne(sql);
@@ -482,12 +501,10 @@ public class ContentUtils {
         return formValues;
     }
 
-    public static Record getRecord(ConfigPojo.Page page, int id) {
-        Map<String, Object> formValues = Maps.newLinkedHashMap();
-
-        if(id >= 0) {
+    public static Record getRecord(ConfigPojo.Page page, String primaryKeyVal) {
+        if(!TextUtils.isEmpty(primaryKeyVal)) {
             String sql = "select * from " + page.getCrudConfig().getSchema() + "." + page.getCrudConfig().getTable() +
-                    " where id=" + id;
+                    " where " + getPrimaryKey(page) + " = " + primaryKeyVal;
             Record record = DatabaseConnector.getDb()
                     .getConnector(page.getCrudConfig().getJdbcUrl(), page.getCrudConfig().getDbUsername(),
                             page.getCrudConfig().getDbPassword()).fetchOne(sql);

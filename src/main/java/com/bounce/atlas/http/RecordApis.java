@@ -78,17 +78,20 @@ public class RecordApis {
         try {
             JSONObject input = new JSONObject(inputString);
             String pagePath = input.optString("pagePath");
-            int id = input.optInt("id", -1);
+            String primaryKeyVal = null;
+            if(input.has("primaryKeyVal")) {
+                primaryKeyVal = input.opt("primaryKeyVal").toString();
+            }
             Map<Object, Object> response = Maps.newHashMap();
 
             ConfigPojo.Page page = ContentUtils.getPageFromPagePath(pagePath);
             FormPojo form = new FormPojo();
             form.formSchema = ContentUtils.getFormSchema(page);
-            if(id >= 0) {
-                form.values = ContentUtils.getFormValues(page, id);
+            if(!TextUtils.isEmpty(primaryKeyVal)) {
+                form.values = ContentUtils.getFormValues(page, primaryKeyVal);
                 form.postUrl = "/records/edit";
             } else {
-                form.values = ContentUtils.getFormValues(page, id);
+                form.values = ContentUtils.getFormValues(page, primaryKeyVal);
                 form.postUrl = "/records/create";
             }
 
@@ -198,8 +201,8 @@ public class RecordApis {
 
             Map<String, Object> editData = FormPojo.fromJson(input.optJSONObject("data").toString());
 
-            int id = Double.valueOf((double)editData.get("id")).intValue();
-            Map<String,Object> oldData = ContentUtils.getFormValues(page, id);
+            String primaryKeyVal = input.optJSONObject("data").opt(ContentUtils.getPrimaryKey(page)).toString();
+            Map<String,Object> oldData = ContentUtils.getFormValues(page, primaryKeyVal);
             editData.remove("pagePath");
             oldData.remove("pagePath");
             Map<String, Field> fieldMap = ContentUtils.getColumns(page);
@@ -274,7 +277,7 @@ public class RecordApis {
 
             updateStatement = updateStatement.substring(0, updateStatement.length() -1);
             updateStatement = "update " + page.getCrudConfig().getSchema() + "." + page.getCrudConfig().getTable() +
-                    " SET " + updateStatement + " WHERE id = " + id;
+                    " SET " + updateStatement + " WHERE " + ContentUtils.getPrimaryKey(page) + " = " + primaryKeyVal;
             logger.info("Update statement : " + updateStatement);
 
             DatabaseConnector.getDb()
@@ -303,9 +306,12 @@ public class RecordApis {
         try {
             JSONObject input = new JSONObject(inputString);
             String pagePath = input.optString("pagePath");
-            int id = input.optInt("id", -1);
+            String primaryKeyVal = null;
+            if(input.has("primaryKeyVal")) {
+                primaryKeyVal = input.opt("primaryKeyVal").toString();
+            }
             ConfigPojo.Page page = ContentUtils.getPageFromPagePath(pagePath);
-            Map<String,Object> oldData = ContentUtils.getFormValues(page, id);
+            Map<String,Object> oldData = ContentUtils.getFormValues(page, primaryKeyVal);
             if(oldData.size() < 1) {
                 asyncResponse.resume(Response.status(500).entity(gson.toJson(Status.buildFailure(500,  "Error  : No record found to delete"))));
                 return;
@@ -314,7 +320,7 @@ public class RecordApis {
             String deleteStatement = "";
 
             deleteStatement = "delete from " + page.getCrudConfig().getSchema() + "." + page.getCrudConfig().getTable() +
-                    " WHERE id = " + id;
+                    " WHERE " + ContentUtils.getPrimaryKey(page) + " = " + primaryKeyVal;
             logger.info("Delete statement : " + deleteStatement);
 
             Result result = DatabaseConnector.getDb()

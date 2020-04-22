@@ -6,7 +6,7 @@
         console.log("editRecord() : " + pageId + " , " + id);
         data = {};
         data.pagePath = pageId;
-        data.id = id;
+        data.primaryKeyVal = id;
         if(isLoading) {
             return;
         }
@@ -49,7 +49,7 @@
         console.log("deleteRecordConfirm() : " + pageId + " , " + id);
         data = {};
         data.pagePath = pageId;
-        data.id = id;
+        data.primaryKeyVal = id;
         if(isLoading) {
             return;
         }
