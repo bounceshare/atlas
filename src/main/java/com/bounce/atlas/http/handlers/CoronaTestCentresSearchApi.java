@@ -4,6 +4,7 @@ import com.bounce.atlas.pojo.BikeDetailsCard;
 import com.bounce.atlas.pojo.MarkerPojo;
 import com.bounce.atlas.pojo.PointPojo;
 import com.bounce.atlas.utils.Constants;
+import com.bounce.atlas.utils.Utils;
 import com.bounce.utils.BounceUtils;
 import com.bounce.utils.Pair;
 import com.bounce.utils.RestGenericRequest;
@@ -48,8 +49,7 @@ public class CoronaTestCentresSearchApi extends BaseApiHandler {
                 super.onRequest();
 
                 String testCentresStr =
-                        RestGenericRequest
-                                .httpGet("https://covid.icmr.org.in/index.php/testing-facilities?option=com_hotspots&view=jsonv4&task=gethotspots&hs-language=en-GB&page=1&per_page=500&total_pages=1&total_entries=158&cat=&level=2&ne=61.979994%2C150.880238&sw=-78.331766%2C-13.299449&c=-24.767312%2C68.790395&fs=0&offset=0&format=raw", new JSONObject("{}"), null);
+                        Utils.httpGetWithoutCertificateCheck("https://covid.icmr.org.in/index.php/testing-facilities?option=com_hotspots&view=jsonv4&task=gethotspots&hs-language=en-GB&page=1&per_page=500&total_pages=1&total_entries=158&cat=&level=2&ne=61.979994%2C150.880238&sw=-78.331766%2C-13.299449&c=-24.767312%2C68.790395&fs=0&offset=0&format=raw", new JSONObject("{}"), null);
 
                 JSONArray testCentres = new JSONObject(testCentresStr).optJSONArray("items");
                 for (int i = 0; i < testCentres.length(); i++) {
