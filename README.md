@@ -13,7 +13,7 @@ Please go though this sample config and configure one yourself with appropriate 
 ![Sample config](https://upload.bounce.bike/devops/57218388-59e0-477a-95c5-7b438272e05f "Sample Config")
 
 
-# BOUNCE ATLAS DOCUMENTATION 
+# Bounce Atlas Documentation
 
 >`This documentation contains information about the fields defined in Bounce Atlas and the approaches to access it.`
 
@@ -41,7 +41,7 @@ Value of key-value pair also supports HTML contents.
 
 * **Example :**
 
->**JSON showing markers content:**
+**JSON showing markers content:**
 ```json 
 "markers": [
       {
@@ -60,8 +60,10 @@ Value of key-value pair also supports HTML contents.
   }
 ]
 ```
->**Image showing markers displayed on screen:**
-![](https://upload.bounce.bike/null/094d29d5-6aa2-4414-8f16-ff866e2773a3)
+**Image showing markers displayed on screen:**
+
+![](https://i.imgur.com/ZVMQaDK.png)
+
 
 
 ### 2. Events or Timeline:
@@ -90,7 +92,7 @@ It is a string which is shown in top right corner of the event
 
 
 * **Example :**
->**JSON showing event parameters:** 
+**JSON showing event parameters:** 
 
 ```json
 "events": [
@@ -112,9 +114,9 @@ It is a string which is shown in top right corner of the event
 ]
 ```
 
->**Image showing event when its displayed:** 
-![](https://i.imgur.com/ZvBavpR.png)
+**Image showing event when its displayed:** 
 
+![](https://i.imgur.com/HprQ8Oz.png)
 
 
 ### 3. Paths:
@@ -135,7 +137,7 @@ Value of key-value pair also supports HTML contents.
 * **lineweight** **:** *(Type: String)*
 This defines the weight(boldness) of the line.
 
->**JSON showing path content**: 
+**JSON showing path content**: 
 ```json 
 "paths": [
   {
@@ -173,8 +175,9 @@ This defines the weight(boldness) of the line.
 ]
 ```
 
->**Image showing a path line and infobox(data) when it is displayed**
-![](https://i.imgur.com/6ydCwMn.png)
+**Image showing a path line and infobox(data) when it is displayed**
+
+![](https://i.imgur.com/srhpmHU.png)
 
 
 
@@ -200,7 +203,7 @@ Opacity of Color of the fence
 
 * **Example :**
 
->JSON showing fence parameters: 
+**JSON showing fence parameters: **
 
 ```json
 "fences": [
@@ -250,8 +253,10 @@ Opacity of Color of the fence
       }
     ]
 ```
->Image showing fence when its displayed: 
-![](https://i.imgur.com/gaxZjy8.png)
+**Image showing fence when its displayed: **
+
+![](https://i.imgur.com/3hQgsoe.png)
+
 
 
 ### 5. Circles:
@@ -278,7 +283,7 @@ Opacity of Color of the fence
 
 * **Example :**
 
->JSON showing fence parameters: 
+**JSON showing circle parameters: **
 ```json
 "circles": [
   {
@@ -299,11 +304,13 @@ Opacity of Color of the fence
 ]
 ```
 
->Image showing circle when its displayed: 
-![](https://i.imgur.com/s0wwafW.png)
+**Image showing circle when its displayed: **
+
+![](https://i.imgur.com/ogQQR4U.png)
 
 
-## II Configuration for adding your backend service to the atlas
+
+## II. Configuration for adding your backend service to the atlas
 
 In order to add your service to the Bounce Atlas, config needs to be updated by adding the following JSON in tabs[] JSON Array.
 The link for atlas config is [here](https://atlas.bounce.bike/config)
@@ -330,7 +337,7 @@ If true, text input is enabled in the navigation bar
 Placeholder for input in navigation bar
 
 * **autoRefresh :** *(Type: Boolean)*
-If true: Backend call is made for actions movement/zoom-in/zoom-out in map
+If true: Backend call is made for actions movement/zoom-in/zoom-out in map.
 
 * **help :** *(Type: String)*
 Guide for the end users
@@ -352,7 +359,7 @@ Schema in the format specified [here](https://jsonform.github.io/jsonform/playgr
 
 * **Examples for config :**
 
->JSON showing parameters Asset safety service of Bounce
+**JSON showing parameters Asset safety service of Bounce**
 ```json
 {
     "page": "Asset Safety",
@@ -366,7 +373,8 @@ Schema in the format specified [here](https://jsonform.github.io/jsonform/playgr
     "zoom": 0
 }
 ```
->JSON showing parameters for a test page which is used to create geofences
+
+**JSON showing parameters for a test page which is used to create geofences**
 ```json
 {
     "page": "Test Draw Objects",
@@ -430,9 +438,9 @@ The backend should return the atlas elements in this way :
     }
 }
 ```
-[Here](https://bitbucket.org/wicked-ride/bounce-atlas/src/master/src/main/resources/sample_response.json) is the sample valid response for the refernce
+[Here](https://bitbucket.org/wicked-ride/bounce-atlas/src/master/src/main/resources/sample_response.json) is the sample valid response for the reference
 
->**NOTE**: Only once the configuation is done at the atlas config this approaches works
+>**NOTE**: Only once the configuation is done at the atlas config this approach works
 
 
 ### Approach 2:
@@ -486,14 +494,14 @@ The backend should return the atlas elements in this way
     }
 }
 ```
-**NOTE**: Backend can only send "events" JSON Array. If it sends, 
+**NOTE**: Backend can only send "events" JSON Array
 
 
->**Image of entire screen if events are shown in sidebar:**
+**Image of entire screen if events are shown in sidebar:**
 ![](https://i.imgur.com/Kg807rf.png)
 
 
->**Image of entire screen if events are shown at center:**
+**Image of entire screen if events are shown at center:**
 ![](https://i.imgur.com/Ij7UuuF.png)
 
 ## IV Debugging
