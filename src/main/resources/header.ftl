@@ -18,6 +18,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
     <link rel="stylesheet" href="/files/css/leaflet-sidebar.css" />
     <link rel="stylesheet" href="https://unpkg.com/@geoman-io/leaflet-geoman-free@2.5.0/dist/leaflet-geoman.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jQuery-QueryBuilder/dist/css/query-builder.default.min.css" />
 
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
@@ -35,12 +36,16 @@
     <script src="/files/scripts/underscore.js"></script>
     <script src="/files/scripts/jsv.js"></script>
     <script src="/files/scripts/jsonform.js"></script>
+    <script src="/files/scripts/dot.min.js"></script>
+    <script src="/files/scripts/jquery-ext.js"></script>
     <script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap4.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.6.1/js/dataTables.buttons.min.js"></script>
     <script src="https://apis.google.com/js/platform.js" async defer></script>
     <script src="https://unpkg.com/@geoman-io/leaflet-geoman-free@2.5.0/dist/leaflet-geoman.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/5.4.0/bootbox.min.js"></script>
+    <script src="https://momentjs.com/downloads/moment.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jQuery-QueryBuilder/dist/js/query-builder.min.js"></script>
 
 
 </head>
@@ -107,6 +112,7 @@
                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuSearch">
                     <form class="px-4 py-3" id="dropdownMenuSearchDiv">
                     </form>
+                    <#if queryBuilder??><a class="dropdown-item" href="#" onclick="openQueryBuilder()">Query Builder</a></#if>
                 </div>
                 </div>
             </div>

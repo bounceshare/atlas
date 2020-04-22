@@ -19,6 +19,8 @@
 <div id="freemarker_mapView" hidden><#if mapView>true<#else></#if></div>
 <div id="freemarker_tableView" hidden><#if tableView??>true<#else></#if></div>
 <div id="freemarker_isCreateAllowed" hidden><#if isCreateAllowed??>true<#else></#if></div>
+<div id="freemarker_queryBuilder" hidden><#if queryBuilder??>true<#else></#if></div>
+<div id="freemarker_searchQueryBuilderFilters" hidden><#if searchQueryBuilderFilters??>${searchQueryBuilderFilters}<#else></#if></div>
 
 <#include "/sidebar.ftl">
 <div id="mapDiv" style="height:100%;" <#if !mapView> hidden </#if> ></div>
@@ -29,6 +31,7 @@
 <#include "/scripts/modal.js">
 <#include "/scripts/form.js">
 <#include "/scripts/crud.js">
+<#include "/scripts/queryBuilder.js">
 <!--<#if page == 'home'></#if>-->
 <!--<#if autoRefresh??><#include "/scripts/layers.js"></#if>-->
 <!--<#if searchPage??><#include "/scripts/search.js"><#else></#if>-->

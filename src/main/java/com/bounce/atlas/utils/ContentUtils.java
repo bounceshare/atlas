@@ -1,23 +1,18 @@
 package com.bounce.atlas.utils;
 
-import com.bounce.atlas.http.RecordApis;
 import com.bounce.atlas.pojo.*;
 import com.bounce.utils.BounceUtils;
 import com.bounce.utils.DatabaseConnector;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.gson.Gson;
-import com.google.gson.JsonSyntaxException;
 import freemarker.template.*;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.util.TextUtils;
 import org.jooq.Field;
 import org.jooq.Record;
 import org.jooq.Result;
-import org.jooq.exception.DataAccessException;
-import org.json.JSONException;
 import org.json.JSONObject;
-import redis.clients.jedis.Jedis;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -513,6 +508,79 @@ public class ContentUtils {
         }
 
         return null;
+    }
+
+    public static List<Map<String, Object>> getSearchFilters(ConfigPojo.Page page) {
+        List<Map<String, Object>> filters = Lists.newLinkedList();
+
+        Map<String, Field> columns = getColumns(page);
+        for(Map.Entry<String, Field> column : columns.entrySet()) {
+            Map<String, Object> map = Maps.newLinkedHashMap();
+            map.put("id", column.getKey());
+            map.put("label", column.getKey());
+
+            Map<String, Object> values = Maps.newLinkedHashMap();
+            List<String> operators = Lists.newArrayList();
+            switch (column.getValue().getDataType().getSQLDataType().getTypeName()) {
+                case "varchar":
+                    map.put("type", "string");
+                    break;
+                case "timestamp":
+                    map.put("type", "date");
+                    break;
+                case "boolean":
+                    map.put("type", "integer");
+                    map.put("input", "radio");
+                    operators.add("equal");
+                    values.put("true", "true");
+                    values.put("false", "false");
+                    break;
+                case "integer":
+                    map.put("type", "integer");
+                    break;
+                case "float":
+                    map.put("type", "double");
+                    break;
+                case "other":
+                    map.put("type", "string");
+                    break;
+                case "bigint":
+                    map.put("type", "string");
+                    break;
+                default:
+                    map.put("type", "string");
+                    map.put("input", "select");
+                    if(column.getValue().getDataType().isEnum()) {
+                        try {
+                            //mostly enum
+                            List<String> enums = getEnumValues(page, column.getValue().getDataType().getSQLDataType().getTypeName());
+                            for(String enumVal : enums) {
+                                values.put(enumVal, enumVal);
+                            }
+                            operators.add("equal");
+                            operators.add("not_equal");
+                            operators.add("in");
+                            operators.add("not_in");
+                            operators.add("is_null");
+                            operators.add("is_not_null");
+                        } catch (Exception e) {
+                            BounceUtils.logError(e);
+                            e.printStackTrace();
+                        }
+                    }
+
+                    break;
+            }
+            if(operators.size() > 0) {
+                map.put("operators", operators);
+            }
+            if(values.size() > 0) {
+                map.put("values", values);
+            }
+            filters.add(map);
+        }
+
+        return filters;
     }
 
 }

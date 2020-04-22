@@ -266,6 +266,8 @@ public class Apis {
             data.put("isCreateAllowed", page.getCrudConfig().isCreateAllowed());
             data.put("mapView", false);
             data.put("tableView", true);
+            data.put("queryBuilder", true);
+            data.put("searchQueryBuilderFilters", gson.toJson(ContentUtils.getSearchFilters(page)));
         }
 
         String content = ContentUtils.getFreemarkerString("index.ftl", data);
