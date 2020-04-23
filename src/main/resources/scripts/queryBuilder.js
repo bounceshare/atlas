@@ -27,7 +27,6 @@
     function openQueryBuilder() {
 
         var qbFilters = JSON.parse($('#freemarker_searchQueryBuilderFilters')[0].innerText);
-        $('#qb-view')[0].innerHTML = "";
         $('#qb-view').queryBuilder({
           plugins: {
             'not-group' : {icon_checked: 'fa fa-check', icon_unchecked: 'icon-check-empty'}
@@ -41,5 +40,11 @@
         console.log("searchQuerySubmit()");
         var sqlRaw = $('#qb-view').queryBuilder('getSQL', false, true).sql.replace(/(\r\n|\n|\r)/gm, " ");
         console.log("searchQuerySubmit() query : " + sqlRaw);
+
+        searchObj = {};
+        searchObj.where = sqlRaw;
+
+        $('#qbModal').modal("hide");
+        searchTableData(searchObj);
     }
 </script>
