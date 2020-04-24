@@ -25,7 +25,7 @@
     var query = "";
     var sidebar = null;
 
-    var drawnObjs = [];
+//    var drawnObjs = [];
 
     function bootstrap() {
         console.log("bootstrap()")
@@ -293,12 +293,58 @@
         });
     }
 
+    function getDrawnObjects() {
+        var drawnObjects = [];
+        map.eachLayer(function(layer){
+            if(layer.pm && typeof layer.pm.isPolygon == 'function'){
+                var drawId = layer._leaflet_id;
+                var drawObj = {};
+                drawObj.formData = layer.formData;
+                drawObj.shape = layer.shape;
+                switch(layer.shape) {
+                    case "Circle":
+                        drawObj.coords = [];
+                        drawObj.coords.push(layer.getLatLng().lat + "," + layer.getLatLng().lng);
+                        drawObj.drawId = drawId;
+                        drawObj.options = {};
+                        drawObj.options.radius = layer.getRadius();
+                        drawnObjects.push(drawObj)
+                        break;
+                    case "Fence":
+                        drawObj.coords = [];
+                        for(var i = 0; i < layer.getLatLngs()[0].length; i++) {
+                            drawObj.coords.push(layer.getLatLngs()[0][i].lat + "," +  layer.getLatLngs()[0][i].lng);
+                        }
+                        drawObj.drawId = drawId;
+                        drawnObjects.push(drawObj);
+                        break;
+                    case "Line":
+                        drawObj.coords = [];
+                        for(var i = 0; i < layer.getLatLngs().length; i++) {
+                            drawObj.coords.push(layer.getLatLngs()[i].lat + "," +  layer.getLatLngs()[i].lng);
+                        }
+                        drawObj.drawId = drawId;
+                        drawnObjects.push(drawObj);
+                        break;
+                    case "Marker":
+                        drawObj.coords = [];
+                        drawObj.coords.push(layer.getLatLng().lat + "," + layer.getLatLng().lng);
+                        drawObj.drawId = drawId;
+                        drawnObjects.push(drawObj);
+                        break;
+                }
+
+            }
+        });
+        return drawnObjects;
+    }
+
     function addEditFenceControls() {
         map.pm.addControls({
           position: 'topleft',
           cutPolygon: false,
-          editMode: false,
-          dragMode: false,
+          editMode: true,
+          dragMode: true,
           drawCircleMarker: false,
           pinningOption: false,
           snappingOption: false
@@ -307,75 +353,40 @@
         map.on('pm:create', function(e) {
             var drawId = e.layer._leaflet_id;
             console.log(e);
-            var drawObj = {};
+            var coords = [];
             switch(e.shape) {
                 case "Circle":
-                    drawObj.coords = [];
-                    drawObj.coords.push(e.layer.getLatLng().lat + "," + e.layer.getLatLng().lng);
-                    drawObj.drawId = drawId;
-                    drawObj.options = {};
-                    drawObj.options.radius = e.layer.getRadius();
-                    drawObj.shape = e.shape;
-                    drawnObjs.push(drawObj)
+                    coords.push(e.layer.getLatLng().lat + "," + e.layer.getLatLng().lng);
+                    e.layer.shape = e.shape;
                     break;
                 case "Rectangle":
                 case "Polygon":
-                    drawObj.coords = [];
                     for(var i = 0; i < e.layer.getLatLngs()[0].length; i++) {
-                        drawObj.coords.push(e.layer.getLatLngs()[0][i].lat + "," +  e.layer.getLatLngs()[0][i].lng);
+                        coords.push(e.layer.getLatLngs()[0][i].lat + "," +  e.layer.getLatLngs()[0][i].lng);
                     }
-                    drawObj.drawId = drawId;
-                    drawObj.options = {};
-                    drawObj.shape = "Fence";
-                    drawnObjs.push(drawObj);
+                    e.layer.shape = "Fence";
                     break;
                 case "Line":
-                    drawObj.coords = [];
                     for(var i = 0; i < e.layer.getLatLngs().length; i++) {
-                        drawObj.coords.push(e.layer.getLatLngs()[i].lat + "," +  e.layer.getLatLngs()[i].lng);
+                        coords.push(e.layer.getLatLngs()[i].lat + "," +  e.layer.getLatLngs()[i].lng);
                     }
-                    drawObj.drawId = drawId;
-                    drawObj.options = {};
-                    drawObj.shape = e.shape;
-                    drawnObjs.push(drawObj);
+                    e.layer.shape = e.shape;
                     break;
                 case "Marker":
-                    drawObj.coords = [];
-                    drawObj.coords.push(e.layer.getLatLng().lat + "," + e.layer.getLatLng().lng);
-                    drawObj.drawId = drawId;
-                    drawObj.options = {};
-                    drawObj.shape = e.shape;
-                    drawnObjs.push(drawObj);
+                    coords.push(e.layer.getLatLng().lat + "," + e.layer.getLatLng().lng);
+                    e.layer.shape = e.shape;
                     break;
             }
-            console.log(drawObj);
 
             var editFenceDataSchema = $('#freemarker_editFenceDataSchema')[0].innerText;
 
             var popupInfo = "<br/><div class='border'><div class='p-2 text-monospace'>";
-            popupInfo += "<div>" + "Coords" + " : " + JSON.stringify(drawObj.coords, null, 3) + "</div>";
-            if(drawObj.options) {
-                for(var key in drawObj.options) {
-                    popupInfo += "<div>" + key + " : " + drawObj.options[key] + "</div>";
-                }
-            }
+            popupInfo += "<div>" + "Coords" + " : " + JSON.stringify(coords, null, 3) + "</div>";
             if(editFenceDataSchema) {
                 popupInfo += "<div>" + "Edit Data" + " : " + "<a href='#' onclick=showFenceModal(" + drawId + ");>Click Here</a>" + "</div>";
             }
             popupInfo += "</div></div><br/>";
             e.layer.bindPopup(popupInfo, {autoClose: false});
-        });
-
-        map.on('pm:remove', function(e) {
-            console.log(e);
-            var drawId = e.layer._leaflet_id;
-            for (var n = 0 ; n < drawnObjs.length ; n++) {
-                if (drawnObjs[n].drawId == drawId) {
-                  var removedObject = drawnObjs.splice(n,1);
-                  removedObject = null;
-                  break;
-                }
-            }
         });
     }
 

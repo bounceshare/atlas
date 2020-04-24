@@ -1,29 +1,32 @@
 <script>
 
+// TODO iterate through layers and add values to the layer object itself
 function submitFenceData(drawId, values) {
-    for (var n = 0 ; n < drawnObjs.length ; n++) {
-        if (drawnObjs[n].drawId == drawId) {
-          drawObj = drawnObjs[n];
-          for(var key in values) {
-            drawObj.options[key] = values[key];
-          }
-          console.log(drawObj);
-          $('#editFenceModal').modal("hide");
-          break;
+
+    map.eachLayer(function(layer){
+        if(layer.pm && typeof layer.pm.isPolygon == 'function' && drawId == layer._leaflet_id){
+            layer.formData = {};
+            for(var key in values) {
+                layer.formData[key] = values[key];
+            }
+            console.log(layer);
+            $('#editFenceModal').modal("hide");
+            return;
         }
-    }
+    });
+
 }
 
+// TODO read formData from layer
 function showFenceModal(drawId) {
-    var drawObj = null;
-    for (var n = 0 ; n < drawnObjs.length ; n++) {
-        if (drawnObjs[n].drawId == drawId) {
-          drawObj = drawnObjs[n];
-          break;
-        }
-    }
 
-    console.log(drawObj);
+    var formDataVals = null;
+    map.eachLayer(function(layer){
+        if(layer.pm && typeof layer.pm.isPolygon == 'function' && drawId == layer._leaflet_id){
+            formDataVals = layer.formData;
+        }
+    });
+
     var editFenceDataSchema = JSON.parse(($('#freemarker_editFenceDataSchema')[0].innerText));
     console.log(editFenceDataSchema);
     $('#editFence-form')[0].innerHTML = "";
@@ -31,7 +34,7 @@ function showFenceModal(drawId) {
     $('#editFence-form').jsonForm({
         schema: editFenceDataSchema,
         form: ["*"],
-        value: drawObj.options,
+        value: formDataVals,
         onSubmit: function (errors, values) {
           console.log(drawId + values.toString());
           submitFenceData(drawId, values);

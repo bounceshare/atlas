@@ -104,6 +104,7 @@
         $('#searchBar')[0].value = "";
     }
 
+    // TODO get editable markers from iterating through the layers
     function fenceSubmit() {
         editFenceUrl = $('#freemarker_editFenceUrl')[0].innerText;
         console.log("Submitting fence data : " + editFenceUrl);
@@ -112,7 +113,8 @@
             console.log("Wrong invocation of search api");
             return;
         }
-        console.log("fenceSubmit() : " + drawnObjs);
+        var drawnObjects = getDrawnObjects();
+        console.log("fenceSubmit() : " + JSON.stringify(drawnObjects));
 
         pos = map.getCenter();
         coords = [pos.lat, pos.lng];
@@ -121,7 +123,7 @@
         data.lat = coords[0];
         data.lon = coords[1];
         data.radius = getMapRadiusInMeters();
-        data.drawnObjs = drawnObjs;
+        data.drawnObjs = drawnObjects;
         if(isLoading) {
             return;
         }
