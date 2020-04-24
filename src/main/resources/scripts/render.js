@@ -293,6 +293,52 @@
         });
     }
 
+    function createLayersFromJson(geoJsonData) {
+        return L.geoJson(geoJsonData, {
+          pointToLayer: (feature, latlng) => {
+            if (feature.properties.shape && feature.properties.shape == 'Circle') {
+              return new L.Circle(latlng, feature.properties.radius);
+            } else {
+              return new L.Marker(latlng);
+            }
+          },
+        });
+    };
+
+    function bootboxPromptRenderGeoJSON() {
+        bootbox.prompt({
+            title: "Please add your geojson",
+            inputType: 'textarea',
+            callback: function (result) {
+                if(result) {
+                    var geoJSONObj = JSON.parse(result);
+                    var geoJSONLayers = createLayersFromJson(geoJSONObj);
+                    for(var i=0;i<geoJSONLayers.getLayers().length;i++) {
+                        var geoLayer = geoJSONLayers.getLayers()[i];
+                        var shape = geoLayer.feature.properties.shape;
+                        switch(shape) {
+                            case "Marker":
+                                break;
+                            case "Line":
+                                break;
+                            case "Rectangle":
+                                shape = "Fence";
+                                break;
+                            case "Cicle":
+                                break;
+                            case "Polygon":
+                                shape = "Fence";
+                                break;
+                        }
+                        geoLayer.shape = shape;
+                    }
+                    geoJSONLayers.addTo(map);
+                    map.fitBounds(geoJSONLayers.getBounds());
+                }
+            }
+        });
+    }
+
     function getDrawnObjects() {
         var drawnObjects = [];
         map.eachLayer(function(layer){
@@ -433,8 +479,6 @@
     }
 
     function onMapEvent(event) {
-        console.log("onMapEvent");
-        console.log(event);
         // If move is set to true. hit api to fetch data and set it using js. Only for home page
     }
 
