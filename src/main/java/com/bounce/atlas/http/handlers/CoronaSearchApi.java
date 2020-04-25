@@ -1,6 +1,6 @@
 package com.bounce.atlas.http.handlers;
 
-import com.bounce.atlas.pojo.BikeDetailsCard;
+import com.bounce.atlas.pojo.CardPojo;
 import com.bounce.atlas.pojo.MarkerPojo;
 import com.bounce.atlas.pojo.PointPojo;
 import com.bounce.atlas.utils.Constants;
@@ -11,7 +11,6 @@ import com.bounce.utils.RestGenericRequest;
 import com.bounce.utils.apis.BaseApiHandler;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.util.TextUtils;
@@ -22,7 +21,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.container.AsyncResponse;
 import java.lang.reflect.Type;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -53,7 +51,7 @@ public class CoronaSearchApi extends BaseApiHandler {
         }
         logger.info("Cache outdated. Fetching information again");
         List<MarkerPojo> markers = Lists.newArrayList();
-        List<BikeDetailsCard> cards = Lists.newArrayList();
+        List<CardPojo> cards = Lists.newArrayList();
         try {
             super.onRequest();
 
@@ -83,7 +81,7 @@ public class CoronaSearchApi extends BaseApiHandler {
             }
             markers.addAll(stateMarkers);
 
-            BikeDetailsCard globalCard = new BikeDetailsCard();
+            CardPojo globalCard = new CardPojo();
             JSONObject globalData =
                     new JSONObject(RestGenericRequest.httpGet("https://coronavirus-19-api.herokuapp.com/all", new JSONObject("{}"), null));
 
@@ -118,8 +116,8 @@ public class CoronaSearchApi extends BaseApiHandler {
         responseTimestampPair = new Pair<>(response, System.currentTimeMillis());
     }
 
-    private BikeDetailsCard getCard(JSONObject countryObj, int i) {
-        BikeDetailsCard countryCard = new BikeDetailsCard();
+    private CardPojo getCard(JSONObject countryObj, int i) {
+        CardPojo countryCard = new CardPojo();
         countryCard.header = StringUtils.capitalize(countryObj.optString("country"));
         countryCard.timeString = "";
         countryCard.time = System.currentTimeMillis() - i * 10000;

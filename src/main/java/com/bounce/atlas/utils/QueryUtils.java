@@ -137,7 +137,7 @@ public class QueryUtils {
             Result<Record> records = DatabaseConnector.getDb().getConnector().fetch(sql);
             for (Record record : records) {
                 Map<String, Object> parkingMap = new HashMap<>();
-                parkingMap.put("polygon", PointPojo.getPointsFromSqlLineString(record.get("fence").toString()));
+                parkingMap.put("polygon", RenderUtils.getPointsFromSqlLineString(record.get("fence").toString()));
                 parkingMap.put("name", record.get("name"));
                 parkingMap.put("category", record.get("category_name"));
                 parkingMap.put("negative", record.get("negative"));

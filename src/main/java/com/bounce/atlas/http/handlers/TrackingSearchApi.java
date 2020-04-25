@@ -3,6 +3,7 @@ package com.bounce.atlas.http.handlers;
 import com.bounce.atlas.pojo.MarkerPojo;
 import com.bounce.atlas.pojo.PathPojo;
 import com.bounce.atlas.utils.QueryUtils;
+import com.bounce.atlas.utils.RenderUtils;
 import com.bounce.atlas.utils.Utils;
 import com.bounce.utils.BounceUtils;
 import com.bounce.utils.apis.BaseApiHandler;
@@ -68,13 +69,13 @@ public class TrackingSearchApi extends BaseApiHandler {
 
             List<Map<String, Object>> trackings = QueryUtils.getTrackingRecords(axcess.getImei(), from, to);
             for(Map<String, Object> tracking : trackings) {
-                MarkerPojo marker = MarkerPojo.getMarkerPojo(tracking);
+                MarkerPojo marker = RenderUtils.getMarkerPojo(tracking);
                 if(marker != null) {
                     markers.add(marker);
                 }
             }
 
-            PathPojo pojo = PathPojo.getMarkerPojo(trackings);
+            PathPojo pojo = RenderUtils.getMarkerPojo(trackings);
             pojo.data = Maps.newHashMap();
             pojo.data.put("From", new Date(from));
             pojo.data.put("To", new Date(to));
@@ -103,13 +104,13 @@ public class TrackingSearchApi extends BaseApiHandler {
         try {
             List<Map<String, Object>> trackings = QueryUtils.getTrackingRecords(imei, from, to);
             for(Map<String, Object> tracking : trackings) {
-                MarkerPojo marker = MarkerPojo.getMarkerPojo(tracking);
+                MarkerPojo marker = RenderUtils.getMarkerPojo(tracking);
                 if(marker != null) {
                     markers.add(marker);
                 }
             }
 
-            PathPojo pojo = PathPojo.getMarkerPojo(trackings);
+            PathPojo pojo = RenderUtils.getMarkerPojo(trackings);
             pojo.data = Maps.newHashMap();
             pojo.data.put("From", new Date(from));
             pojo.data.put("To", new Date(to));

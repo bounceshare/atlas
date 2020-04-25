@@ -91,7 +91,7 @@
                 if(markerData.data) {
                     for(var key in markerData.data) {
                         popupInfo += "<div>" + key + " : " + markerData.data[key] + "</div>";
-                        formData[key] = fenceData.data[key];
+                        formData[key] = markerData.data[key];
                     }
                 }
                 var drawId = uuid();

@@ -1,8 +1,8 @@
 package com.bounce.atlas.http.handlers;
 
-import com.bounce.atlas.pojo.BikeDetailsCard;
-import com.bounce.atlas.pojo.MarkerPojo;
+import com.bounce.atlas.pojo.CardPojo;
 import com.bounce.atlas.utils.QueryUtils;
+import com.bounce.atlas.utils.RenderUtils;
 import com.bounce.utils.DatabaseConnector;
 import com.bounce.utils.apis.BaseApiHandler;
 import com.bounce.utils.dbmodels.public_.Keys;
@@ -29,7 +29,7 @@ public class BikeDeviceDataApi extends BaseApiHandler {
 
     @Override
     public void onRequest() {
-        List<BikeDetailsCard> bikeDetailsCards = Lists.newArrayList();
+        List<CardPojo> bikeDetailsCards = Lists.newArrayList();
         try {
             super.onRequest();
             int bikeId = input.optInt("id");
@@ -41,7 +41,7 @@ public class BikeDeviceDataApi extends BaseApiHandler {
                     DatabaseConnector.getDb().getReadDbConnector().selectFrom(DeviceLatestData.DEVICE_LATEST_DATA)
                             .where(DeviceLatestData.DEVICE_LATEST_DATA.DEVICE_ID.eq(axcessRecord.getImei())).fetchAny();
 
-            BikeDetailsCard card = BikeDetailsCard.getCard(deviceLatestDataRecord);
+            CardPojo card = RenderUtils.getCard(deviceLatestDataRecord);
             card.body = axcessRecord.getImei();
             bikeDetailsCards.add(card);
 
@@ -50,7 +50,7 @@ public class BikeDeviceDataApi extends BaseApiHandler {
             e.printStackTrace();
         }
 
-        Collections.sort(bikeDetailsCards, new BikeDetailsCard.CardComparator());
+        Collections.sort(bikeDetailsCards, new RenderUtils.CardComparator());
 
         Map<Object, Object> response = Maps.newHashMap();
         response.put("events", bikeDetailsCards);

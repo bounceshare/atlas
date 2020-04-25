@@ -1,8 +1,7 @@
 package com.bounce.atlas.http.handlers;
 
-import com.bounce.atlas.pojo.BikeDetailsCard;
-import com.bounce.atlas.pojo.MarkerPojo;
 import com.bounce.atlas.utils.QueryUtils;
+import com.bounce.atlas.utils.RenderUtils;
 import com.bounce.utils.apis.BaseApiHandler;
 import com.bounce.utils.dbmodels.public_.tables.records.BikeRecord;
 import com.bounce.utils.status.Status;
@@ -13,7 +12,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.container.AsyncResponse;
 import javax.ws.rs.core.Response;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -35,7 +33,7 @@ public class BikeSearchApi extends BaseApiHandler {
                 logger.info("Bikes : " + bikes);
 
                 Map<Object, Object> response = Maps.newHashMap();
-                response.put("markers", MarkerPojo.getBikesAsMarkers(bikes));
+                response.put("markers", RenderUtils.getBikesAsMarkers(bikes));
                 if(bikes.size() == 1) {
                     response.put("events", BikeEventsApi.getCards(bikes.get(0).getId(), System.currentTimeMillis()));
                 }

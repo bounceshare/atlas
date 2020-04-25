@@ -1,25 +1,19 @@
 package com.bounce.atlas.http.handlers;
 
-import com.bounce.atlas.pojo.BikeDetailsCard;
 import com.bounce.atlas.pojo.MarkerPojo;
 import com.bounce.atlas.pojo.PointPojo;
-import com.bounce.atlas.utils.Constants;
 import com.bounce.atlas.utils.Utils;
 import com.bounce.utils.BounceUtils;
 import com.bounce.utils.Pair;
-import com.bounce.utils.RestGenericRequest;
 import com.bounce.utils.apis.BaseApiHandler;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.google.gson.reflect.TypeToken;
-import org.apache.http.util.TextUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.container.AsyncResponse;
-import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Map;
 

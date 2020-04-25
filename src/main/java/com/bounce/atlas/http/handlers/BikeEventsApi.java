@@ -1,8 +1,8 @@
 package com.bounce.atlas.http.handlers;
 
-import com.bounce.atlas.pojo.BikeDetailsCard;
+import com.bounce.atlas.pojo.CardPojo;
 import com.bounce.atlas.utils.Constants;
-import com.bounce.atlas.utils.Utils;
+import com.bounce.atlas.utils.RenderUtils;
 import com.bounce.utils.*;
 import com.bounce.utils.apis.BaseApiHandler;
 import com.bounce.utils.dbmodels.public_.tables.BikeStatusLog;
@@ -17,7 +17,6 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import org.apache.http.util.TextUtils;
 import org.joda.time.DateTime;
-import org.jooq.meta.derby.sys.Sys;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import redis.clients.jedis.Jedis;
@@ -40,7 +39,7 @@ public class BikeEventsApi extends BaseApiHandler {
 
     @Override
     public void onRequest() {
-        List<BikeDetailsCard> bikeDetailsCards = Lists.newArrayList();
+        List<CardPojo> bikeDetailsCards = Lists.newArrayList();
         try {
             super.onRequest();
             int bikeId = input.optInt("id");
@@ -53,7 +52,7 @@ public class BikeEventsApi extends BaseApiHandler {
             e.printStackTrace();
         }
 
-        Collections.sort(bikeDetailsCards, new BikeDetailsCard.CardComparator());
+        Collections.sort(bikeDetailsCards, new RenderUtils.CardComparator());
 
         Map<Object, Object> response = Maps.newHashMap();
         response.put("events", bikeDetailsCards);
@@ -61,21 +60,21 @@ public class BikeEventsApi extends BaseApiHandler {
         sendSuccessResponse(asyncResponse, response);
     }
 
-    public static List<BikeDetailsCard> getCards(int bikeId, long from) {
-        List<BikeDetailsCard> bikeDetailsCards = Lists.newArrayList();
+    public static List<CardPojo> getCards(int bikeId, long from) {
+        List<CardPojo> bikeDetailsCards = Lists.newArrayList();
         List<BookingRecord> bookings = DatabaseConnector.getDb().getReadDbConnector().selectFrom(Booking.BOOKING)
                 .where(Booking.BOOKING.BIKE_ID.eq(bikeId))
                 .and(Booking.BOOKING.CREATED_ON.lessThan(new Timestamp(from))).orderBy(Booking.BOOKING.CREATED_ON.desc())
                 .limit(40).fetch();
 
         for (BookingRecord booking : bookings) {
-            bikeDetailsCards.addAll(BikeDetailsCard.getCard(booking));
+            bikeDetailsCards.addAll(RenderUtils.getCard(booking));
             List<EndTripFeedbackRecord> endTripFeedbacks =
                     DatabaseConnector.getDb().getReadDbConnector().selectFrom(EndTripFeedback.END_TRIP_FEEDBACK)
                             .where(EndTripFeedback.END_TRIP_FEEDBACK.BOOKING_ID.eq(booking.getId())).fetch();
 
             for (EndTripFeedbackRecord endTripFeedback : endTripFeedbacks) {
-                bikeDetailsCards.add(BikeDetailsCard.getCard(endTripFeedback));
+                bikeDetailsCards.add(RenderUtils.getCard(endTripFeedback));
             }
         }
 
@@ -115,15 +114,15 @@ public class BikeEventsApi extends BaseApiHandler {
         }
 
         for(BikeStatusLogRecord bsl : bikeStatusLogRecords) {
-            bikeDetailsCards.add(BikeDetailsCard.getCard(bsl));
+            bikeDetailsCards.add(RenderUtils.getCard(bsl));
         }
 
-        Collections.sort(bikeDetailsCards, new BikeDetailsCard.CardComparator());
+        Collections.sort(bikeDetailsCards, new RenderUtils.CardComparator());
 
         JSONArray tasksArray = getTasks(bikeId);
         if(tasksArray.length() > 0) {
             for (int i = 0; i < tasksArray.length(); i++) {
-                bikeDetailsCards.addAll(BikeDetailsCard.getCard(tasksArray.getJSONObject(i)));
+                bikeDetailsCards.addAll(RenderUtils.getCard(tasksArray.getJSONObject(i)));
             }
         }
         return bikeDetailsCards;

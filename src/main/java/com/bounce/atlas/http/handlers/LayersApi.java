@@ -5,6 +5,7 @@ import com.bounce.atlas.pojo.FencePojo;
 import com.bounce.atlas.pojo.MarkerPojo;
 import com.bounce.atlas.pojo.PathPojo;
 import com.bounce.atlas.utils.QueryUtils;
+import com.bounce.atlas.utils.RenderUtils;
 import com.bounce.utils.BounceUtils;
 import com.bounce.utils.Pair;
 import com.bounce.utils.apis.BaseApiHandler;
@@ -60,23 +61,23 @@ public class LayersApi extends BaseApiHandler {
             switch (path) {
                 case "bikes":
                     List<BikeRecord> bikes = QueryUtils.getBikes(lat, lon, 20000, radius, null, searchQuery);
-                    List<MarkerPojo> bikeMarkers = MarkerPojo.getBikesAsMarkers(bikes);
+                    List<MarkerPojo> bikeMarkers = RenderUtils.getBikesAsMarkers(bikes);
                     markers.addAll(bikeMarkers);
                     break;
                 case "parking":
-                    fences = FencePojo.getParkingFences(lat, lon, radius);
+                    fences = RenderUtils.getParkingFences(lat, lon, radius);
                     break;
                 case "idle":
                     List<BikeRecord> idleBikes = QueryUtils.getBikes(lat, lon, 10000, radius, BikeStatus.idle, searchQuery);
-                    markers.addAll(MarkerPojo.getBikesAsMarkers(idleBikes));
+                    markers.addAll(RenderUtils.getBikesAsMarkers(idleBikes));
                     break;
                 case "busy":
                     List<BikeRecord> busyBikes = QueryUtils.getBikes(lat, lon, 10000, radius, BikeStatus.busy, searchQuery);
-                    markers.addAll(MarkerPojo.getBikesAsMarkers(busyBikes));
+                    markers.addAll(RenderUtils.getBikesAsMarkers(busyBikes));
                     break;
                 case "oos":
                     List<BikeRecord> oosBikes = QueryUtils.getBikes(lat, lon, 10000, radius, BikeStatus.oos, searchQuery);
-                    markers.addAll(MarkerPojo.getBikesAsMarkers(oosBikes));
+                    markers.addAll(RenderUtils.getBikesAsMarkers(oosBikes));
                     break;
                 case "bookings":
                     List<BikeRecord> inTripBikes = QueryUtils.getBikes(lat, lon, 1000, radius, BikeStatus.busy, searchQuery);
@@ -85,11 +86,11 @@ public class LayersApi extends BaseApiHandler {
                         BookingRecord booking = QueryUtils.getLatestBooking(bike);
                         pairs.add(new Pair<>(bike, booking));
                     }
-                    markers.addAll(MarkerPojo.getBookingMarkers(pairs));
+                    markers.addAll(RenderUtils.getBookingMarkers(pairs));
                     break;
                 case "hubs":
                     List<HubRecord> hubs = QueryUtils.getHubs(lat, lon, 100, radius, searchQuery);
-                    circles.addAll(CirclePojo.getHubsAsCircles(hubs));
+                    circles.addAll(RenderUtils.getHubsAsCircles(hubs));
                     break;
             }
         } catch (Exception e) {
