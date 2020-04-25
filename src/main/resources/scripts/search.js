@@ -129,7 +129,7 @@
         }
         showLoader(true);
         httpPost(editFenceUrl, data, function(response) {
-            invalidateMap(response.data.markers, response.data.fences, response.data.circles, response.data.paths, response.data.events, response.data.form, response.data.isSidebar, true, response.data.autoRefresh);
+            invalidateMap(response.data.markers, response.data.fences, response.data.circles, response.data.paths, response.data.events, response.data.form, response.data.isSidebar, true, response.data.autoRefresh, response.data);
             showLoader(false);
         }, function(jqXHR, exceptiom) {
             showLoader(false);
@@ -159,7 +159,7 @@
         }
         showLoader(true);
         httpPost(searchUrl, data, function(response) {
-            invalidateMap(response.data.markers, response.data.fences, response.data.circles, response.data.paths, response.data.events, response.data.form, response.data.isSidebar, true, response.data.autoRefresh);
+            invalidateMap(response.data.markers, response.data.fences, response.data.circles, response.data.paths, response.data.events, response.data.form, response.data.isSidebar, true, response.data.autoRefresh, response.data);
             showLoader(false);
         }, function(jqXHR, exceptiom) {
             showLoader(false);

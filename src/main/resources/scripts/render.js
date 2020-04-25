@@ -86,15 +86,19 @@
                 var popupInfo = "<br/><div class='border'><div class='p-2 text-monospace'>";
 
                 popupInfo += "<b>" + markerData.title + "</b><br/>" + markerData.subtext + "<br/>";
+                var formData = {};
                 if(markerData.data) {
                     for(var key in markerData.data) {
                         popupInfo += "<div>" + key + " : " + markerData.data[key] + "</div>";
+                        formData[key] = fenceData.data[key];
                     }
                 }
                 popupInfo += "</div></div><br/>";
                 marker.bindPopup(popupInfo, {autoClose: false});
                 marker.text = markerData.title + " / " + markerData.subtext;
                 marker.alt = markerData.title + " / " + markerData.subtext;
+                marker.shape = "Marker";
+                marker.formData = formData;
                 if(markerData.count > 0) {
                     marker.count = markerData.count;
                 }
@@ -117,13 +121,17 @@
                 var points = getPoints(fenceData.points);
                 var fence = L.polygon(points, {fillColor: fenceData.fillColor, fillOpacity: fenceData.fillOpacity, color: fenceData.color});
                 var popupInfo = "<br/><div class='border'><div class='p-2 text-monospace'>";
+                var formData = {};
                 if(fenceData.data) {
                     for(var key in fenceData.data) {
                         popupInfo += "<div>" + key + " : " + fenceData.data[key] + "</div>";
+                        formData[key] = fenceData.data[key];
                     }
                 }
                 popupInfo += "</div></div><br/>";
                 fence.bindPopup(popupInfo, {autoClose: false});
+                fence.shape = "Fence";
+                fence.formData = formData;
                 fences.push(fence);
                 fencesGroup.addLayer(fence);
                 layerAdded = fence;
@@ -153,13 +161,17 @@
                 }
                 var path = L.polyline(points, {color: pathData.color, weight: lineWeight});
                 var popupInfo = "<br/><div class='border'><div class='p-2 text-monospace'>";
+                var formData = {};
                 if(pathData.data) {
                     for(var key in pathData.data) {
                         popupInfo += "<div>" + key + " : " + pathData.data[key] + "</div>";
+                        formData[key] = pathData.data[key];
                     }
                 }
                 popupInfo += "</div></div><br/>";
                 path.bindPopup(popupInfo, {autoClose: false});
+                path.shape = "Line";
+                path.formData = formData;
                 paths.push(path);
                 pathsGroup.addLayer(path);
                 layerAdded = path;
@@ -183,13 +195,17 @@
                 point = [circleData.location.lat, circleData.location.lon];
                 var circle = L.circle(point, {fillColor: circleData.fillColor, fillOpacity: circleData.fillOpacity, color: circleData.color, radius: circleData.radius});
                 var popupInfo = "<br/><div class='border'><div class='p-2 text-monospace'>";
+                var formData = {};
                 if(circleData.data) {
                     for(var key in circleData.data) {
                         popupInfo += "<div>" + key + " : " + circleData.data[key] + "</div>";
+                        formData[key] = circleData.data[key];
                     }
                 }
                 popupInfo += "</div></div><br/>";
                 circle.bindPopup(popupInfo, {autoClose: false});
+                circle.shape = "Circle";
+                circle.formData = formData;
                 circles.push(circle);
                 circlesGroup.addLayer(circle);
                 layerAdded = circle;
@@ -287,7 +303,7 @@
             callback: function (result) {
                 if(result) {
                     var atlasObj = JSON.parse(result);
-                    invalidateMap(atlasObj.markers, atlasObj.fences, atlasObj.circles, atlasObj.paths, atlasObj.events, atlasObj.form, atlasObj.isSidebar, true, false);
+                    invalidateMap(atlasObj.markers, atlasObj.fences, atlasObj.circles, atlasObj.paths, atlasObj.events, atlasObj.form, atlasObj.isSidebar, true, false, atlasObj);
                 }
             }
         });
@@ -482,7 +498,7 @@
         // If move is set to true. hit api to fetch data and set it using js. Only for home page
     }
 
-    function invalidateMap(tMarkers, tFences, tCircles, tPaths, events, form, isSidebar = true, fitToBounds = false, toRefresh = refresh) {
+    function invalidateMap(tMarkers, tFences, tCircles, tPaths, events, form, isSidebar = true, fitToBounds = false, toRefresh = refresh, data = null) {
         console.log("fitToBounds : " + fitToBounds);
         if(tMarkers != null) {
             $('#markerData')[0].innerText = JSON.stringify(tMarkers);
@@ -527,6 +543,12 @@
         refresh = toRefresh;
 
         $('#refreshCheckbox').prop('checked', refresh);
+
+        if(data) {
+            if(data.editMode == true) {
+                addEditFenceControls();
+            }
+        }
     }
 
     function getMapRadiusInMeters() {

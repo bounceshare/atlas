@@ -15,7 +15,7 @@
         }
         showLoader(true);
         httpPost(postUrl, data, function(response) {
-            invalidateMap(response.data.markers, response.data.fences, response.data.circles, response.data.paths, response.data.events, response.data.form, response.data.isSidebar, true, response.data.autoRefresh);
+            invalidateMap(response.data.markers, response.data.fences, response.data.circles, response.data.paths, response.data.events, response.data.form, response.data.isSidebar, true, response.data.autoRefresh, response.data);
             showLoader(false);
             showSuccessMessage("Form Update : Success")
         }, function(jqXHR, exception) {
