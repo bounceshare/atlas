@@ -20,6 +20,7 @@
     var circles = []
 
     var isLoading = false;
+    var isEditMode = false;
 
     var refresh = true;
     var query = "";
@@ -93,12 +94,17 @@
                         formData[key] = fenceData.data[key];
                     }
                 }
+                var drawId = uuid();
+                if(isEditMode) {
+                    popupInfo += "<div>" + "Edit Data" + " : " + "<a href='#' onclick=showFenceModal('" + drawId + "');>Click Here</a>" + "</div>";
+                }
                 popupInfo += "</div></div><br/>";
                 marker.bindPopup(popupInfo, {autoClose: false});
                 marker.text = markerData.title + " / " + markerData.subtext;
                 marker.alt = markerData.title + " / " + markerData.subtext;
                 marker.shape = "Marker";
                 marker.formData = formData;
+                marker.drawId = drawId;
                 if(markerData.count > 0) {
                     marker.count = markerData.count;
                 }
@@ -128,10 +134,15 @@
                         formData[key] = fenceData.data[key];
                     }
                 }
+                var drawId = uuid();
+                if(isEditMode) {
+                    popupInfo += "<div>" + "Edit Data" + " : " + "<a href='#' onclick=showFenceModal('" + drawId + "');>Click Here</a>" + "</div>";
+                }
                 popupInfo += "</div></div><br/>";
                 fence.bindPopup(popupInfo, {autoClose: false});
                 fence.shape = "Fence";
                 fence.formData = formData;
+                fence.drawId = drawId;
                 fences.push(fence);
                 fencesGroup.addLayer(fence);
                 layerAdded = fence;
@@ -168,10 +179,15 @@
                         formData[key] = pathData.data[key];
                     }
                 }
+                var drawId = uuid();
+                if(isEditMode) {
+                    popupInfo += "<div>" + "Edit Data" + " : " + "<a href='#' onclick=showFenceModal('" + drawId + "');>Click Here</a>" + "</div>";
+                }
                 popupInfo += "</div></div><br/>";
                 path.bindPopup(popupInfo, {autoClose: false});
                 path.shape = "Line";
                 path.formData = formData;
+                path.drawId = drawId;
                 paths.push(path);
                 pathsGroup.addLayer(path);
                 layerAdded = path;
@@ -202,10 +218,15 @@
                         formData[key] = circleData.data[key];
                     }
                 }
+                var drawId = uuid();
+                if(isEditMode) {
+                    popupInfo += "<div>" + "Edit Data" + " : " + "<a href='#' onclick=showFenceModal('" + drawId + "');>Click Here</a>" + "</div>";
+                }
                 popupInfo += "</div></div><br/>";
                 circle.bindPopup(popupInfo, {autoClose: false});
                 circle.shape = "Circle";
                 circle.formData = formData;
+                circle.drawId = drawId;
                 circles.push(circle);
                 circlesGroup.addLayer(circle);
                 layerAdded = circle;
@@ -359,7 +380,7 @@
         var drawnObjects = [];
         map.eachLayer(function(layer){
             if(layer.pm && typeof layer.pm.isPolygon == 'function'){
-                var drawId = layer._leaflet_id;
+                var drawId = layer.drawId;
                 var drawObj = {};
                 drawObj.formData = layer.formData;
                 drawObj.shape = layer.shape;
@@ -412,8 +433,10 @@
           snappingOption: false
         });
 
+        isEditMode = true;
+
         map.on('pm:create', function(e) {
-            var drawId = e.layer._leaflet_id;
+            var drawId = uuid();
             console.log(e);
             var coords = [];
             switch(e.shape) {
@@ -440,12 +463,13 @@
                     break;
             }
 
+            e.layer.drawId = drawId
             var editFenceDataSchema = $('#freemarker_editFenceDataSchema')[0].innerText;
 
             var popupInfo = "<br/><div class='border'><div class='p-2 text-monospace'>";
             popupInfo += "<div>" + "Coords" + " : " + JSON.stringify(coords, null, 3) + "</div>";
             if(editFenceDataSchema) {
-                popupInfo += "<div>" + "Edit Data" + " : " + "<a href='#' onclick=showFenceModal(" + drawId + ");>Click Here</a>" + "</div>";
+                popupInfo += "<div>" + "Edit Data" + " : " + "<a href='#' onclick=showFenceModal('" + drawId + "');>Click Here</a>" + "</div>";
             }
             popupInfo += "</div></div><br/>";
             e.layer.bindPopup(popupInfo, {autoClose: false});

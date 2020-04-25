@@ -1,10 +1,9 @@
 <script>
 
-// TODO iterate through layers and add values to the layer object itself
 function submitFenceData(drawId, values) {
 
     map.eachLayer(function(layer){
-        if(layer.pm && typeof layer.pm.isPolygon == 'function' && drawId == layer._leaflet_id){
+        if(layer.pm && typeof layer.pm.isPolygon == 'function' && drawId == layer.drawId){
             layer.formData = {};
             for(var key in values) {
                 layer.formData[key] = values[key];
@@ -17,17 +16,19 @@ function submitFenceData(drawId, values) {
 
 }
 
-// TODO read formData from layer
 function showFenceModal(drawId) {
 
     var formDataVals = null;
     map.eachLayer(function(layer){
-        if(layer.pm && typeof layer.pm.isPolygon == 'function' && drawId == layer._leaflet_id){
+        if(layer.pm && typeof layer.pm.isPolygon == 'function' && drawId == layer.drawId){
             formDataVals = layer.formData;
         }
     });
 
     var editFenceDataSchema = JSON.parse(($('#freemarker_editFenceDataSchema')[0].innerText));
+    if(!editFenceDataSchema) {
+        editFenceDataSchema = getDefaultFormSchema(formDataVals);
+    }
     console.log(editFenceDataSchema);
     $('#editFence-form')[0].innerHTML = "";
     // show form based on schema
@@ -42,6 +43,33 @@ function showFenceModal(drawId) {
       });
 
     $('#editFenceModal').modal();
+}
+
+// TODO implement the method to retrieve formschema if not explicitly provided
+function getDefaultFormSchema(formData) {
+    var formSchema = {};
+    for(var key in formData) {
+        var val = formData[key];
+        var dataType = typeof(val);
+        var obj = {};
+        obj.title = key;
+        switch(dataType) {
+            case "number":
+                obj.type = "number";
+                break;
+            case "string":
+                obj.type = "string";
+                break;
+            case "boolean":
+                obj.type = "boolean";
+                break;
+            default:
+                obj.type = "string";
+                break;
+        }
+        formSchema[key] = obj;
+    }
+    return formSchema;
 }
 
 </script>

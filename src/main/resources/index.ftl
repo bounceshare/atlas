@@ -32,6 +32,7 @@
 <#include "/scripts/form.js">
 <#include "/scripts/crud.js">
 <#include "/scripts/queryBuilder.js">
+<#include "/edit_fence_modal.js">
 <!--<#if page == 'home'></#if>-->
 <!--<#if autoRefresh??><#include "/scripts/layers.js"></#if>-->
 <!--<#if searchPage??><#include "/scripts/search.js"><#else></#if>-->
@@ -39,4 +40,3 @@
 </main>
 <#include "/footer.ftl">
 <#include "/modal.ftl">
-<#include "/edit_fence_modal.ftl">
