@@ -273,6 +273,9 @@ public class ContentUtils {
             if(radius != -1) {
                 sql = sql.replace("$radius", radius + "");
             }
+            if(sql.contains("$radius")) {
+                sql = sql.replace("$radius", 0 + "");
+            }
             Result<Record> records = DatabaseConnector.getDb()
                     .getConnector(page.getGeoJsonRecordConfig().getJdbcUrl(), page.getGeoJsonRecordConfig().getDbUsername(),
                             page.getGeoJsonRecordConfig().getDbPassword())

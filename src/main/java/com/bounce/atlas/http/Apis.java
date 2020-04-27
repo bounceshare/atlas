@@ -305,7 +305,7 @@ public class Apis {
         if(page.getGeoJsonRecordConfig() != null) {
             double lat = Double.valueOf(location.split(",")[0]);
             double lon = Double.valueOf(location.split(",")[1]);
-            data.put("geojson", ContentUtils.getGeoJsonRecords(page, lat, lon, -1).toString());
+            data.put("geojson", ContentUtils.getGeoJsonRecords(page, lat, lon, 0).toString());
         }
 
         String content = ContentUtils.getFreemarkerString("index.ftl", data);
