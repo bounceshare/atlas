@@ -25,7 +25,10 @@ function showFenceModal(drawId) {
         }
     });
 
-    var editFenceDataSchema = JSON.parse(($('#freemarker_editFenceDataSchema')[0].innerText));
+    var editFenceDataSchema = $('#freemarker_editFenceDataSchema')[0].innerText;
+    if(editFenceDataSchema) {
+        editFenceDataSchema = JSON.parse(editFenceDataSchema);
+    }
     if(!editFenceDataSchema) {
         editFenceDataSchema = getDefaultFormSchema(formDataVals);
     }

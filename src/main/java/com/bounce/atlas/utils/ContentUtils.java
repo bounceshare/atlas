@@ -12,6 +12,7 @@ import org.apache.http.util.TextUtils;
 import org.jooq.Field;
 import org.jooq.Record;
 import org.jooq.Result;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -259,6 +260,33 @@ public class ContentUtils {
         }
 
         return page;
+    }
+
+    public static JSONArray getGeoJsonRecords(ConfigPojo.Page page, double lat, double lon, double radius) {
+        JSONArray geoJsonArray = new JSONArray();
+        if(page.getGeoJsonRecordConfig() != null) {
+            String sql = page.getGeoJsonRecordConfig().getGeoJsonSqlQuery();
+            if(lat != -1 && lon != -1) {
+                sql = sql.replace("$lat", lat + "");
+                sql = sql.replace("$lon", lon + "");
+            }
+            if(radius != -1) {
+                sql = sql.replace("$radius", radius + "");
+            }
+            Result<Record> records = DatabaseConnector.getDb()
+                    .getConnector(page.getGeoJsonRecordConfig().getJdbcUrl(), page.getGeoJsonRecordConfig().getDbUsername(),
+                            page.getGeoJsonRecordConfig().getDbPassword())
+                    .fetch(sql);
+            for(Record record : records) {
+                JSONObject geoJson = new JSONObject(record.get("geojson").toString());
+                Map<String, Object> details = record.intoMap();
+                details.remove("geojson");
+                geoJson.put("properties", new JSONObject(gson.toJson(details)));
+
+                geoJsonArray.put(geoJson);
+            }
+        }
+        return geoJsonArray;
     }
 
     public static List<List<String>> getDbRecords(ConfigPojo.Page page, String where, int limit) {

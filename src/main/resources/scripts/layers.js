@@ -21,12 +21,21 @@
             showLoader(false);
         }, function(jqXHR, exceptiom) {
              showLoader(false);
-         });
+        });
     }
 
     function onMapEvent(event) {
         console.log("Layers onMapEvent");
         console.log(event);
+
+        // check if geojson is non emplty. If so, hit geojson search api
+        var geojson = $('#freemarker_geojson')[0].innerText;
+        if(geojson && geojson.length > 0 && !isLoading && refresh) {
+            setTimeout(function() {
+                searchGeojsonNearby();
+            }, 1500);
+            return;
+        }
 
         if(isLoading || !refresh) {
             return;
@@ -37,6 +46,27 @@
         }, 1500);
     }
 
+    function searchGeojsonNearby() {
+        pos = map.getCenter();
+        radius = getMapRadiusInMeters();
+
+        var data = {};
+        data.lat = pos.lat;
+        data.lon = pos.lng;
+        data.radius = radius;
+        data.path = window.location.pathname;
+
+        showLoader(true);
+        httpPost("/geofence/search", data, function(response) {
+            console.log(response);
+            showLoader(false);
+            clearAllLayers();
+            renderGeoJsonArray(response.geojson, false);
+        }, function(jqXHR, exceptiom) {
+             showLoader(false);
+        });
+    }
+
     function searchLayers(isMapEvent) {
         if(isLoading) {
             return;
@@ -44,10 +74,10 @@
         console.log("Empty search query. So searching wherever the map is active")
         pos = map.getCenter();
         center = [pos.lat, pos.lng];
-        radius = DEFAULT_RADIUS;
-        if(isMapEvent) {
-            radius = getMapRadiusInMeters();
-        }
+        radius = getMapRadiusInMeters();
+//        if(isMapEvent) {
+//            radius = getMapRadiusInMeters();
+//        }
         refreshLayers(center, radius);
     }
 

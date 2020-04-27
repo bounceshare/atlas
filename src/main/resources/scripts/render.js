@@ -301,6 +301,14 @@
         pathsGroup = null;
     }
 
+    function clearAllLayers() {
+        map.eachLayer(function(layer){
+            if(layer.pm && typeof layer.pm.isPolygon == 'function'){
+                map.removeLayer(layer);
+            }
+        });
+    }
+
     function getMarkers() {
         return genericMarkerObjs;
     }
@@ -349,31 +357,73 @@
             callback: function (result) {
                 if(result) {
                     var geoJSONObj = JSON.parse(result);
-                    var geoJSONLayers = createLayersFromJson(geoJSONObj);
-                    for(var i=0;i<geoJSONLayers.getLayers().length;i++) {
-                        var geoLayer = geoJSONLayers.getLayers()[i];
-                        var shape = geoLayer.feature.properties.shape;
-                        switch(shape) {
-                            case "Marker":
-                                break;
-                            case "Line":
-                                break;
-                            case "Rectangle":
-                                shape = "Fence";
-                                break;
-                            case "Cicle":
-                                break;
-                            case "Polygon":
-                                shape = "Fence";
-                                break;
-                        }
-                        geoLayer.shape = shape;
-                    }
-                    geoJSONLayers.addTo(map);
-                    map.fitBounds(geoJSONLayers.getBounds());
+                    clearAllLayers();
+                    renderGeoJsonObjects(geoJSONObj, true);
                 }
             }
         });
+    }
+
+    function renderGeoJsonArray(geojson, fitBounds = true) {
+        geolayers = createLayersFromJson(geojson);
+        for(var i = 0; i < geojson.length; i++) {
+            renderGeoJsonObjects(geojson[i], fitBounds);
+        }
+        if(fitBounds) {
+            map.fitBounds(geolayers.getBounds());
+        }
+    }
+
+    function renderGeoJsonObjects(geoJSONObj, fitBounds = true) {
+        var geoJSONLayers = createLayersFromJson(geoJSONObj);
+        var properties = geoJSONObj.properties;
+        for(var i=0;i<geoJSONLayers.getLayers().length;i++) {
+            var geoLayer = geoJSONLayers.getLayers()[i];
+            var shape = geoLayer.feature.properties.shape;
+            if(!shape) {
+                shape = geoLayer.feature.geometry.type;
+            }
+            switch(shape) {
+                case "Marker":
+                    break;
+                case "Line":
+                    break;
+                case "Rectangle":
+                    shape = "Fence";
+                    break;
+                case "Cicle":
+                    break;
+                case "Polygon":
+                    shape = "Fence";
+                    break;
+            }
+            var drawId = uuid();
+            geoLayer.shape = shape;
+            geoLayer.drawId = drawId;
+            if(properties) {
+                var formData = {};
+                var popupInfo = "<br/><div class='border'><div class='p-2 text-monospace'>";
+                 if(properties) {
+                    for(var key in properties) {
+                        if(typeof properties[key] == 'object') {
+                            continue;
+                        }
+                        popupInfo += "<div>" + key + " : " + properties[key] + "</div>";
+                        formData[key] = properties[key];
+                    }
+                }
+                if(isEditMode) {
+                    popupInfo += "<div>" + "Edit Data" + " : " + "<a href='#' onclick=showFenceModal('" + drawId + "');>Click Here</a>" + "</div>";
+                }
+                popupInfo += "</div></div><br/>";
+                geoLayer.bindPopup(popupInfo, {autoClose: false});
+                geoLayer.formData = formData;
+            }
+        }
+        geoJSONLayers.addTo(map);
+        if(fitBounds) {
+            map.fitBounds(geoJSONLayers.getBounds());
+        }
     }
 
     function getDrawnObjects() {
@@ -481,6 +531,7 @@
         var zoom = $('#freemarker_zoom')[0].innerText;
         var autoRefresh = $('#freemarker_autorefresh')[0].innerText;
         var editFence = parseBoolean($('#freemarker_isEditControlSupported')[0].innerText);
+        var geojson = $('#freemarker_geojson')[0].innerText;
 
         refresh = parseBoolean(autoRefresh);
 
@@ -515,6 +566,10 @@
 
         if(editFence) {
             addEditFenceControls();
+        }
+        if(geojson && geojson.length > 0) {
+            geojson = JSON.parse(geojson);
+            renderGeoJsonArray(geojson, true);
         }
     }
 

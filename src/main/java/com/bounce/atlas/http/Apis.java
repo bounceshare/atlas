@@ -10,10 +10,13 @@ import com.bounce.utils.Log;
 import com.bounce.utils.dbmodels.public_.tables.Booking;
 import com.bounce.utils.dbmodels.public_.tables.records.BookingRecord;
 import com.bounce.utils.status.Status;
+import com.google.common.collect.Maps;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import org.apache.http.util.TextUtils;
 import org.apache.log4j.Logger;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import javax.servlet.http.Cookie;
@@ -28,6 +31,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Map;
 
@@ -197,6 +201,35 @@ public class Apis {
         }
     }
 
+    @POST
+    @Path("/geofence/search")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes({MediaType.APPLICATION_JSON})
+    @GoogleAuth
+    public void geofenceSearch(String inputString, @Suspended final AsyncResponse asyncResponse) {
+        logger.info("/geofence/search");
+        try {
+            JSONObject jsonObject = new JSONObject(inputString);
+            double lat = jsonObject.optDouble("lat", -1);
+            double lon = jsonObject.optDouble("lon", -1);
+            double radius = jsonObject.optDouble("radius", -1);
+            String path = jsonObject.optString("path");
+
+            Map<String, Object> response = Maps.newLinkedHashMap();
+            ConfigPojo.Page page = ContentUtils.getPageFromPagePath(path);
+            JSONArray jsonArray = ContentUtils.getGeoJsonRecords(page, lat, lon, radius);
+
+            Type userListType = new TypeToken<List<Object>>(){}.getType();
+            List<Object> geojsonObjects = gson.fromJson(jsonArray.toString(), userListType);
+
+            response.put("geojson", geojsonObjects);
+
+            asyncResponse.resume(Response.ok().entity(gson.toJson(response)).build());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     @GET
     @Path("/{path:.*}")
     @Produces(MediaType.TEXT_HTML)
@@ -268,6 +301,11 @@ public class Apis {
             data.put("tableView", true);
             data.put("queryBuilder", true);
             data.put("searchQueryBuilderFilters", gson.toJson(ContentUtils.getSearchFilters(page)));
+        }
+        if(page.getGeoJsonRecordConfig() != null) {
+            double lat = Double.valueOf(location.split(",")[0]);
+            double lon = Double.valueOf(location.split(",")[1]);
+            data.put("geojson", ContentUtils.getGeoJsonRecords(page, lat, lon, -1).toString());
         }
 
         String content = ContentUtils.getFreemarkerString("index.ftl", data);

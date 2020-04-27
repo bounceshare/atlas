@@ -127,6 +127,9 @@ public class ConfigPojo {
         @SerializedName("editControl")
         @Expose
         private EditControl editControl;
+        @SerializedName("geoJsonRecordConfig")
+        @Expose
+        private GeoJsonRecordConfig geoJsonRecordConfig;
 
         public String getPage() {
             return page;
@@ -262,6 +265,14 @@ public class ConfigPojo {
         public void setEditControl(EditControl editControl) {
             this.editControl = editControl;
         }
+
+        public GeoJsonRecordConfig getGeoJsonRecordConfig() {
+            return geoJsonRecordConfig;
+        }
+
+        public void setGeoJsonRecordConfig(GeoJsonRecordConfig geoJsonRecordConfig) {
+            this.geoJsonRecordConfig = geoJsonRecordConfig;
+        }
     }
 
     public class CrudConfig {
@@ -388,6 +399,75 @@ public class ConfigPojo {
 
         public void setEditFenceDataSchema(Map<String, Object> editFenceDataSchema) {
             this.editFenceDataSchema = editFenceDataSchema;
+        }
+    }
+
+    public class GeoJsonRecordConfig {
+        @SerializedName("jdbcUrl")
+        @Expose
+        private String jdbcUrl;
+        @SerializedName("dbUsername")
+        @Expose
+        private String dbUsername;
+        @SerializedName("dbPassword")
+        @Expose
+        private String dbPassword;
+        @SerializedName("schema")
+        @Expose
+        private String schema;
+        @SerializedName("table")
+        @Expose
+        private String table;
+        @SerializedName("geoJsonSqlQuery")
+        @Expose
+        private String geoJsonSqlQuery;
+
+        public String getJdbcUrl() {
+            return jdbcUrl;
+        }
+
+        public void setJdbcUrl(String jdbcUrl) {
+            this.jdbcUrl = jdbcUrl;
+        }
+
+        public String getDbUsername() {
+            return dbUsername;
+        }
+
+        public void setDbUsername(String dbUsername) {
+            this.dbUsername = dbUsername;
+        }
+
+        public String getDbPassword() {
+            return dbPassword;
+        }
+
+        public void setDbPassword(String dbPassword) {
+            this.dbPassword = dbPassword;
+        }
+
+        public String getSchema() {
+            return schema;
+        }
+
+        public void setSchema(String schema) {
+            this.schema = schema;
+        }
+
+        public String getTable() {
+            return table;
+        }
+
+        public void setTable(String table) {
+            this.table = table;
+        }
+
+        public String getGeoJsonSqlQuery() {
+            return geoJsonSqlQuery;
+        }
+
+        public void setGeoJsonSqlQuery(String geoJsonSqlQuery) {
+            this.geoJsonSqlQuery = geoJsonSqlQuery;
         }
     }
 
