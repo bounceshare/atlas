@@ -10,15 +10,10 @@ import com.bounce.utils.Log;
 import com.bounce.utils.dbmodels.public_.tables.Booking;
 import com.bounce.utils.dbmodels.public_.tables.records.BookingRecord;
 import com.bounce.utils.status.Status;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.apache.http.util.TextUtils;
 import org.apache.log4j.Logger;
-import org.jooq.Record;
-import org.jooq.Result;
-import org.jooq.exception.DataAccessException;
 import org.json.JSONObject;
 
 import javax.servlet.http.Cookie;
@@ -256,8 +251,13 @@ public class Apis {
         data.put("searchPage", page.getSearchPage());
         data.put("searchText", page.getSearchText());
         data.put("help", page.getHelp());
-        data.put("editFenceUrl", page.getEditFenceUrl());
-        data.put("editFenceDataSchema", page.getEditFenceDataSchema());
+        if(page.getEditControl() != null) {
+            data.put("editFenceUrl", page.getEditControl().getEditFenceUrl());
+            if(page.getEditControl().getEditFenceDataSchema() != null) {
+                data.put("editFenceDataSchema", gson.toJson(page.getEditControl().getEditFenceDataSchema()));
+            }
+            data.put("isEditControlSupported", page.getEditControl().IsEditControlSupported() + "");
+        }
         data.put("searchDataSchema", page.getSearchDataSchema());
         data.put("mapView", true);
         if(page.getCrudConfig() != null) {

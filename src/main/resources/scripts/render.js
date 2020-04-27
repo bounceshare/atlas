@@ -480,7 +480,7 @@
         var loc = $('#freemarker_location')[0].innerText;
         var zoom = $('#freemarker_zoom')[0].innerText;
         var autoRefresh = $('#freemarker_autorefresh')[0].innerText;
-        var editFence = $('#freemarker_editFenceUrl')[0].innerText;
+        var editFence = parseBoolean($('#freemarker_isEditControlSupported')[0].innerText);
 
         refresh = parseBoolean(autoRefresh);
 
@@ -513,7 +513,7 @@
             zoomOffset: -1
         }).addTo(map);
 
-        if(editFence != 'false') {
+        if(editFence) {
             addEditFenceControls();
         }
     }

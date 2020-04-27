@@ -118,18 +118,15 @@ public class ConfigPojo {
         @SerializedName("zoom")
         @Expose
         private int zoom;
-        @SerializedName("editFenceUrl")
-        @Expose
-        private String editFenceUrl;
-        @SerializedName("editFenceDataSchema")
-        @Expose
-        private Map<String, Object> editFenceDataSchema;
         @SerializedName("searchDataSchema")
         @Expose
         private Map<String, Object> searchDataSchema;
         @SerializedName("crudConfig")
         @Expose
         private CrudConfig crudConfig;
+        @SerializedName("editControl")
+        @Expose
+        private EditControl editControl;
 
         public String getPage() {
             return page;
@@ -242,22 +239,6 @@ public class ConfigPojo {
             this.zoom = zoom;
         }
 
-        public String getEditFenceUrl() {
-            return editFenceUrl;
-        }
-
-        public void setEditFenceUrl(String editFence) {
-            this.editFenceUrl = editFence;
-        }
-
-        public String getEditFenceDataSchema() {
-            return new GsonBuilder().disableHtmlEscaping().create().toJson(editFenceDataSchema);
-        }
-
-        public void setEditFenceDataSchema(Map<String, Object> editFenceForm) {
-            this.editFenceDataSchema = editFenceForm;
-        }
-
         public String getSearchDataSchema() {
             return new GsonBuilder().disableHtmlEscaping().create().toJson(searchDataSchema);
         }
@@ -272,6 +253,14 @@ public class ConfigPojo {
 
         public void setCrudConfig(CrudConfig crudConfig) {
             this.crudConfig = crudConfig;
+        }
+
+        public EditControl getEditControl() {
+            return editControl;
+        }
+
+        public void setEditControl(EditControl editControl) {
+            this.editControl = editControl;
         }
     }
 
@@ -363,6 +352,42 @@ public class ConfigPojo {
 
         public void setTable(String table) {
             this.table = table;
+        }
+    }
+
+    public class EditControl {
+        @SerializedName("editFenceUrl")
+        @Expose
+        private String editFenceUrl;
+        @SerializedName("editFenceDataSchema")
+        @Expose
+        private Map<String, Object> editFenceDataSchema;
+        @SerializedName("isEditControlSupported")
+        @Expose
+        private boolean isEditControlSupported;
+
+        public boolean IsEditControlSupported() {
+            return isEditControlSupported;
+        }
+
+        public void setIsEditControlSupported(boolean isEditControlSupported) {
+            this.isEditControlSupported = isEditControlSupported;
+        }
+
+        public String getEditFenceUrl() {
+            return editFenceUrl;
+        }
+
+        public void setEditFenceUrl(String editFenceUrl) {
+            this.editFenceUrl = editFenceUrl;
+        }
+
+        public Map<String, Object> getEditFenceDataSchema() {
+            return editFenceDataSchema;
+        }
+
+        public void setEditFenceDataSchema(Map<String, Object> editFenceDataSchema) {
+            this.editFenceDataSchema = editFenceDataSchema;
         }
     }
 
