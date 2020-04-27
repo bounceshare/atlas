@@ -63,9 +63,9 @@ public class Apis {
     @Path("/health")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes({MediaType.APPLICATION_JSON})
-    public void healthPost(@Suspended final AsyncResponse asyncResponse) {
+    public void healthPost(String inputString, @Suspended final AsyncResponse asyncResponse) {
         logger.info("/health");
-        logger.info("/health");
+        logger.info("RequestParams : " + inputString);
         try {
             asyncResponse.resume(Response.ok().entity(gson.toJson(StatusPojo.buildSuccess(Maps.newLinkedHashMap()))).build());
             return;
