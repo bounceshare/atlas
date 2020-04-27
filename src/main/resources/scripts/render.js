@@ -532,6 +532,8 @@
         var autoRefresh = $('#freemarker_autorefresh')[0].innerText;
         var editFence = parseBoolean($('#freemarker_isEditControlSupported')[0].innerText);
         var geojson = $('#freemarker_geojson')[0].innerText;
+        var tileserverurl = $('#freemarker_tileserverurl')[0].innerText;
+        var tileserverid = $('#freemarker_tileserverid')[0].innerText;
 
         refresh = parseBoolean(autoRefresh);
 
@@ -554,12 +556,9 @@
         map.on('moveend', onMapEvent);
         isLoading = false;
 
-        L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1Ijoic3VzaGVlbGsiLCJhIjoiY2s3NHR3YjN1MDhxOTNrcGxreGM2bmxwdiJ9.h0asAA-St15DH7sCIc0drw', {
+        L.tileLayer(tileserverurl, {
             maxZoom: 18,
-            attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
-                '<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
-                'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
-            id: 'mapbox/streets-v11',
+            id: tileserverid,
             tileSize: 512,
             zoomOffset: -1
         }).addTo(map);

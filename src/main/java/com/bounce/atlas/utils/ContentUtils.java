@@ -1,8 +1,6 @@
 package com.bounce.atlas.utils;
 
 import com.bounce.atlas.pojo.*;
-import com.bounce.utils.BounceUtils;
-import com.bounce.utils.DatabaseConnector;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.gson.Gson;
@@ -40,7 +38,7 @@ public class ContentUtils {
                 throw new IOException("File not found");
             }
         } catch (Exception e) {
-            BounceUtils.logError(e);
+            Utils.logError(e);
             e.printStackTrace();
         }
         return content.toString();
@@ -54,7 +52,7 @@ public class ContentUtils {
                 throw new IOException("Resource not found");
             }
         } catch (Exception e) {
-            BounceUtils.logError(e);
+            Utils.logError(e);
             e.printStackTrace();
         }
         return content;
@@ -80,7 +78,7 @@ public class ContentUtils {
 
             content.append(stringWriter.toString());
         } catch (Exception e) {
-            BounceUtils.logError(e);
+            Utils.logError(e);
             e.printStackTrace();
         }
 
@@ -123,6 +121,8 @@ public class ContentUtils {
 
         data.put("tabs", getRootPages(isAuth));
         data.put("nestedTabs", getNestedPages(isAuth));
+        data.put("tileserverurl", PropertiesLoader.getProperty("tileserver.url"));
+        data.put("tileserverid", PropertiesLoader.getProperty("tileserver.id"));
         if(isAuth) {
             data.put("auth", isAuth);
         }
@@ -345,7 +345,7 @@ public class ContentUtils {
             return result;
         } catch (Exception e) {
             e.printStackTrace();
-            BounceUtils.logError(e);
+            Utils.logError(e);
         }
         if(isCustomQuery) {
             result = getDbRecords(page, null, 1);
@@ -427,7 +427,7 @@ public class ContentUtils {
                             List<String> enums = getEnumValues(page, column.getValue().getDataType().getSQLDataType().getTypeName());
                             map.put("enum", enums);
                         } catch (Exception e) {
-                            BounceUtils.logError(e);
+                            Utils.logError(e);
                             e.printStackTrace();
                         }
                     }
@@ -595,7 +595,7 @@ public class ContentUtils {
                             operators.add("is_null");
                             operators.add("is_not_null");
                         } catch (Exception e) {
-                            BounceUtils.logError(e);
+                            Utils.logError(e);
                             e.printStackTrace();
                         }
                     }

@@ -23,6 +23,8 @@
 <div id="freemarker_queryBuilder" hidden><#if queryBuilder??>true<#else></#if></div>
 <div id="freemarker_searchQueryBuilderFilters" hidden><#if searchQueryBuilderFilters??>${searchQueryBuilderFilters}<#else></#if></div>
 <div id="freemarker_geojson" hidden><#if geojson??>${geojson}<#else></#if></div>
+<div id="freemarker_tileserverurl" hidden><#if tileserverurl??>${tileserverurl}<#else></#if></div>
+<div id="freemarker_tileserverid" hidden><#if tileserverid??>${tileserverid}<#else></#if></div>
 
 <#include "/sidebar.ftl">
 <div id="mapDiv" style="height:100%;" <#if !mapView> hidden </#if> ></div>

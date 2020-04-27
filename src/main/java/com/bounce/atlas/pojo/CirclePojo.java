@@ -1,12 +1,5 @@
 package com.bounce.atlas.pojo;
 
-import com.bounce.utils.BounceUtils;
-import com.bounce.utils.dbmodels.public_.tables.records.HubRecord;
-import com.google.common.collect.Maps;
-import org.apache.http.util.TextUtils;
-
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 public class CirclePojo {

@@ -1,10 +1,5 @@
 package com.bounce.atlas.pojo;
 
-import com.bounce.utils.BounceUtils;
-import com.google.common.collect.Lists;
-
-import java.util.List;
-
 public class PointPojo {
 
     public Double lat;

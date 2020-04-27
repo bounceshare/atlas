@@ -1,9 +1,5 @@
 package com.bounce.atlas.pojo;
 
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-import javafx.util.Pair;
-
 import java.util.List;
 import java.util.Map;
 

@@ -13,6 +13,36 @@
       "searchUrl" : "/test/search",
       "autoRefresh" : "true",
       "help" : "This page shows a small peek into Atlas. Go ahead and configure in Options to setup your own maps."
+    },
+    {
+      "page": "Test Draw Objects",
+      "pageId": "Covid19",
+      "path": "/draw_test",
+      "autoRefresh": "false",
+      "help": "Draw paths, fences, circles, markers",
+      "auth": "open",
+      "zoom": 5,
+      "editControl": {
+        "editFenceUrl": "/health",
+        "editFenceDataSchema": {
+          "name": {
+            "title": "Fence Name",
+            "description": "Please specify a name to identify this geo fence",
+            "type": "string"
+          },
+          "type": {
+            "title": "Type",
+            "description": "Fence type",
+            "type": "string",
+            "enum": [
+              "Red Zone",
+              "Black Zone",
+              "Blue Zone"
+            ]
+          }
+        },
+        "isEditControlSupported": true
+      }
     }
   ]
 }
