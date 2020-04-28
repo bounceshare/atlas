@@ -171,7 +171,6 @@ public class Apis {
     @Path("/test/search")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes({MediaType.APPLICATION_JSON})
-    @GoogleAuth
     public void testSearch(String inputString, @Suspended final AsyncResponse asyncResponse) {
         logger.info("/test/search");
         try {
