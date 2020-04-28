@@ -415,16 +415,28 @@ public class ContentUtils {
                     break;
                 case "other":
                     map.put("type", "string");
+                    if(columnRecordMap.get(column.getKey()).get("data_type").equals("USER-DEFINED")) {
+                        try {
+                            //mostly enum
+                            String udtName = columnRecordMap.get(column.getKey()).get("udt_name").toString();
+                            List<String> enums = getEnumValues(page, udtName);
+                            map.put("enum", enums);
+                        } catch (Exception e) {
+                            Utils.logError(e);
+                            e.printStackTrace();
+                        }
+                    }
                     break;
                 case "bigint":
                     map.put("type", "string");
                     break;
                 default:
                     map.put("type", "string");
-                    if(column.getValue().getDataType().isEnum()) {
+                    if(columnRecordMap.get(column.getKey()).get("data_type").equals("USER-DEFINED")) {
                         try {
                             //mostly enum
-                            List<String> enums = getEnumValues(page, column.getValue().getDataType().getSQLDataType().getTypeName());
+                            String udtName = columnRecordMap.get(column.getKey()).get("udt_name").toString();
+                            List<String> enums = getEnumValues(page, udtName);
                             map.put("enum", enums);
                         } catch (Exception e) {
                             Utils.logError(e);
@@ -544,6 +556,17 @@ public class ContentUtils {
     public static List<Map<String, Object>> getSearchFilters(ConfigPojo.Page page) {
         List<Map<String, Object>> filters = Lists.newLinkedList();
 
+        String infosql = "SELECT * FROM information_schema.columns WHERE table_schema = '" + page.getCrudConfig().getSchema() + "' AND table_name   = '" + page.getCrudConfig().getTable() + "';";
+        Result<Record> columnRecords = DatabaseConnector.getDb()
+                .getConnector(page.getCrudConfig().getJdbcUrl(), page.getCrudConfig().getDbUsername(),
+                        page.getCrudConfig().getDbPassword())
+                .fetch(infosql);
+
+        Map<String, Record> columnRecordMap = Maps.newLinkedHashMap();
+        for(Record columnRecord : columnRecords) {
+            columnRecordMap.put(columnRecord.get("column_name").toString(), columnRecord);
+        }
+
         Map<String, Field> columns = getColumns(page);
         for(Map.Entry<String, Field> column : columns.entrySet()) {
             Map<String, Object> map = Maps.newLinkedHashMap();
@@ -574,6 +597,27 @@ public class ContentUtils {
                     break;
                 case "other":
                     map.put("type", "string");
+                    if(columnRecordMap.get(column.getKey()).get("data_type").equals("USER-DEFINED")) {
+                        try {
+                            //mostly enum
+                            String udtName = columnRecordMap.get(column.getKey()).get("udt_name").toString();
+                            List<String> enums = getEnumValues(page, udtName);
+
+                            map.put("input", "select");
+                            for(String enumVal : enums) {
+                                values.put(enumVal, enumVal);
+                            }
+                            operators.add("equal");
+                            operators.add("not_equal");
+                            operators.add("in");
+                            operators.add("not_in");
+                            operators.add("is_null");
+                            operators.add("is_not_null");
+                        } catch (Exception e) {
+                            Utils.logError(e);
+                            e.printStackTrace();
+                        }
+                    }
                     break;
                 case "bigint":
                     map.put("type", "string");
@@ -584,7 +628,8 @@ public class ContentUtils {
                     if(column.getValue().getDataType().isEnum()) {
                         try {
                             //mostly enum
-                            List<String> enums = getEnumValues(page, column.getValue().getDataType().getSQLDataType().getTypeName());
+                            String udtName = columnRecordMap.get(column.getKey()).get("udt_name").toString();
+                            List<String> enums = getEnumValues(page, udtName);
                             for(String enumVal : enums) {
                                 values.put(enumVal, enumVal);
                             }
