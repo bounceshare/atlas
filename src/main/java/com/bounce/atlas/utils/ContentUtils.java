@@ -123,6 +123,7 @@ public class ContentUtils {
         data.put("nestedTabs", getNestedPages(isAuth));
         data.put("tileserverurl", PropertiesLoader.getProperty("tileserver.url"));
         data.put("tileserverid", PropertiesLoader.getProperty("tileserver.id"));
+        data.put("googleclientid", PropertiesLoader.getProperty("google.clientid"));
         if(isAuth) {
             data.put("auth", isAuth);
         }

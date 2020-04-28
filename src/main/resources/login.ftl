@@ -5,8 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="${title}"></meta>
-    <meta name="google-signin-client_id"
-          content="665442752379-qrreooo8o3q27svvkn1i52s3v2jr3plp.apps.googleusercontent.com"></meta>
+    <meta name="google-signin-client_id" content="${googleclientid}"></meta>
 
     <link rel="shortcut icon" type="image/png" href="${favicon}">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
