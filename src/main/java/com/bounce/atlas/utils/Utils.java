@@ -1,9 +1,6 @@
 package com.bounce.atlas.utils;
 
-import com.amazonaws.util.IOUtils;
-import com.bounce.utils.BounceUtils;
-import com.bounce.utils.Log;
-import com.bounce.utils.Pair;
+import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
@@ -16,10 +13,7 @@ import org.json.JSONObject;
 import redis.clients.jedis.Jedis;
 
 import javax.net.ssl.SSLContext;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.StringReader;
+import java.io.*;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -42,7 +36,7 @@ public class Utils {
             return dateTime.toInstant().getMillis();
         } catch (ParseException e) {
             e.printStackTrace();
-            BounceUtils.logError(e);
+            Utils.logError(e);
         }
         return -1;
     }
@@ -55,7 +49,7 @@ public class Utils {
             return dateTime.toInstant().getMillis();
         } catch (ParseException e) {
             e.printStackTrace();
-            BounceUtils.logError(e);
+            Utils.logError(e);
         }
         return -1;
     }
@@ -67,7 +61,7 @@ public class Utils {
             return date;
         } catch (Exception e) {
             e.printStackTrace();
-            BounceUtils.logError(e);
+            Utils.logError(e);
         }
         return null;
     }
@@ -80,7 +74,7 @@ public class Utils {
             return dateTime.toInstant().getMillis();
         } catch (ParseException e) {
             e.printStackTrace();
-            BounceUtils.logError(e);
+            Utils.logError(e);
         }
         return -1;
     }
@@ -96,8 +90,8 @@ public class Utils {
             Properties prop = new Properties();
             prop.load(inputStream);
 
-            String redisHost = prop.getProperty("redis.host");
-            Integer redisPort = Integer.parseInt(prop.getProperty("redis.port"));
+            String redisHost = PropertiesLoader.getProperty("redis.host");
+            Integer redisPort = Integer.parseInt(PropertiesLoader.getProperty("redis.port"));
 
             return new Pair<>(redisHost, redisPort);
         } catch (IOException e) {
@@ -169,6 +163,17 @@ public class Utils {
             return body;
         } else {
             return null;
+        }
+    }
+
+    public static void logError(Exception e) {
+        if (e != null) {
+            Logger logger = Log.getLogger("Exception");
+            StringWriter sw = new StringWriter();
+            PrintWriter pw = new PrintWriter(sw);
+            e.printStackTrace(pw);
+            String stackTrace = sw.toString();
+            logger.error(stackTrace);
         }
     }
 

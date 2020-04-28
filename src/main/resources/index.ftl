@@ -23,10 +23,13 @@
 <div id="freemarker_queryBuilder" hidden><#if queryBuilder??>true<#else></#if></div>
 <div id="freemarker_searchQueryBuilderFilters" hidden><#if searchQueryBuilderFilters??>${searchQueryBuilderFilters}<#else></#if></div>
 <div id="freemarker_geojson" hidden><#if geojson??>${geojson}<#else></#if></div>
+<div id="freemarker_tileserverurl" hidden><#if tileserverurl??>${tileserverurl}<#else></#if></div>
+<div id="freemarker_tileserverid" hidden><#if tileserverid??>${tileserverid}<#else></#if></div>
 
 <#include "/sidebar.ftl">
 <div id="mapDiv" style="height:100%;" <#if !mapView> hidden </#if> ></div>
 <#if recordsDataString??><div><table class="table table-striped table-bordered" id="crudTable" width="100%"></table></div><#else></#if>
+<#if isCreateAllowed??><#if isCreateAllowed><a href="#" onclick="createRecord()" style="position: absolute;left: 50%;" class="btn btn-outline-primary">Add</a></#if><#else></#if>
 <#include "/scripts/render.js">
 <#include "/scripts/layers.js">
 <#include "/scripts/search.js">

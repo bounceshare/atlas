@@ -67,7 +67,6 @@
           "Booking Id": 2220857,
           "Est. Time": 3318.0,
           "Status": "completed",
-          "Timeline": "<b><a href='#' onclick='showTimeline(\"/apis/booking/events\", 2220857, \"Bike Event Timeline - 2220857\");'>Events</a></b>",
           "User Id": 140620,
           "Trip Created At": "2020-02-12 15:03:42.395",
           "Trip Started At": "2020-02-12 15:04:17.09",

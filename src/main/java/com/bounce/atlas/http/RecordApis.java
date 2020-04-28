@@ -2,13 +2,8 @@ package com.bounce.atlas.http;
 
 import com.bounce.atlas.pojo.ConfigPojo;
 import com.bounce.atlas.pojo.FormPojo;
-import com.bounce.atlas.utils.ContentUtils;
-import com.bounce.atlas.utils.GoogleAuth;
-import com.bounce.atlas.utils.Utils;
-import com.bounce.utils.BounceUtils;
-import com.bounce.utils.DatabaseConnector;
-import com.bounce.utils.Log;
-import com.bounce.utils.status.Status;
+import com.bounce.atlas.pojo.StatusPojo;
+import com.bounce.atlas.utils.*;
 import com.google.common.collect.Maps;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -62,7 +57,7 @@ public class RecordApis {
             Map<Object, Object> response = Maps.newHashMap();
             response.put("records", obj);
 
-            asyncResponse.resume(Response.ok().entity(gson.toJson(Status.buildSuccess(response))).build());
+            asyncResponse.resume(Response.ok().entity(gson.toJson(StatusPojo.buildSuccess(response))).build());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -96,7 +91,7 @@ public class RecordApis {
             }
 
             response.put("form", form);
-            asyncResponse.resume(Response.ok().entity(gson.toJson(Status.buildSuccess(response))).build());
+            asyncResponse.resume(Response.ok().entity(gson.toJson(StatusPojo.buildSuccess(response))).build());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -173,16 +168,16 @@ public class RecordApis {
 
             if(result.size() > 0) {
                 Map<Object, Object> response = Maps.newHashMap();
-                asyncResponse.resume(Response.ok().entity(gson.toJson(Status.buildSuccess(response))).build());
+                asyncResponse.resume(Response.ok().entity(gson.toJson(StatusPojo.buildSuccess(response))).build());
             } else {
-                asyncResponse.resume(Response.status(500).entity(gson.toJson(Status.buildFailure(500,  "Error  : No records deleted"))));
+                asyncResponse.resume(Response.status(500).entity(gson.toJson(StatusPojo.buildFailure(500,  "Error  : No records deleted"))));
                 return;
             }
 
         } catch (Exception e) {
             e.printStackTrace();
-            BounceUtils.logError(e);
-            asyncResponse.resume(Response.status(500).entity(gson.toJson(Status.buildFailure(500,  "Error  : " + e.getMessage()))));
+            Utils.logError(e);
+            asyncResponse.resume(Response.status(500).entity(gson.toJson(StatusPojo.buildFailure(500,  "Error  : " + e.getMessage()))));
         }
     }
 
@@ -286,12 +281,12 @@ public class RecordApis {
 
 
             Map<Object, Object> response = Maps.newHashMap();
-            asyncResponse.resume(Response.ok().entity(gson.toJson(Status.buildSuccess(response))).build());
+            asyncResponse.resume(Response.ok().entity(gson.toJson(StatusPojo.buildSuccess(response))).build());
             return;
         } catch (Exception e) {
             e.printStackTrace();
-            BounceUtils.logError(e);
-            asyncResponse.resume(Response.status(500).entity(gson.toJson(Status.buildFailure(500,  "Error  : " + e.getMessage()))));
+            Utils.logError(e);
+            asyncResponse.resume(Response.status(500).entity(gson.toJson(StatusPojo.buildFailure(500,  "Error  : " + e.getMessage()))));
         }
 
     }
@@ -313,7 +308,7 @@ public class RecordApis {
             ConfigPojo.Page page = ContentUtils.getPageFromPagePath(pagePath);
             Map<String,Object> oldData = ContentUtils.getFormValues(page, primaryKeyVal);
             if(oldData.size() < 1) {
-                asyncResponse.resume(Response.status(500).entity(gson.toJson(Status.buildFailure(500,  "Error  : No record found to delete"))));
+                asyncResponse.resume(Response.status(500).entity(gson.toJson(StatusPojo.buildFailure(500,  "Error  : No record found to delete"))));
                 return;
             }
 
@@ -329,16 +324,16 @@ public class RecordApis {
 
             if(result.size() > 0) {
                 Map<Object, Object> response = Maps.newHashMap();
-                asyncResponse.resume(Response.ok().entity(gson.toJson(Status.buildSuccess(response))).build());
+                asyncResponse.resume(Response.ok().entity(gson.toJson(StatusPojo.buildSuccess(response))).build());
             } else {
-                asyncResponse.resume(Response.status(500).entity(gson.toJson(Status.buildFailure(500,  "Error  : No records deleted"))));
+                asyncResponse.resume(Response.status(500).entity(gson.toJson(StatusPojo.buildFailure(500,  "Error  : No records deleted"))));
                 return;
             }
 
         } catch (Exception e) {
             e.printStackTrace();
-            BounceUtils.logError(e);
-            asyncResponse.resume(Response.status(500).entity(gson.toJson(Status.buildFailure(500,  "Error  : " + e.getMessage()))));
+            Utils.logError(e);
+            asyncResponse.resume(Response.status(500).entity(gson.toJson(StatusPojo.buildFailure(500,  "Error  : " + e.getMessage()))));
         }
     }
 

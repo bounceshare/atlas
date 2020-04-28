@@ -1,15 +1,7 @@
 package com.bounce.atlas.http;
 
 import com.bounce.atlas.pojo.*;
-import com.bounce.atlas.utils.AuthUtils;
-import com.bounce.atlas.utils.ContentUtils;
-import com.bounce.atlas.utils.GoogleAuth;
-import com.bounce.utils.BounceUtils;
-import com.bounce.utils.DatabaseConnector;
-import com.bounce.utils.Log;
-import com.bounce.utils.dbmodels.public_.tables.Booking;
-import com.bounce.utils.dbmodels.public_.tables.records.BookingRecord;
-import com.bounce.utils.status.Status;
+import com.bounce.atlas.utils.*;
 import com.google.common.collect.Maps;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -53,18 +45,12 @@ public class Apis {
     public void health(@Suspended final AsyncResponse asyncResponse) {
         logger.info("/health");
         try {
-            List<BookingRecord>
-                    bookings = DatabaseConnector.getDb().getReadDbConnector().selectFrom(Booking.BOOKING).limit(10).fetch();
-            if(bookings == null || bookings.size() < 10) {
-                asyncResponse.resume(Response.status(400).entity(gson.toJson(Status.buildFailure(400, "Error : Unable to fetch required number of records : " + bookings))).build());
-                return;
-            }
-            asyncResponse.resume(Response.ok().entity(gson.toJson(Status.buildSuccess())).build());
+            asyncResponse.resume(Response.ok().entity(gson.toJson(StatusPojo.buildSuccess(Maps.newLinkedHashMap()))).build());
             return;
         } catch (Exception e) {
             e.printStackTrace();
-            BounceUtils.logError(e);
-            asyncResponse.resume(Response.status(400).entity(gson.toJson(Status.buildFailure(400, "Error : " + e.getMessage()))).build());
+            Utils.logError(e);
+            asyncResponse.resume(Response.status(400).entity(gson.toJson(StatusPojo.buildFailure(400, "Error : " + e.getMessage()))).build());
         }
     }
 
@@ -77,21 +63,16 @@ public class Apis {
     @Path("/health")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes({MediaType.APPLICATION_JSON})
-    public void healthPost(@Suspended final AsyncResponse asyncResponse) {
+    public void healthPost(String inputString, @Suspended final AsyncResponse asyncResponse) {
         logger.info("/health");
+        logger.info("RequestParams : " + inputString);
         try {
-            List<BookingRecord>
-                    bookings = DatabaseConnector.getDb().getReadDbConnector().selectFrom(Booking.BOOKING).limit(10).fetch();
-            if(bookings == null || bookings.size() < 10) {
-                asyncResponse.resume(Response.status(400).entity(gson.toJson(Status.buildFailure(400, "Error : Unable to fetch required number of records : " + bookings))).build());
-                return;
-            }
-            asyncResponse.resume(Response.ok().entity(gson.toJson(Status.buildSuccess())).build());
+            asyncResponse.resume(Response.ok().entity(gson.toJson(StatusPojo.buildSuccess(Maps.newLinkedHashMap()))).build());
             return;
         } catch (Exception e) {
             e.printStackTrace();
-            BounceUtils.logError(e);
-            asyncResponse.resume(Response.status(400).entity(gson.toJson(Status.buildFailure(400, "Error : " + e.getMessage()))).build());
+            Utils.logError(e);
+            asyncResponse.resume(Response.status(400).entity(gson.toJson(StatusPojo.buildFailure(400, "Error : " + e.getMessage()))).build());
         }
     }
 
@@ -105,7 +86,7 @@ public class Apis {
             return ContentUtils.getContentAsStream(path);
         } catch (IOException e) {
             e.printStackTrace();
-            BounceUtils.logError(e);
+            Utils.logError(e);
         }
         return null;
     }
@@ -120,7 +101,7 @@ public class Apis {
             return ContentUtils.getContent(path);
         } catch (IOException e) {
             e.printStackTrace();
-            BounceUtils.logError(e);
+            Utils.logError(e);
         }
         return "404.ftl";
     }
@@ -179,18 +160,17 @@ public class Apis {
             String configData = jsonObject.optString("config");
             logger.info("Config To Update : " + configData);
             ContentUtils.updateConfigPojo(configData);
-            asyncResponse.resume(Response.ok().entity(gson.toJson(Status.buildSuccess())).build());
+            asyncResponse.resume(Response.ok().entity(gson.toJson(StatusPojo.buildSuccess())).build());
         } catch (Exception e) {
             e.printStackTrace();
         }
-        asyncResponse.resume(Response.status(400).entity(gson.toJson(Status.buildFailure(400, "Couldn't update the config"))).build());
+        asyncResponse.resume(Response.status(400).entity(gson.toJson(StatusPojo.buildFailure(400, "Couldn't update the config"))).build());
     }
 
     @POST
     @Path("/test/search")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes({MediaType.APPLICATION_JSON})
-    @GoogleAuth
     public void testSearch(String inputString, @Suspended final AsyncResponse asyncResponse) {
         logger.info("/test/search");
         try {

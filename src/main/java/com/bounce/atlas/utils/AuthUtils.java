@@ -4,6 +4,11 @@ import com.nimbusds.jose.JWSObject;
 import org.apache.http.util.TextUtils;
 import org.json.JSONObject;
 
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
+
 public class AuthUtils {
 
     public static boolean isAuth(String token) {
@@ -13,7 +18,7 @@ public class AuthUtils {
                 JSONObject jsonObject = new JSONObject(jwsObject.getPayload().toJSONObject().toJSONString());
                 String domain = jsonObject.optString("hd");
                 String email_verified = jsonObject.optString("email_verified");
-                if (domain.equals("bounceshare.com") && email_verified.equals("true")) {
+                if (!TextUtils.isEmpty(getDomain()) && domain.equals(getDomain()) && email_verified.equals("true")) {
                     return true;
                 }
             }
@@ -21,6 +26,10 @@ public class AuthUtils {
             e.printStackTrace();
         }
         return false;
+    }
+
+    public static String getDomain() {
+        return PropertiesLoader.getProperty("googleauth.domain");
     }
 
 }
