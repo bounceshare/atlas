@@ -111,7 +111,7 @@
 
         var isCreateAllowed = $('#freemarker_isCreateAllowed')[0].innerText;
         if(isCreateAllowed && isCreateAllowed.length > 0) {
-            $('#crudTable_paginate').children("ul.pagination")[0].innerHTML += '<li class="paginate_button page-item" id="crudTable_add"><a href="#" aria-controls="crudTable" onclick="createRecord()" data-dt-idx="9" tabindex="0" class="page-link">Add</a></li>';
+//            $('#crudTable_paginate').children("ul.pagination")[0].innerHTML += '<li class="paginate_button page-item" id="crudTable_add"><a href="#" aria-controls="crudTable" onclick="createRecord()" data-dt-idx="9" tabindex="0" class="page-link">Add</a></li>';
         }
     }
 
