@@ -83,7 +83,7 @@
                     var links = "";
                     if("edit" in options) {
                         var params = options.edit;
-                        links += "<b><a href='#' onclick='editRecord(" + params + ")'>Edit</a></b> "
+                        links += "<b><a href='#' onclick='editRecord(" + params + ")'>Edit</a></b><br/> "
                     }
                     if("delete" in options) {
                         links += "<b><a href='#' onclick='deleteRecord(" + params + ")'>Delete</a></b> "
