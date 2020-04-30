@@ -365,7 +365,10 @@
     }
 
     function renderGeoJsonArray(geojson, fitBounds = true) {
-        geolayers = createLayersFromJson(geojson);
+        var geolayers = createLayersFromJson(geojson);
+        if(geojson.length < 1) {
+            return;
+        }
         for(var i = 0; i < geojson.length; i++) {
             renderGeoJsonObjects(geojson[i], fitBounds);
         }

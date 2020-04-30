@@ -16,6 +16,14 @@
 
         var searchUrl = $('#freemarker_searchurl')[0].innerText;
 
+        // check if geojson is non emplty. If so, hit geojson search api
+        var geojson = $('#freemarker_geojson')[0].innerText;
+        if(geojson && geojson.length > 0) {
+            searchGeojsonNearby();
+            return;
+        }
+
+        console.log("Origin here");
         httpPost(searchUrl, data, function(response) {
             invalidateMap(response.data.markers, response.data.fences, response.data.circles, response.data.paths, response.data.events, response.data.form, response.data.isSidebar, false, response.data.autoRefresh, response.data);
             showLoader(false);
@@ -27,15 +35,6 @@
     function onMapEvent(event) {
         console.log("Layers onMapEvent");
         console.log(event);
-
-        // check if geojson is non emplty. If so, hit geojson search api
-        var geojson = $('#freemarker_geojson')[0].innerText;
-        if(geojson && geojson.length > 0 && !isLoading && refresh) {
-            setTimeout(function() {
-                searchGeojsonNearby();
-            }, 1500);
-            return;
-        }
 
         if(isLoading || !refresh) {
             return;
