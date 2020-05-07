@@ -138,6 +138,18 @@
         window.location = path;
     }
 
+    function setupDateTimeElement() {
+        if($('input[type="datetime-local"]') && $('input[type="datetime-local"]').length > 0 ) {
+            $('input[type="datetime-local"]').datetimepicker({format: "YYYY-MM-DDTHH:mm"});
+        }
+        if($('input[type="date"]') && $('input[type="date"]').length > 0 ) {
+            $('input[type="date"]').datetimepicker({format: "YYYY-MM-DD"});
+        }
+        if($('input[type="datetime"]') && $('input[type="datetime"]').length > 0 ) {
+            $('input[type="datetime"]').datetimepicker({format: "YYYY-MM-DDTHH:mm"});
+        }
+    }
+
     $(document).ready(function(){
         try {
             $('[data-toggle="popover"]').popover();
@@ -153,6 +165,8 @@
             }
 
         });
+
+        setupDateTimeElement();
     });
 
 </script>
