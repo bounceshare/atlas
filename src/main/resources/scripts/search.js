@@ -124,6 +124,7 @@
         data.lon = coords[1];
         data.radius = getMapRadiusInMeters();
         data.drawnObjs = drawnObjects;
+        data.drawnObjsOld = drawnObjectsOld;
         if(isLoading) {
             return;
         }

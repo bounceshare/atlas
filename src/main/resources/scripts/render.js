@@ -27,6 +27,7 @@
     var sidebar = null;
 
 //    var drawnObjs = [];
+    var drawnObjectsOld = [];
 
     function bootstrap() {
         console.log("bootstrap()")
@@ -573,6 +574,8 @@
             geojson = JSON.parse(geojson);
             renderGeoJsonArray(geojson, true);
         }
+        drawnObjectsOld = getDrawnObjects();
+
     }
 
     function onMapEvent(event) {
