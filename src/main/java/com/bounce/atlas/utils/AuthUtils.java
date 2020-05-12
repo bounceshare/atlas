@@ -13,19 +13,19 @@ public class AuthUtils {
 
     public static boolean isAuth(String token) {
         try {
-//            if(!TextUtils.isEmpty(token)) {
-//                JWSObject jwsObject = JWSObject.parse(token);
-//                JSONObject jsonObject = new JSONObject(jwsObject.getPayload().toJSONObject().toJSONString());
-//                String domain = jsonObject.optString("hd");
-//                String email_verified = jsonObject.optString("email_verified");
-//                if (!TextUtils.isEmpty(getDomain()) && domain.equals(getDomain()) && email_verified.equals("true")) {
-//                    return true;
-//                }
-//            }
+            if(!TextUtils.isEmpty(token)) {
+                JWSObject jwsObject = JWSObject.parse(token);
+                JSONObject jsonObject = new JSONObject(jwsObject.getPayload().toJSONObject().toJSONString());
+                String domain = jsonObject.optString("hd");
+                String email_verified = jsonObject.optString("email_verified");
+                if (!TextUtils.isEmpty(getDomain()) && domain.equals(getDomain()) && email_verified.equals("true")) {
+                    return true;
+                }
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return true;
+        return false;
     }
 
     public static String getDomain() {
