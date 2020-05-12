@@ -96,7 +96,7 @@
                 }
                 var drawId = uuid();
                 if(isEditMode) {
-                    popupInfo += "<div>" + "Edit Data" + " : " + "<a href='#' onclick=showFenceModal('" + drawId + "');>Click Here</a>" + "</div>";
+                    popupInfo += getEditModePopupInfo(drawId);
                 }
                 popupInfo += "</div></div><br/>";
                 marker.bindPopup(popupInfo, {autoClose: false});
@@ -136,7 +136,7 @@
                 }
                 var drawId = uuid();
                 if(isEditMode) {
-                    popupInfo += "<div>" + "Edit Data" + " : " + "<a href='#' onclick=showFenceModal('" + drawId + "');>Click Here</a>" + "</div>";
+                    popupInfo += getEditModePopupInfo(drawId);
                 }
                 popupInfo += "</div></div><br/>";
                 fence.bindPopup(popupInfo, {autoClose: false});
@@ -181,7 +181,7 @@
                 }
                 var drawId = uuid();
                 if(isEditMode) {
-                    popupInfo += "<div>" + "Edit Data" + " : " + "<a href='#' onclick=showFenceModal('" + drawId + "');>Click Here</a>" + "</div>";
+                    popupInfo += getEditModePopupInfo(drawId);
                 }
                 popupInfo += "</div></div><br/>";
                 path.bindPopup(popupInfo, {autoClose: false});
@@ -220,7 +220,7 @@
                 }
                 var drawId = uuid();
                 if(isEditMode) {
-                    popupInfo += "<div>" + "Edit Data" + " : " + "<a href='#' onclick=showFenceModal('" + drawId + "');>Click Here</a>" + "</div>";
+                    popupInfo += getEditModePopupInfo(drawId);
                 }
                 popupInfo += "</div></div><br/>";
                 circle.bindPopup(popupInfo, {autoClose: false});
@@ -416,9 +416,7 @@
                     }
                 }
                 if(isEditMode) {
-                    popupInfo += "<div>" + "Edit Data" + " : " + "<a href='#' onclick=showFenceModal('" + drawId + "');>Click Here</a>" + "</div>";
-                    popupInfo += "<div>" + "Update changes" + " : " + "<a href='#' onclick=updateSelectedGeom('" + drawId + "');>Click Here</a>" + "</div>";
-                    popupInfo += "<div>" + "Delete" + " : " + "<a href='#' onclick=deleteSelectedGeom('" + drawId + "');>Click Here</a>" + "</div>";
+                    popupInfo += getEditModePopupInfo(drawId);
                 }
                 popupInfo += "</div></div><br/>";
                 geoLayer.bindPopup(popupInfo, {autoClose: false});
@@ -429,6 +427,13 @@
         if(fitBounds) {
             map.fitBounds(geoJSONLayers.getBounds());
         }
+    }
+
+    function getEditModePopupInfo(drawId){
+        popupInfo = "<div>" + "Edit Data" + " : " + "<a href='#' onclick=showFenceModal('" + drawId + "');>Click Here</a>" + "</div>";
+        popupInfo += "<div>" + "Update changes" + " : " + "<a href='#' onclick=updateSelectedGeom('" + drawId + "');>Click Here</a>" + "</div>";
+        popupInfo += "<div>" + "Delete" + " : " + "<a href='#' onclick=deleteSelectedGeom('" + drawId + "');>Click Here</a>" + "</div>";
+        return popupInfo;
     }
 
     function getDrawnObjects() {
@@ -621,9 +626,7 @@
             var popupInfo = "<br/><div class='border'><div class='p-2 text-monospace'>";
             popupInfo += "<div>" + "Coords" + " : " + JSON.stringify(coords, null, 3) + "</div>";
             if(editFenceDataSchema) {
-                popupInfo += "<div>" + "Edit Data" + " : " + "<a href='#' onclick=showFenceModal('" + drawId + "');>Click Here</a>" + "</div>";
-                popupInfo += "<div>" + "Update changes" + " : " + "<a href='#' onclick=updateSelectedGeom('" + drawId + "');>Click Here</a>" + "</div>";
-                popupInfo += "<div>" + "Delete" + " : " + "<a href='#' onclick=deleteSelectedGeom('" + drawId + "');>Click Here</a>" + "</div>";
+                popupInfo += getEditModePopupInfo(drawId);
             }
             popupInfo += "</div></div><br/>";
             e.layer.bindPopup(popupInfo, {autoClose: false});
