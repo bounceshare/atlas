@@ -267,10 +267,6 @@ public class ContentUtils {
         JSONArray geoJsonArray = new JSONArray();
         if(page.getGeoJsonRecordConfig() != null) {
             String sql = page.getGeoJsonRecordConfig().getGeoJsonSqlQuery();
-            if(page.getEditControl().IsEditControlSupported()){
-                //TODO get sql from config
-                sql = "select st_asgeojson(fence) as geojson, * from bounce_service_area1";
-            }
             if(lat != -1 && lon != -1) {
                 sql = sql.replace("$lat", lat + "");
                 sql = sql.replace("$lon", lon + "");

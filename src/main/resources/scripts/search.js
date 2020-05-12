@@ -124,7 +124,6 @@
         data.lon = coords[1];
         data.radius = getMapRadiusInMeters();
         data.drawnObjs = drawnObjects;
-        data.drawnObjsOld = drawnObjectsOld;
         if(isLoading) {
             return;
         }
@@ -132,7 +131,6 @@
         httpPost(editFenceUrl, data, function(response) {
             invalidateMap(response.data.markers, response.data.fences, response.data.circles, response.data.paths, response.data.events, response.data.form, response.data.isSidebar, true, response.data.autoRefresh, response.data);
             showLoader(false);
-            drawnObjectsOld = drawnObjects;
         }, function(jqXHR, exceptiom) {
             showLoader(false);
         });

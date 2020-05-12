@@ -282,12 +282,10 @@ public class Apis {
             data.put("queryBuilder", true);
             data.put("searchQueryBuilderFilters", gson.toJson(ContentUtils.getSearchFilters(page)));
         }
-
         if(page.getGeoJsonRecordConfig() != null) {
             double lat = Double.valueOf(location.split(",")[0]);
             double lon = Double.valueOf(location.split(",")[1]);
             data.put("geojson", ContentUtils.getGeoJsonRecords(page, lat, lon, 0).toString());
-            data.put("jdbcUrl", page.getGeoJsonRecordConfig());
         }
 
         String content = ContentUtils.getFreemarkerString("index.ftl", data);
