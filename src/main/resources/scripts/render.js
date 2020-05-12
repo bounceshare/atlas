@@ -503,31 +503,36 @@
     }
 
     function deleteSelectedGeom(drawId) {
-        var drawObj = getDrawnObject(drawId);
-        editFenceUrl = $('#freemarker_editFenceUrl')[0].innerText;
-        var deleteFenceUrl = editFenceUrl+"?action=delete";
-        console.log("Submitting fence data : " + deleteFenceUrl);
-        if(!deleteFenceUrl || deleteFenceUrl.length < 1) {
-            console.log("Wrong invocation of search api");
-            return;
-        }
-        console.log("deleteSelectedGeom() : " + JSON.stringify(drawObj));
-        data = {};
-        data.drawnObj = drawObj;
-        if(isLoading) {
-            return;
-        }
-        showLoader(true);
-        httpPost(deleteFenceUrl, data, function(response) {
-            invalidateMap(response.data.markers, response.data.fences, response.data.circles, response.data.paths, response.data.events, response.data.form, response.data.isSidebar, true, response.data.autoRefresh, response.data);
-            showLoader(false);
-            map.eachLayer(function(layer){
-                if(layer.pm && typeof layer.pm.isPolygon == 'function' && layer.drawId==drawId)
-                    layer.remove();
-            });
-        }, function(jqXHR, exceptiom) {
-            showLoader(false);
+        bootbox.confirm("This is the default confirm!", function(result){
+            if(result){
+                var drawObj = getDrawnObject(drawId);
+                editFenceUrl = $('#freemarker_editFenceUrl')[0].innerText;
+                var deleteFenceUrl = editFenceUrl+"?action=delete";
+                console.log("Submitting fence data : " + deleteFenceUrl);
+                if(!deleteFenceUrl || deleteFenceUrl.length < 1) {
+                    console.log("Wrong invocation of search api");
+                    return;
+                }
+                console.log("deleteSelectedGeom() : " + JSON.stringify(drawObj));
+                data = {};
+                data.drawnObj = drawObj;
+                if(isLoading) {
+                    return;
+                }
+                showLoader(true);
+                httpPost(deleteFenceUrl, data, function(response) {
+                    invalidateMap(response.data.markers, response.data.fences, response.data.circles, response.data.paths, response.data.events, response.data.form, response.data.isSidebar, true, response.data.autoRefresh, response.data);
+                    showLoader(false);
+                    map.eachLayer(function(layer){
+                        if(layer.pm && typeof layer.pm.isPolygon == 'function' && layer.drawId==drawId)
+                            layer.remove();
+                    });
+                }, function(jqXHR, exceptiom) {
+                    showLoader(false);
+                });
+            }
         });
+
     }
 
     function getDrawnObject(drawId) {
