@@ -504,7 +504,142 @@ The backend should return the atlas elements in this way
 **Image of entire screen if events are shown at center:**
 ![](https://i.imgur.com/Ij7UuuF.png)
 
-## IV Debugging
+## IV Rendering and updating map
+prerequisites: II. Configuration for adding your backend service to the atlas
+
+
+### 1. Reading map data from DB:
+Geometries can be fetched directly from Postgres database can be done by setting geoJsonRecordConfig.
+The parameters are specified below:
+### Inputs:
+* **jdbcUrl :** *(Type: String)*
+Url of database to be called to obtain Map Geometries
+
+* **dbUsername,  dbPassword, schema, table:** *(Type: string)*
+These DB credentials and table names need to be added in Config JSON
+
+* **geoJsonSqlQuery :** *(Type: String) (default = false)*
+SQL query to fetch data from database.
+This has to fetch data in geojson format.
+
+### 2. Writing map data to DB:
+* isEditControlSupported should be set to true in order to get options on map to add/edit/delete
+* editFenceUrl : Url of custom backend which manages add/edit/delete request
+1.  **Add/Edit/Delete :** *(Type: String)*
+
+**Parameters**:
+* shape : It can be Fence, Line, Marker
+* formData : According to editFenceDataSchema specified
+* action : update (for both add/editing geometries)/ delete
+* coords: Json array of LatLngs
+
+On add/edit/delete a HTTP request is sent to with body as this JSON format:
+```json
+{
+  "action": "update",
+  "drawnObj": {
+    "formData": {
+      "updated_on": "May 8, 2020 2:11:17 PM",
+      "created_on": "Jul 5, 2019 10:19:54 AM",
+      "name": "Bangalore",
+      "active": true,
+      "id": 1,
+      "geo_id": 1
+    },
+    "shape": "Fence",
+    "coords": [
+      "13.056615,77.473915",
+      "13.0522572,77.482048",
+      "13.0466692,77.479738",
+      "13.042932,77.474046",
+      "13.0307426,77.4738811",
+      "13.068031,77.521002",
+      "13.082752,77.503246",
+      "13.0668803,77.4859124"
+    ],
+    "drawId": "a5a53ac6-3cf2-4e8c-a09f-708c47214b2f"
+  },
+}
+```
+* **Example :**
+**JSON showing circle parameters: **
+```json
+{
+                    "page": "Cities",
+                    "pageId": "Layers",
+                    "path": "/layers/cities",
+                    "autoRefresh": "true",
+                    "zoom": 0,
+                    
+                    "editControl": {
+                        "editFenceUrl": "http://localhost:8081/apis/cities/alter",
+                        "editFenceDataSchema": {
+                            "id": {
+                                "title": "id",
+                                "description": "Id of the geo fence",
+                                "readonly": true,
+                                "type": "string"
+                            },
+                            "name": {
+                                "title": "Fence Name",
+                                "description": "Please specify a name to identify this geo fence",
+                                "type": "string"
+                            },
+                            "category": {
+                                "title": "category",
+                                "description": "Please specify if bike or cycle",
+                                "type": "string",
+                                "enum": [
+                                    "Bike",
+                                    "Cycle"
+                                ]
+                            },
+                            "active": {
+                                "title": "active",
+                                "description": "Please specify if area is active",
+                                "type": "string",
+                                "enum": [
+                                    "true",
+                                    "false"
+                                ]
+                            },
+                            "geo_id": {
+                                "title": "geo_id",
+                                "description": "Please specify geo_id (1 to 16)",
+                                "type": "string"
+                            },
+                            "updated_on": {
+                                "title": "updated_on",
+                                "description": "Last updated time of the geo fence",
+                                "readonly": true,
+                                "type": "string"
+                            },
+                            "created_on": {
+                                "title": "created_on",
+                                "description": "Created time of the geo fence",
+                                "readonly": true,
+                                "type": "string"
+                            }
+                        },
+                        "isEditControlSupported": true
+                    },
+                    "geoJsonRecordConfig": {
+                        "jdbcUrl": "jdbc:postgresql://127.0.0.1:4567/metro_one",
+                        "dbUsername": "wickedrideAdmin",
+                        "dbPassword": "rkf_ZqSidB0506Ty",
+                        "schema": "public",
+                        "table": "bounce_service_area",
+                        "geoJsonSqlQuery": "select st_asgeojson(fence) as geojson, * from bounce_service_area where ST_DWithin(fence::geography, ST_MakePoint($lon,$lat)::geography, $radius)"
+                    }
+                }
+```
+Screenshots:
+
+![](https://i.imgur.com/oe7Wkdc.jpg)
+
+
+
+## V Debugging
 
 ### 1. Test with JSON:
 Developers can test if the response renders info on the map by pasting the JSON data at Options->Render Atlas Json
