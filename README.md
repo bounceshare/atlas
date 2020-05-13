@@ -528,10 +528,10 @@ This has to fetch data in geojson format.
 1.  **Add/Edit/Delete :** *(Type: String)*
 
 **Parameters**:
-* shape : It can be Fence, Line, Marker
-* formData : According to editFenceDataSchema specified
-* action : update (for both add/editing geometries)/ delete
-* coords: Json array of LatLngs
+* **shape** : It can be Fence, Line, Marker
+* **formData** : According to editFenceDataSchema specified
+* **action** : update (for both add/editing geometries)/ delete
+* **coords**: Json array of LatLngs
 
 On add/edit/delete a HTTP request is sent to with body as this JSON format:
 ```json
