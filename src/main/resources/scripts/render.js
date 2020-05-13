@@ -485,21 +485,21 @@
     function updateSelectedGeom(drawId) {
         var drawObj = getDrawnObject(drawId);
         editFenceUrl = $('#freemarker_editFenceUrl')[0].innerText;
-        var updateFenceUrl = editFenceUrl+"?action=update";
-        console.log("Submitting fence data : " + updateFenceUrl);
+        console.log("Submitting fence data : " + editFenceUrl);
 
-        if(!updateFenceUrl || updateFenceUrl.length < 1) {
+        if(!editFenceUrl || editFenceUrl.length < 1) {
             console.log("Wrong invocation of search api");
             return;
         }
         console.log("updateSelectedGeom() : " + JSON.stringify(drawObj));
         data = {};
         data.drawnObj = drawObj;
+        data.action = 'update';
         if(isLoading) {
             return;
         }
         showLoader(true);
-        httpPost(updateFenceUrl, data, function(response) {
+        httpPost(editFenceUrl, data, function(response) {
             invalidateMap(response.data.markers, response.data.fences, response.data.circles, response.data.paths, response.data.events, response.data.form, response.data.isSidebar, true, response.data.autoRefresh, response.data);
             showLoader(false);
         }, function(jqXHR, exceptiom) {
@@ -512,20 +512,20 @@
             if(result){
                 var drawObj = getDrawnObject(drawId);
                 editFenceUrl = $('#freemarker_editFenceUrl')[0].innerText;
-                var deleteFenceUrl = editFenceUrl+"?action=delete";
-                console.log("Submitting fence data : " + deleteFenceUrl);
-                if(!deleteFenceUrl || deleteFenceUrl.length < 1) {
+                console.log("Submitting fence data : " + editFenceUrl);
+                if(!editFenceUrl || editFenceUrl.length < 1) {
                     console.log("Wrong invocation of search api");
                     return;
                 }
                 console.log("deleteSelectedGeom() : " + JSON.stringify(drawObj));
                 data = {};
                 data.drawnObj = drawObj;
+                data.action = 'delete';
                 if(isLoading) {
                     return;
                 }
                 showLoader(true);
-                httpPost(deleteFenceUrl, data, function(response) {
+                httpPost(editFenceUrl, data, function(response) {
                     invalidateMap(response.data.markers, response.data.fences, response.data.circles, response.data.paths, response.data.events, response.data.form, response.data.isSidebar, true, response.data.autoRefresh, response.data);
                     showLoader(false);
                     map.eachLayer(function(layer){
