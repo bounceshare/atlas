@@ -508,7 +508,7 @@
     }
 
     function deleteSelectedGeom(drawId) {
-        bootbox.confirm("This is the default confirm!", function(result){
+        bootbox.confirm("Are you sure you want to delete this fence?", function(result){
             if(result){
                 var drawObj = getDrawnObject(drawId);
                 editFenceUrl = $('#freemarker_editFenceUrl')[0].innerText;
