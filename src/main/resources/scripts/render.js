@@ -96,7 +96,7 @@
                 }
                 var drawId = uuid();
                 if(isEditMode) {
-                    popupInfo += "<div>" + "Edit Data" + " : " + "<a href='#' onclick=showFenceModal('" + drawId + "');>Click Here</a>" + "</div>";
+                    popupInfo += getEditModePopupInfo(drawId);
                 }
                 popupInfo += "</div></div><br/>";
                 marker.bindPopup(popupInfo, {autoClose: false});
@@ -136,7 +136,7 @@
                 }
                 var drawId = uuid();
                 if(isEditMode) {
-                    popupInfo += "<div>" + "Edit Data" + " : " + "<a href='#' onclick=showFenceModal('" + drawId + "');>Click Here</a>" + "</div>";
+                    popupInfo += getEditModePopupInfo(drawId);
                 }
                 popupInfo += "</div></div><br/>";
                 fence.bindPopup(popupInfo, {autoClose: false});
@@ -181,7 +181,7 @@
                 }
                 var drawId = uuid();
                 if(isEditMode) {
-                    popupInfo += "<div>" + "Edit Data" + " : " + "<a href='#' onclick=showFenceModal('" + drawId + "');>Click Here</a>" + "</div>";
+                    popupInfo += getEditModePopupInfo(drawId);
                 }
                 popupInfo += "</div></div><br/>";
                 path.bindPopup(popupInfo, {autoClose: false});
@@ -220,7 +220,7 @@
                 }
                 var drawId = uuid();
                 if(isEditMode) {
-                    popupInfo += "<div>" + "Edit Data" + " : " + "<a href='#' onclick=showFenceModal('" + drawId + "');>Click Here</a>" + "</div>";
+                    popupInfo += getEditModePopupInfo(drawId);
                 }
                 popupInfo += "</div></div><br/>";
                 circle.bindPopup(popupInfo, {autoClose: false});
@@ -416,7 +416,7 @@
                     }
                 }
                 if(isEditMode) {
-                    popupInfo += "<div>" + "Edit Data" + " : " + "<a href='#' onclick=showFenceModal('" + drawId + "');>Click Here</a>" + "</div>";
+                    popupInfo += getEditModePopupInfo(drawId);
                 }
                 popupInfo += "</div></div><br/>";
                 geoLayer.bindPopup(popupInfo, {autoClose: false});
@@ -427,6 +427,13 @@
         if(fitBounds) {
             map.fitBounds(geoJSONLayers.getBounds());
         }
+    }
+
+    function getEditModePopupInfo(drawId){
+        popupInfo = "<div>" + "Edit Data" + " : " + "<a href='#' onclick=showFenceModal('" + drawId + "');>Click Here</a>" + "</div>";
+        popupInfo += "<div>" + "Update changes" + " : " + "<a href='#' onclick=updateSelectedGeom('" + drawId + "');>Click Here</a>" + "</div>";
+        popupInfo += "<div>" + "Delete" + " : " + "<a href='#' onclick=deleteSelectedGeom('" + drawId + "');>Click Here</a>" + "</div>";
+        return popupInfo;
     }
 
     function getDrawnObjects() {
@@ -473,6 +480,103 @@
             }
         });
         return drawnObjects;
+    }
+
+    function updateSelectedGeom(drawId) {
+        var drawObj = getDrawnObject(drawId);
+        editFenceUrl = $('#freemarker_editFenceUrl')[0].innerText;
+        console.log("Submitting fence data : " + editFenceUrl);
+
+        if(!editFenceUrl || editFenceUrl.length < 1) {
+            console.log("Wrong invocation of search api");
+            return;
+        }
+        console.log("updateSelectedGeom() : " + JSON.stringify(drawObj));
+        data = {};
+        data.drawnObj = drawObj;
+        data.action = 'update';
+        if(isLoading) {
+            return;
+        }
+        showLoader(true);
+        httpPost(editFenceUrl, data, function(response) {
+            invalidateMap(response.data.markers, response.data.fences, response.data.circles, response.data.paths, response.data.events, response.data.form, response.data.isSidebar, true, response.data.autoRefresh, response.data);
+            showLoader(false);
+        }, function(jqXHR, exceptiom) {
+            showLoader(false);
+        });
+    }
+
+    function deleteSelectedGeom(drawId) {
+        bootbox.confirm("Are you sure you want to delete this?", function(result){
+            if(result){
+                var drawObj = getDrawnObject(drawId);
+                editFenceUrl = $('#freemarker_editFenceUrl')[0].innerText;
+                console.log("Submitting fence data : " + editFenceUrl);
+                if(!editFenceUrl || editFenceUrl.length < 1) {
+                    console.log("Wrong invocation of search api");
+                    return;
+                }
+                console.log("deleteSelectedGeom() : " + JSON.stringify(drawObj));
+                data = {};
+                data.drawnObj = drawObj;
+                data.action = 'delete';
+                if(isLoading) {
+                    return;
+                }
+                showLoader(true);
+                httpPost(editFenceUrl, data, function(response) {
+                    invalidateMap(response.data.markers, response.data.fences, response.data.circles, response.data.paths, response.data.events, response.data.form, response.data.isSidebar, true, response.data.autoRefresh, response.data);
+                    showLoader(false);
+                    map.eachLayer(function(layer){
+                        if(layer.pm && typeof layer.pm.isPolygon == 'function' && layer.drawId==drawId)
+                            layer.remove();
+                    });
+                }, function(jqXHR, exceptiom) {
+                    showLoader(false);
+                });
+            }
+        });
+
+    }
+
+    function getDrawnObject(drawId) {
+        var drawObj = {};
+        map.eachLayer(function(layer){
+            if(layer.pm && typeof layer.pm.isPolygon == 'function' && layer.drawId==drawId){
+                drawObj.formData = layer.formData;
+                drawObj.shape = layer.shape;
+                switch(layer.shape) {
+                    case "Circle":
+                        drawObj.coords = [];
+                        drawObj.coords.push(layer.getLatLng().lat + "," + layer.getLatLng().lng);
+                        drawObj.drawId = layer.drawId;
+                        drawObj.options = {};
+                        drawObj.options.radius = layer.getRadius();
+                        break;
+                    case "Fence":
+                        drawObj.coords = [];
+                        for(var i = 0; i < layer.getLatLngs()[0].length; i++) {
+                            drawObj.coords.push(layer.getLatLngs()[0][i].lat + "," +  layer.getLatLngs()[0][i].lng);
+                        }
+                        drawObj.drawId = layer.drawId;
+                        break;
+                    case "Line":
+                        drawObj.coords = [];
+                        for(var i = 0; i < layer.getLatLngs().length; i++) {
+                            drawObj.coords.push(layer.getLatLngs()[i].lat + "," +  layer.getLatLngs()[i].lng);
+                        }
+                        drawObj.drawId = layer.drawId;
+                        break;
+                    case "Marker":
+                        drawObj.coords = [];
+                        drawObj.coords.push(layer.getLatLng().lat + "," + layer.getLatLng().lng);
+                        drawObj.drawId = layer.drawId;
+                        break;
+                }
+            }
+        });
+        return drawObj;
     }
 
     function addEditFenceControls() {
@@ -522,7 +626,7 @@
             var popupInfo = "<br/><div class='border'><div class='p-2 text-monospace'>";
             popupInfo += "<div>" + "Coords" + " : " + JSON.stringify(coords, null, 3) + "</div>";
             if(editFenceDataSchema) {
-                popupInfo += "<div>" + "Edit Data" + " : " + "<a href='#' onclick=showFenceModal('" + drawId + "');>Click Here</a>" + "</div>";
+                popupInfo += getEditModePopupInfo(drawId);
             }
             popupInfo += "</div></div><br/>";
             e.layer.bindPopup(popupInfo, {autoClose: false});
