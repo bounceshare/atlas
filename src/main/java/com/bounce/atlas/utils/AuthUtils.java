@@ -28,6 +28,22 @@ public class AuthUtils {
         return false;
     }
 
+    public static String getUserId(String token) {
+        try {
+            if(!TextUtils.isEmpty(token)) {
+                JWSObject jwsObject = JWSObject.parse(token);
+                JSONObject jsonObject = new JSONObject(jwsObject.getPayload().toJSONObject().toJSONString());
+                String domain = jsonObject.optString("hd");
+                String email_verified = jsonObject.optString("email_verified");
+                String email = jsonObject.optString("email");
+                return email;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     public static String getDomain() {
         return PropertiesLoader.getProperty("googleauth.domain");
     }

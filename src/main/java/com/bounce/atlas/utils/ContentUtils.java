@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
 import java.sql.Timestamp;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -109,7 +110,7 @@ public class ContentUtils {
         data.put("panOut", "true");
     }
 
-    public static Map<String, Object> getDefaultFreemarkerObj(String page, boolean isAuth) {
+    public static Map<String, Object> getDefaultFreemarkerObj(String page, boolean isAuth, String userId) {
         Map<String, Object> data = Maps.newHashMap();
 
         ConfigPojo config = getConfig();
@@ -119,16 +120,51 @@ public class ContentUtils {
         data.put("favicon", config.getFavicon());
         data.put("logo", config.getLogo());
 
-        data.put("tabs", getRootPages(isAuth));
-        data.put("nestedTabs", getNestedPages(isAuth));
+        data.put("tabs", getRootPages(userId, isAuth));
+        data.put("nestedTabs", getNestedPages(userId, isAuth));
         data.put("tileserverurl", PropertiesLoader.getProperty("tileserver.url"));
         data.put("tileserverid", PropertiesLoader.getProperty("tileserver.id"));
         data.put("googleclientid", PropertiesLoader.getProperty("google.clientid"));
         if(isAuth) {
             data.put("auth", isAuth);
         }
+        data.put("isAdmin", isAdmin(userId));
 
         return data;
+    }
+
+    private static boolean isAdmin(String userId) {
+        List<String> authRoleUserIds =  getConfig().getAuthRoles().get("admin");
+        if(authRoleUserIds != null && authRoleUserIds.contains(userId)) {
+            return true;
+        }
+        return false;
+    }
+
+    private static boolean isPageOpenForUser(ConfigPojo.Page page, String userId, boolean isAuth) {
+        // enable page to all users who're admins
+        if(isAdmin(userId) && isAuth) {
+            return true;
+        }
+        // enable page if auth is open
+        if(!TextUtils.isEmpty(page.getAuth()) && page.getAuth().equals("open")) {
+            return true;
+        }
+        // enable page across the organisation if auth is explicitly not specified
+        if((TextUtils.isEmpty(page.getAuth()) || page.getAuth().equals("org")) && isAuth) {
+            return true;
+        }
+        String authRolesStr = page.getAuth();
+        if(!TextUtils.isEmpty(authRolesStr)) {
+            String[] authRoles = authRolesStr.split(",");
+            for(String authRole : authRoles) {
+                List<String> authRoleUserIds =  getConfig().getAuthRoles().get(authRole);
+                if(authRoleUserIds != null && authRoleUserIds.contains(userId)) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     public static void updateConfigPojo(String configJson) throws Exception {
@@ -144,6 +180,9 @@ public class ContentUtils {
                     String configString = Utils.redisGet("atlas.config", getContent("sample_config.json"));
                     ConfigPojo configPojo = gson.fromJson(configString, ConfigPojo.class);
                     config = configPojo;
+                    if(config.getAuthRoles() == null || configPojo.getAuthRoles().size() == 0) {
+                        config.getAuthRoles().put("admin", Arrays.asList(PropertiesLoader.getProperty("admin.email")));
+                    }
                     return configPojo;
                 } else {
                     return config;
@@ -159,16 +198,11 @@ public class ContentUtils {
         return null;
     }
 
-    private static List<ConfigPojo.Page> getRootPages(boolean isAuth) {
+    private static List<ConfigPojo.Page> getRootPages(String userId, boolean isAuth) {
         List<ConfigPojo.Page> pages = Lists.newArrayList();
         for (ConfigPojo.Page item : getConfig().getTabs()) {
             if (item.getPages() == null || item.getPages().size() < 1) {
-                if(item.isAuth()) {
-                    if(isAuth) {
-                        item.setPageId(item.getPage());
-                        pages.add(item);
-                    }
-                } else {
+                if(isPageOpenForUser(item, userId, isAuth)) {
                     item.setPageId(item.getPage());
                     pages.add(item);
                 }
@@ -178,22 +212,12 @@ public class ContentUtils {
         return pages;
     }
 
-    private static Map<String, List<ConfigPojo.Page>> getNestedPages(boolean isAuth) {
+    private static Map<String, List<ConfigPojo.Page>> getNestedPages(String userId, boolean isAuth) {
         Map<String, List<ConfigPojo.Page>> map = Maps.newHashMap();
         for (ConfigPojo.Page tab : getConfig().getTabs()) {
             if (tab.getPages() != null && tab.getPages().size() > 0) {
                 for (ConfigPojo.Page page : tab.getPages()) {
-                    if(page.isAuth()) {
-                        if(isAuth) {
-                            page.setPageId(tab.getTabName());
-                            List<ConfigPojo.Page> pages = map.get(tab.getTabName());
-                            if (pages == null) {
-                                pages = Lists.newArrayList();
-                            }
-                            pages.add(page);
-                            map.put(tab.getTabName(), pages);
-                        }
-                    } else {
+                    if(isPageOpenForUser(page, userId, isAuth)) {
                         page.setPageId(tab.getTabName());
                         List<ConfigPojo.Page> pages = map.get(tab.getTabName());
                         if (pages == null) {

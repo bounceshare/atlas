@@ -17,6 +17,7 @@
             console.log("Config Updated");
             showLoader(false);
             showSuccessMessage("Config Updated");
+            window.location.reload();
         }, function(jqXHR, exception) {
             console.log("Config Update Failed");
             showLoader(false);

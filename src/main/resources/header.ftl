@@ -92,7 +92,9 @@
                     <div class="dropdown-menu" aria-labelledby="dropdown04">
                         <a class="dropdown-item" href="#" onclick="bootboxPromptRenderJSON()">Render Atlas JSON</a>
                         <a class="dropdown-item" href="#" onclick="bootboxPromptRenderGeoJSON()">Render GeoJSON</a>
+                        <#if isAdmin??><#if isAdmin>
                         <a class="dropdown-item" href="/config">Config</a>
+                        </#if></#if>
                         <div class="dropdown-item">
                             <input type="checkbox" class="form-check-input text-center" id="refreshCheckbox">Auto Refresh</input>
                         </div>
@@ -124,9 +126,9 @@
                 <!--<input class="form-control mr-sm-2" type="text" id="searchBar" placeholder="Search" aria-label="Search"></input>-->
                 <!--<button class="btn btn-outline-success my-2 my-sm-0" onclick="search()">Search</button>&nbsp;-->
             <!--</div>-->
-            <div class="form-inline mt-2 mt-md-0" <#if editFenceUrl??><#else>hidden</#if>>
-                <button class="btn btn-outline-success my-2 my-sm-0" onclick="fenceSubmit()">Submit</button>&nbsp;
-            </div>&nbsp;&nbsp;
+            <!--<div class="form-inline mt-2 mt-md-0" <#if editFenceUrl??><#else>hidden</#if>>-->
+                <!--<button class="btn btn-outline-success my-2 my-sm-0" onclick="fenceSubmit()">Submit</button>&nbsp;-->
+            <!--</div>&nbsp;&nbsp;-->
 
         </div>
     </nav>

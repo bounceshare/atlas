@@ -3,6 +3,7 @@ package com.bounce.atlas.pojo;
 import java.util.List;
 import java.util.Map;
 
+import com.google.common.collect.Maps;
 import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -28,6 +29,9 @@ public class ConfigPojo {
     @SerializedName("tabs")
     @Expose
     private List<Page> tabs = null;
+    @SerializedName("authRoles")
+    @Expose
+    private Map<String, List<String>> authRoles = Maps.newLinkedHashMap();
 
     public String getDefaultLocation() {
         return defaultLocation;
@@ -75,6 +79,14 @@ public class ConfigPojo {
 
     public void setTabs(List<Page> tabs) {
         this.tabs = tabs;
+    }
+
+    public Map<String, List<String>> getAuthRoles() {
+        return authRoles;
+    }
+
+    public void setAuthRoles(Map<String, List<String>> authRoles) {
+        this.authRoles = authRoles;
     }
 
     public class Page {

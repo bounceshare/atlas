@@ -113,7 +113,7 @@ public class Apis {
     public void login(@Suspended final AsyncResponse asyncResponse) {
         logger.info("/login");
 
-        Map<String, Object> data = ContentUtils.getDefaultFreemarkerObj("login", false);
+        Map<String, Object> data = ContentUtils.getDefaultFreemarkerObj("login", false, AuthUtils.getUserId(getToken()));
 
         String content = ContentUtils.getFreemarkerString("login.ftl", data);
         asyncResponse.resume(Response.ok().entity(content).build());
@@ -127,7 +127,7 @@ public class Apis {
     public void config(@Suspended final AsyncResponse asyncResponse) {
         logger.info("/config");
 
-        Map<String, Object> data = ContentUtils.getDefaultFreemarkerObj("config", true);
+        Map<String, Object> data = ContentUtils.getDefaultFreemarkerObj("config", true, AuthUtils.getUserId(getToken()));
         data.put("config", gson.toJson(ContentUtils.getConfig()));
 
         String content = ContentUtils.getFreemarkerString("config.ftl", data);
@@ -141,7 +141,7 @@ public class Apis {
     public void notFound404(@Suspended final AsyncResponse asyncResponse) {
         logger.info("/404");
 
-        Map<String, Object> data = ContentUtils.getDefaultFreemarkerObj("404", false);
+        Map<String, Object> data = ContentUtils.getDefaultFreemarkerObj("404", false, AuthUtils.getUserId(getToken()));
         data.put("config", gson.toJson(ContentUtils.getConfig()));
 
         String content = ContentUtils.getFreemarkerString("404.ftl", data);
@@ -238,7 +238,7 @@ public class Apis {
             asyncResponse.resume(Response.temporaryRedirect(builder.build()).build());
             return;
         }
-        Map<String, Object> data = ContentUtils.getDefaultFreemarkerObj(page.getPage(), isAuth);
+        Map<String, Object> data = ContentUtils.getDefaultFreemarkerObj(page.getPage(), isAuth, AuthUtils.getUserId(getToken()));
         ConfigPojo config = ContentUtils.getConfig();
         if (TextUtils.isEmpty(location)) {
             location = config.getDefaultLocation();
