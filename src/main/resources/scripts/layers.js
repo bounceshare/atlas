@@ -81,7 +81,7 @@
     }
 
     if(refresh || query.length > 1) {
-        refreshLayers(DEFAULT_CENTRE, DEFAULT_RADIUS);
+        refreshLayers(map.getCenter(), getMapRadiusInMeters());
     }
     map.on('moveend', onMapEvent);
 
