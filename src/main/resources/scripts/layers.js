@@ -81,7 +81,13 @@
     }
 
     if(refresh || query.length > 1) {
-        refreshLayers(map.getCenter(), getMapRadiusInMeters());
+        if(isJson(query)) {
+            console.log("Path contains search query. So trying to search" + query);
+            var qJSON = JSON.parse(query);
+            getSearchData(qJSON);
+        } else {
+            refreshLayers(map.getCenter(), getMapRadiusInMeters());
+        }
     }
     map.on('moveend', onMapEvent);
 

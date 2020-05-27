@@ -91,7 +91,8 @@
 
     function submitSearchData(values) {
         console.log(values);
-        getSearchData(values);
+        searchUsingQueryPath(values);
+//        getSearchData(values);
         $("body").trigger("click");
     }
 
@@ -134,6 +135,26 @@
         }, function(jqXHR, exceptiom) {
             showLoader(false);
         });
+    }
+
+    function searchUsingQueryPath(searchVals) {
+        var path = window.location.pathname;
+        console.log("searchUsingQueryPath : " + path)
+        if(typeof map !== 'undefined') {
+            var pos = map.getCenter();
+            var position = pos.lat + "," + pos.lng;
+
+            if(path.includes("?")) {
+                path += "&p=" + position;
+            }else {
+                path += "?p=" + position;
+            }
+
+            path += "&z=" + map.getZoom();
+        }
+        path += "&q=" + JSON.stringify(searchVals);
+        console.log("searchUsingQueryPath : " + path)
+        window.location = path;
     }
 
     function getSearchData(searchVals) {

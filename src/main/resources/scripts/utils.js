@@ -150,6 +150,15 @@
         }
     }
 
+    function isJson(str) {
+        try {
+            JSON.parse(str);
+        } catch (e) {
+            return false;
+        }
+        return true;
+    }
+
     $(document).ready(function(){
         try {
             $('[data-toggle="popover"]').popover();
