@@ -1,5 +1,6 @@
 package com.bounce.atlas.utils;
 
+import com.bounce.atlas.http.Apis;
 import com.bounce.atlas.pojo.*;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -7,6 +8,7 @@ import com.google.gson.Gson;
 import freemarker.template.*;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.util.TextUtils;
+import org.apache.log4j.Logger;
 import org.jooq.Field;
 import org.jooq.Record;
 import org.jooq.Result;
@@ -28,6 +30,8 @@ public class ContentUtils {
 
     public static Gson gson = new Gson();
     private static ConfigPojo config = null;
+
+    private static Logger logger = Log.getLogger(ContentUtils.class.getCanonicalName());
 
     public static String getContent(String filename) throws IOException {
         StringBuilder content = new StringBuilder();
@@ -305,6 +309,7 @@ public class ContentUtils {
                     .getConnector(page.getGeoJsonRecordConfig().getJdbcUrl(), page.getGeoJsonRecordConfig().getDbUsername(),
                             page.getGeoJsonRecordConfig().getDbPassword())
                     .fetch(sql);
+            logger.info("Records : " + records);
             for(Record record : records) {
                 JSONObject geoJson = new JSONObject(record.get("geojson").toString());
                 Map<String, Object> details = record.intoMap();
