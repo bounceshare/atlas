@@ -82,6 +82,10 @@
                    iconAnchor: [25, 50]
                 });
 
+                if(markerData.location.lat == null || markerData.location.lon == null) {
+                    continue;
+                }
+
                 var marker = L.marker([markerData.location.lat, markerData.location.lon],{icon: markerIcon});
 
                 var popupInfo = "<br/><div class='border'><div class='p-2 text-monospace'>";
