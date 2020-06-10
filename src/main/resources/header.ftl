@@ -115,7 +115,7 @@
                 <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuSearch" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     Search
                 </button>
-                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuSearch">
+                <div class="dropdown-menu dropdown-menu-lg-right" aria-labelledby="dropdownMenuSearch">
                     <form class="px-4 py-3" id="dropdownMenuSearchDiv">
                     </form>
                     <#if queryBuilder??><a class="dropdown-item" href="#" onclick="openQueryBuilder()">Query Builder</a></#if>
