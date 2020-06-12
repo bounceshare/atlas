@@ -15,7 +15,12 @@ public class PropertiesLoader {
     public static String getProperty(String key) {
         if(map == null || map.size() < 1) {
             try {
-                InputStream inputStream = new FileInputStream("config.ini");
+                String env = System.getProperty("env", "prod");
+                String configPath = "config.ini";
+                if(env.equals("local")) {
+                    configPath = "config-local.ini";
+                }
+                InputStream inputStream = new FileInputStream(configPath);
                 Properties prop = new Properties();
                 prop.load(inputStream);
                 map = Maps.newLinkedHashMap();

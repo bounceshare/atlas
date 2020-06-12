@@ -6,3 +6,5 @@ src/main/resources/config.ini
 src/main/resources/config.json
 .DS_Store
 src/main/resources/.DS_Store
+config.ini
+config-local.ini
