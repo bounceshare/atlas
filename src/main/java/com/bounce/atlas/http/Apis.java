@@ -207,6 +207,7 @@ public class Apis {
             asyncResponse.resume(Response.ok().entity(gson.toJson(response)).build());
         } catch (Exception e) {
             e.printStackTrace();
+            Utils.logError(e);
         }
     }
 

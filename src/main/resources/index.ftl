@@ -31,8 +31,8 @@
 <#if recordsDataString??><div><table class="table table-striped table-bordered" id="crudTable" width="100%"></table></div><#else></#if>
 <#if isCreateAllowed??><#if isCreateAllowed><a href="#" onclick="createRecord()" style="position: absolute;left: 50%;" class="btn btn-outline-primary">Add</a></#if><#else></#if>
 <#include "/scripts/render.js">
-<#include "/scripts/layers.js">
 <#include "/scripts/search.js">
+<#include "/scripts/layers.js">
 <#include "/scripts/modal.js">
 <#include "/scripts/form.js">
 <#include "/scripts/crud.js">
