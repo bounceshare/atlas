@@ -13,6 +13,9 @@ public class AuthUtils {
 
     public static boolean isAuth(String token) {
         try {
+            if(!Utils.isAuthEnabled()) {
+                return true;
+            }
             if(!TextUtils.isEmpty(token)) {
                 JWSObject jwsObject = JWSObject.parse(token);
                 JSONObject jsonObject = new JSONObject(jwsObject.getPayload().toJSONObject().toJSONString());

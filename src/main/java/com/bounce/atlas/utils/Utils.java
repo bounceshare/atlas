@@ -84,6 +84,20 @@ public class Utils {
         System.out.println("Timestamp : " + new Timestamp(System.currentTimeMillis()));
     }
 
+    public static boolean isAuthEnabled() {
+        boolean isAuthEnabled = false;
+        try {
+            String authEnabledStr = PropertiesLoader.getProperty("auth.enabled");
+            if(!TextUtils.isEmpty(authEnabledStr)) {
+                isAuthEnabled = Boolean.parseBoolean(authEnabledStr);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            Utils.logError(e);
+        }
+        return isAuthEnabled;
+    }
+
     private static Pair<String, Integer> getRedisHostPortPair() {
         try {
             InputStream inputStream = new FileInputStream("config.ini");
