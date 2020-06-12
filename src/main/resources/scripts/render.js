@@ -483,27 +483,31 @@
     }
 
     function updateSelectedGeom(drawId) {
-        var drawObj = getDrawnObject(drawId);
-        editFenceUrl = $('#freemarker_editFenceUrl')[0].innerText;
-        console.log("Submitting fence data : " + editFenceUrl);
+        bootbox.confirm("Are you sure you want to update this in Database?", function(result){
+            if(result){
+                var drawObj = getDrawnObject(drawId);
+                editFenceUrl = $('#freemarker_editFenceUrl')[0].innerText;
+                console.log("Submitting fence data : " + editFenceUrl);
 
-        if(!editFenceUrl || editFenceUrl.length < 1) {
-            console.log("Wrong invocation of search api");
-            return;
-        }
-        console.log("updateSelectedGeom() : " + JSON.stringify(drawObj));
-        data = {};
-        data.drawnObj = drawObj;
-        data.action = 'update';
-        if(isLoading) {
-            return;
-        }
-        showLoader(true);
-        httpPost(editFenceUrl, data, function(response) {
-            invalidateMap(response.data.markers, response.data.fences, response.data.circles, response.data.paths, response.data.events, response.data.form, response.data.isSidebar, true, response.data.autoRefresh, response.data);
-            showLoader(false);
-        }, function(jqXHR, exceptiom) {
-            showLoader(false);
+                if(!editFenceUrl || editFenceUrl.length < 1) {
+                    console.log("Wrong invocation of search api");
+                    return;
+                }
+                console.log("updateSelectedGeom() : " + JSON.stringify(drawObj));
+                data = {};
+                data.drawnObj = drawObj;
+                data.action = 'update';
+                if(isLoading) {
+                    return;
+                }
+                showLoader(true);
+                httpPost(editFenceUrl, data, function(response) {
+                    invalidateMap(response.data.markers, response.data.fences, response.data.circles, response.data.paths, response.data.events, response.data.form, response.data.isSidebar, true, response.data.autoRefresh, response.data);
+                    showLoader(false);
+                }, function(jqXHR, exceptiom) {
+                    showLoader(false);
+                });
+            }
         });
     }
 
@@ -537,7 +541,6 @@
                 });
             }
         });
-
     }
 
     function getDrawnObject(drawId) {
