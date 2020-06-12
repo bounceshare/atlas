@@ -487,7 +487,7 @@
     }
 
     function updateSelectedGeom(drawId) {
-        bootbox.confirm("Are you sure you want to update this in Database?", function(result){
+        bootbox.confirm("Are you sure you want to update it on the server?", function(result){
             if(result){
                 var drawObj = getDrawnObject(drawId);
                 editFenceUrl = $('#freemarker_editFenceUrl')[0].innerText;
