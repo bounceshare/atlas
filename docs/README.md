@@ -31,7 +31,7 @@ Have a table storing some PostGIS info? Now you can easily visualise them on the
 
 ## Screenshots 
 
-![Screenshot1](https://upload.bounce.bike/images/fc8731de-52e0-49bc-937d-24861f7e7eea)
+![Screenshot1](https://upload.bounce.bike/images/dc3539b7-1216-4b6a-858d-e0e409cb7b4c)
 
 ![Screenshot2](https://upload.bounce.bike/images/25ca396e-e9c7-418b-80e7-4a25adc5cde4)
 
