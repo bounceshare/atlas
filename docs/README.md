@@ -1,19 +1,12 @@
 # Build Command
 ``mvn clean install -DskipTests``
 
-# Running Locally
-Go ahead and install Jetty-Runner plugin on IntelliJ if not installed. 
-
-#Setting up local config
-``./setup_local.sh <appname>``
-
-#Sample Config
-Please go though this sample config and configure one yourself with appropriate values
-
-![Sample config](https://upload.bounce.bike/devops/57218388-59e0-477a-95c5-7b438272e05f "Sample Config")
+``mvn jetty:run``
 
 
 # Bounce Atlas Documentation
+
+Atlas can be configured to connect to a PostgreSQL db and render information on a map. 
 
 >`This documentation contains information about the fields defined in Bounce Atlas and the approaches to access it.`
 
@@ -645,3 +638,5 @@ Screenshots:
 
 ### 1. Test with JSON:
 Developers can test if the response renders info on the map by pasting the JSON data at Options->Render Atlas Json
+
+You can also use GeoJSON and paste it under Options->Render GeoJSON  
