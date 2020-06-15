@@ -127,7 +127,18 @@ public class Apis {
     public void config(@Suspended final AsyncResponse asyncResponse) {
         logger.info("/config");
 
-        Map<String, Object> data = ContentUtils.getDefaultFreemarkerObj("config", true, AuthUtils.getUserId(getToken()));
+        String userId = AuthUtils.getUserId(getToken());
+
+        if(!AuthUtils.isAdmin(userId)) {
+            logger.info("Unauthorized token : " + getToken());
+            String redirectPath = "/404";
+            UriBuilder builder =
+                    UriBuilder.fromPath("").path(redirectPath);
+            asyncResponse.resume(Response.temporaryRedirect(builder.build()).build());
+            return;
+        }
+
+        Map<String, Object> data = ContentUtils.getDefaultFreemarkerObj("config", true, userId);
         data.put("config", gson.toJson(ContentUtils.getConfig()));
 
         String content = ContentUtils.getFreemarkerString("config.ftl", data);
@@ -155,6 +166,15 @@ public class Apis {
     @GoogleAuth
     public void configPost(String inputString, @Suspended final AsyncResponse asyncResponse) {
         try {
+
+            String userId = AuthUtils.getUserId(getToken());
+
+            if(!AuthUtils.isAdmin(userId)) {
+                logger.info("Unauthorized token : " + getToken());
+                asyncResponse.resume(Response.status(400).entity(gson.toJson(StatusPojo.buildFailure(401, "Couldn't update the config cause of permission issue"))).build());
+                return;
+            }
+
             logger.info("/config");
             JSONObject jsonObject = new JSONObject(inputString);
             String configData = jsonObject.optString("config");
@@ -226,7 +246,7 @@ public class Apis {
         boolean isAuth = AuthUtils.isAuth(getToken());
 
         ConfigPojo.Page page = ContentUtils.getPage(path, isAuth);
-        if(page == null) {
+        if(page == null || !ContentUtils.isPageOpenForUser(page, AuthUtils.getUserId(getToken()))) {
             String redirectPath = "/login";
             if(httpRequest.getRequestURL().toString().contains("covid.bounceshare") || httpRequest.getRequestURI().contains("covid.bounce.bike")) {
                 redirectPath = "/404";

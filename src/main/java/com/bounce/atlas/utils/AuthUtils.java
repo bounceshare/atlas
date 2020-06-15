@@ -7,6 +7,7 @@ import org.json.JSONObject;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 import java.util.Properties;
 
 public class AuthUtils {
@@ -45,6 +46,17 @@ public class AuthUtils {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public static boolean isAdmin(String userId) {
+        if(TextUtils.isEmpty(userId)) {
+            return false;
+        }
+        List<String> authRoleUserIds =  ContentUtils.getConfig().getAuthRoles().get("admin");
+        if(authRoleUserIds != null && authRoleUserIds.contains(userId)) {
+            return true;
+        }
+        return false;
     }
 
     public static String getDomain() {

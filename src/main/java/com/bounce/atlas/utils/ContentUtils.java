@@ -132,22 +132,18 @@ public class ContentUtils {
         if(isAuth) {
             data.put("auth", isAuth);
         }
-        data.put("isAdmin", isAdmin(userId));
+        data.put("isAdmin", AuthUtils.isAdmin(userId));
 
         return data;
     }
 
-    private static boolean isAdmin(String userId) {
-        List<String> authRoleUserIds =  getConfig().getAuthRoles().get("admin");
-        if(authRoleUserIds != null && authRoleUserIds.contains(userId)) {
-            return true;
-        }
-        return false;
+    public static boolean isPageOpenForUser(ConfigPojo.Page page, String userId) {
+        return isPageOpenForUser(page, userId, true);
     }
 
     private static boolean isPageOpenForUser(ConfigPojo.Page page, String userId, boolean isAuth) {
         // enable page to all users who're admins
-        if(isAdmin(userId) && isAuth) {
+        if(AuthUtils.isAdmin(userId) && isAuth) {
             return true;
         }
         // enable page if auth is open
