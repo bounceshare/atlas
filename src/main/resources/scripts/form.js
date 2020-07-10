@@ -26,6 +26,33 @@
         // post data to the end point
     }
 
+    function onFormPageSubmit(formObj, values) {
+        var formSchema = formObj.formSchema;
+        var formValues = formObj.values;
+        var postUrl = formObj.postUrl;
+
+        console.log(values);
+
+        $('#formModal').modal("hide");
+        data = {};
+        data.data = values;
+        if(isLoading) {
+            return;
+        }
+        showLoader(true);
+        httpPost(postUrl, data, function(response) {
+            invalidateMap(response.data.markers, response.data.fences, response.data.circles, response.data.paths, response.data.events, response.data.form, response.data.isSidebar, true, response.data.autoRefresh, response.data);
+            showLoader(false);
+            bootbox.alert("Form Submission Successful");
+            location.reload();
+        }, function(jqXHR, exception) {
+            showLoader(false);
+            bootbox.alert("Form Submission Failure : " + exception);
+        });
+
+        // post data to the end point
+    }
+
     function fetchForm(url, id) {
         isLoading = true;
         showLoader(true);
@@ -37,6 +64,46 @@
         }, function(jqXHR, exceptiom) {
              showLoader(false);
         });
+    }
+
+    function fetchFormAndRender(url, dataObj) {
+        isLoading = true;
+        showLoader(true);
+        data = {};
+        data.data = dataObj;
+        httpPost(url, data, function(response) {
+            renderFormPage(response.data.form);
+            showLoader(false);
+        }, function(jqXHR, exceptiom) {
+             showLoader(false);
+        });
+    }
+
+    function renderFormPage(formObj) {
+        var formSchema = formObj.formSchema;
+        var formValues = formObj.values;
+        var postUrl = formObj.postUrl;
+
+        $('#formpage-form')[0].innerHTML = "";
+            // show form based on schema
+        $('#formpage-form').jsonForm({
+            schema: formSchema,
+            form: ["*"],
+            value: formValues,
+            form: [
+              "*",
+              {
+                "type": "submit",
+                "title": "Submit"
+              }
+            ],
+            onSubmit: function (errors, values) {
+              console.log("onSubmit()");
+              onFormPageSubmit(formObj, values);
+            }
+        });
+
+//        setupDateTimeElement();
     }
 
     function renderForm(formObj) {
@@ -58,6 +125,11 @@
 
         setupDateTimeElement();
         $('#formModal').modal();
+    }
+
+    var formStr = $('#freemarker_formPageUrl')[0].innerText;
+    if(formStr && formStr.length > 0) {
+        fetchFormAndRender(formStr, $('#freemarker_formPageData')[0].innerText);
     }
 
 </script>

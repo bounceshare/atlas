@@ -303,6 +303,11 @@ public class Apis {
             data.put("queryBuilder", true);
             data.put("searchQueryBuilderFilters", gson.toJson(ContentUtils.getSearchFilters(page)));
         }
+        if(page.getFormConfig() != null)  {
+            data.put("formPageUrl", page.getFormConfig().getFormUrl());
+            data.put("formPageDataStr", gson.toJson(page.getFormConfig().getFormRequestData()));
+            data.put("mapView", false);
+        }
         if(page.getGeoJsonRecordConfig() != null) {
             double lat = Double.valueOf(location.split(",")[0]);
             double lon = Double.valueOf(location.split(",")[1]);

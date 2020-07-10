@@ -143,6 +143,9 @@ public class ConfigPojo {
         @SerializedName("geoJsonRecordConfig")
         @Expose
         private GeoJsonRecordConfig geoJsonRecordConfig;
+        @SerializedName("formConfig")
+        @Expose
+        private FormConfig formConfig;
 
         public String getPage() {
             return page;
@@ -285,6 +288,39 @@ public class ConfigPojo {
 
         public void setGeoJsonRecordConfig(GeoJsonRecordConfig geoJsonRecordConfig) {
             this.geoJsonRecordConfig = geoJsonRecordConfig;
+        }
+
+        public FormConfig getFormConfig() {
+            return formConfig;
+        }
+
+        public void setFormConfig(FormConfig formConfig) {
+            this.formConfig = formConfig;
+        }
+    }
+
+    public class FormConfig {
+        @SerializedName("formUrl")
+        @Expose
+        private String formUrl;
+        @SerializedName("formRequestData")
+        @Expose
+        private Map<String, Object> formRequestData;
+
+        public String getFormUrl() {
+            return formUrl;
+        }
+
+        public void setFormUrl(String formUrl) {
+            this.formUrl = formUrl;
+        }
+
+        public Map<String, Object> getFormRequestData() {
+            return formRequestData;
+        }
+
+        public void setFormRequestData(Map<String, Object> formRequestData) {
+            this.formRequestData = formRequestData;
         }
     }
 
