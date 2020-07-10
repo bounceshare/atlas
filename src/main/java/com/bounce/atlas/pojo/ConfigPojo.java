@@ -1,5 +1,6 @@
 package com.bounce.atlas.pojo;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -312,6 +313,42 @@ public class ConfigPojo {
         @SerializedName("table")
         @Expose
         private String table;
+
+        public List<String> getListExcludeFields() {
+            return listExcludeFields;
+        }
+
+        public void setListExcludeFields(List<String> listExcludeFields) {
+            this.listExcludeFields = listExcludeFields;
+        }
+
+        public List<String> getCreateExcludeFields() {
+            return createExcludeFields;
+        }
+
+        public void setCreateExcludeFields(List<String> createExcludeFields) {
+            this.createExcludeFields = createExcludeFields;
+        }
+
+        public List<String> getEditExcludeFields() {
+            return editExcludeFields;
+        }
+
+        public void setEditExcludeFields(List<String> editExcludeFields) {
+            this.editExcludeFields = editExcludeFields;
+        }
+
+        @SerializedName("listExcludeFields")
+        @Expose
+        private List<String> listExcludeFields = new ArrayList<>();
+
+        @SerializedName("createExcludeFields")
+        @Expose
+        private List<String> createExcludeFields = new ArrayList<>();
+
+        @SerializedName("editExcludeFields")
+        @Expose
+        private List<String> editExcludeFields = new ArrayList<>();
 
         public boolean isCreateAllowed() {
             return isCreateAllowed;

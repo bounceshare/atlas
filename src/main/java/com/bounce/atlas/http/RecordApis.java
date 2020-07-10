@@ -53,7 +53,7 @@ public class RecordApis {
             String where = input.optString("where");
 
             ConfigPojo.Page page = ContentUtils.getPageFromPagePath(pagePath);
-            List<List<String>> obj = ContentUtils.getDbRecords(page, where, 100);
+            List<List<String>> obj = ContentUtils.getDbRecords(page, where, 100, page.getCrudConfig().getListExcludeFields());
             Map<Object, Object> response = Maps.newHashMap();
             response.put("records", obj);
 
@@ -83,10 +83,10 @@ public class RecordApis {
             FormPojo form = new FormPojo();
             form.formSchema = ContentUtils.getFormSchema(page);
             if(!TextUtils.isEmpty(primaryKeyVal)) {
-                form.values = ContentUtils.getFormValues(page, primaryKeyVal);
+                form.values = ContentUtils.getFormValues(page, primaryKeyVal, page.getCrudConfig().getEditExcludeFields());
                 form.postUrl = "/records/edit";
             } else {
-                form.values = ContentUtils.getFormValues(page, primaryKeyVal);
+                form.values = ContentUtils.getFormValues(page, primaryKeyVal, page.getCrudConfig().getEditExcludeFields());
                 form.postUrl = "/records/create";
             }
 
@@ -117,6 +117,9 @@ public class RecordApis {
 
             for(Map.Entry<String, Object> entry : createData.entrySet()) {
                 String column = entry.getKey();
+                if(page.getCrudConfig().getCreateExcludeFields().contains(column)) {
+                    continue;
+                }
                 Field field = fieldMap.get(column);
                 Object val = entry.getValue();
                 if(TextUtils.isEmpty(val.toString())) {
@@ -197,7 +200,7 @@ public class RecordApis {
             Map<String, Object> editData = FormPojo.fromJson(input.optJSONObject("data").toString());
 
             String primaryKeyVal = input.optJSONObject("data").opt(ContentUtils.getPrimaryKey(page)).toString();
-            Map<String,Object> oldData = ContentUtils.getFormValues(page, primaryKeyVal);
+            Map<String,Object> oldData = ContentUtils.getFormValues(page, primaryKeyVal, page.getCrudConfig().getEditExcludeFields());
             editData.remove("pagePath");
             oldData.remove("pagePath");
             Map<String, Field> fieldMap = ContentUtils.getColumns(page);
@@ -306,7 +309,7 @@ public class RecordApis {
                 primaryKeyVal = input.opt("primaryKeyVal").toString();
             }
             ConfigPojo.Page page = ContentUtils.getPageFromPagePath(pagePath);
-            Map<String,Object> oldData = ContentUtils.getFormValues(page, primaryKeyVal);
+            Map<String,Object> oldData = ContentUtils.getFormValues(page, primaryKeyVal, page.getCrudConfig().getEditExcludeFields());
             if(oldData.size() < 1) {
                 asyncResponse.resume(Response.status(500).entity(gson.toJson(StatusPojo.buildFailure(500,  "Error  : No record found to delete"))));
                 return;

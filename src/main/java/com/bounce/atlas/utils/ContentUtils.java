@@ -19,10 +19,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
 import java.sql.Timestamp;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 
 public class ContentUtils {
 
@@ -318,7 +315,7 @@ public class ContentUtils {
         return geoJsonArray;
     }
 
-    public static List<List<String>> getDbRecords(ConfigPojo.Page page, String where, int limit) {
+    public static List<List<String>> getDbRecords(ConfigPojo.Page page, String where, int limit, List<String> excludeFields) {
         String sql = "select * from " + page.getCrudConfig().getSchema() + "." + page.getCrudConfig().getTable();
         boolean isCustomQuery = false;
         if(TextUtils.isEmpty(where)) {
@@ -340,6 +337,9 @@ public class ContentUtils {
                 List<String> fieldList = Lists.newLinkedList();
                 fieldList.add("");
                 for(Field f : record.fields()) {
+                    if(excludeFields != null && excludeFields.size() > 0 && excludeFields.contains(f.getName())) {
+                        continue;
+                    }
                     fieldList.add(f.getName());
                 }
                 result.add(fieldList);
@@ -359,6 +359,9 @@ public class ContentUtils {
                 }
                 recordList.add(buttonFunction.toString());
                 for(Field f : record.fields()) {
+                    if(excludeFields != null && excludeFields.size() > 0 && excludeFields.contains(f.getName())) {
+                        continue;
+                    }
                     Object obj = record.get(f.getName());
                     if(obj != null) {
                         recordList.add(obj.toString());
@@ -374,13 +377,17 @@ public class ContentUtils {
             Utils.logError(e);
         }
         if(isCustomQuery) {
-            result = getDbRecords(page, null, 1);
+            result = getDbRecords(page, null, 1, excludeFields);
             result.remove(1);
         }
         return result;
     }
 
     public static Map<String, Field> getColumns(ConfigPojo.Page page) {
+        return getColumns(page, new ArrayList<>());
+    }
+
+    public static Map<String, Field> getColumns(ConfigPojo.Page page, List<String> excludeCols) {
         Map<String, Field> columns = Maps.newLinkedHashMap();
 
         String sql = "select * from " + page.getCrudConfig().getSchema() + "." + page.getCrudConfig().getTable() + " limit 1";
@@ -392,6 +399,9 @@ public class ContentUtils {
         if(records.size() > 0) {
             Record record = records.get(0);
             for(Field f : record.fields()) {
+                if(excludeCols != null && excludeCols.contains(f.getName())) {
+                    continue;
+                }
                 columns.put(f.getName(), f);
             }
         }
@@ -401,7 +411,7 @@ public class ContentUtils {
 
     public static Map<String, Object> getFormSchema(ConfigPojo.Page page) {
         Map<String, Object> formSchema = Maps.newLinkedHashMap();
-        Map<String, Field> columns = getColumns(page);
+        Map<String, Field> columns = getColumns(page, page.getCrudConfig().getEditExcludeFields());
 
         String infosql = "SELECT * FROM information_schema.columns WHERE table_schema = '" + page.getCrudConfig().getSchema() + "' AND table_name   = '" + page.getCrudConfig().getTable() + "';";
         Result<Record> columnRecords = DatabaseConnector.getDb()
@@ -510,7 +520,7 @@ public class ContentUtils {
         return enums;
     }
 
-    public static Map<String, Object> getFormValues(ConfigPojo.Page page, String primaryKeyVal) {
+    public static Map<String, Object> getFormValues(ConfigPojo.Page page, String primaryKeyVal, List<String> excludeCols) {
         Map<String, Object> formValues = Maps.newLinkedHashMap();
 
         if(!TextUtils.isEmpty(primaryKeyVal)) {
@@ -521,6 +531,9 @@ public class ContentUtils {
                             page.getCrudConfig().getDbPassword()).fetchOne(sql);
 
             for (Field field : record.fields()) {
+                if(excludeCols != null && excludeCols.contains(field.getName())) {
+                    continue;
+                }
                 Object val = record.get(field.getName());
                 if (field.getDataType().getSQLDataType().getTypeName().equals("timestamp") && val != null) {
                     // convert timestamp to html time
