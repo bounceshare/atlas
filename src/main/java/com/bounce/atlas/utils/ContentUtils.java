@@ -121,8 +121,8 @@ public class ContentUtils {
         data.put("favicon", config.getFavicon());
         data.put("logo", config.getLogo());
 
-        data.put("tabs", getRootPages(userId, isAuth));
-        data.put("nestedTabs", getNestedPages(userId, isAuth));
+        data.put("tabs", getRootPages(userId, isAuth, true));
+        data.put("nestedTabs", getNestedPages(userId, isAuth, true));
         data.put("tileserverurl", PropertiesLoader.getProperty("tileserver.url"));
         data.put("tileserverid", PropertiesLoader.getProperty("tileserver.id"));
         data.put("googleclientid", PropertiesLoader.getProperty("google.clientid"));
@@ -195,11 +195,14 @@ public class ContentUtils {
         return null;
     }
 
-    private static List<ConfigPojo.Page> getRootPages(String userId, boolean isAuth) {
+    private static List<ConfigPojo.Page> getRootPages(String userId, boolean isAuth, boolean isHidden) {
         List<ConfigPojo.Page> pages = Lists.newArrayList();
         for (ConfigPojo.Page item : getConfig().getTabs()) {
             if (item.getPages() == null || item.getPages().size() < 1) {
                 if(isPageOpenForUser(item, userId, isAuth)) {
+                    if(item.isHidden() && isHidden) {
+                        continue;
+                    }
                     item.setPageId(item.getPage());
                     pages.add(item);
                 }
@@ -209,12 +212,15 @@ public class ContentUtils {
         return pages;
     }
 
-    private static Map<String, List<ConfigPojo.Page>> getNestedPages(String userId, boolean isAuth) {
+    private static Map<String, List<ConfigPojo.Page>> getNestedPages(String userId, boolean isAuth, boolean isHidden) {
         Map<String, List<ConfigPojo.Page>> map = Maps.newHashMap();
         for (ConfigPojo.Page tab : getConfig().getTabs()) {
             if (tab.getPages() != null && tab.getPages().size() > 0) {
                 for (ConfigPojo.Page page : tab.getPages()) {
                     if(isPageOpenForUser(page, userId, isAuth)) {
+                        if(page.isHidden() && isHidden) {
+                            continue;
+                        }
                         page.setPageId(tab.getTabName());
                         List<ConfigPojo.Page> pages = map.get(tab.getTabName());
                         if (pages == null) {

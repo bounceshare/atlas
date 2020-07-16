@@ -146,6 +146,9 @@ public class ConfigPojo {
         @SerializedName("formConfig")
         @Expose
         private FormConfig formConfig;
+        @SerializedName("hidden")
+        @Expose
+        private boolean hidden;
 
         public String getPage() {
             return page;
@@ -296,6 +299,14 @@ public class ConfigPojo {
 
         public void setFormConfig(FormConfig formConfig) {
             this.formConfig = formConfig;
+        }
+
+        public boolean isHidden() {
+            return hidden;
+        }
+
+        public void setHidden(boolean hidden) {
+            this.hidden = hidden;
         }
     }
 
