@@ -4,6 +4,8 @@ import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.ssl.SSLContextBuilder;
 import org.apache.http.util.TextUtils;
@@ -188,6 +190,75 @@ public class Utils {
             e.printStackTrace(pw);
             String stackTrace = sw.toString();
             logger.error(stackTrace);
+        }
+    }
+
+    public static String httpPost(String url, Object jsonObject, Map<String, String> headers) throws Exception {
+        logger.info("url is : " + url);
+        logger.info("json obj is : " + jsonObject.toString());
+        HttpClient httpClient = HttpClientBuilder.create().build();
+        HttpPost request = new HttpPost(url);
+        if (headers != null && headers.size() > 0) {
+            Iterator var5 = headers.entrySet().iterator();
+
+            while(var5.hasNext()) {
+                Map.Entry<String, String> entry = (Map.Entry)var5.next();
+                request.addHeader((String)entry.getKey(), (String)entry.getValue());
+            }
+        }
+
+        StringEntity params = new StringEntity(jsonObject.toString());
+        request.addHeader("Content-Type", "application/json");
+        request.setEntity(params);
+        HttpResponse response = httpClient.execute(request);
+        if (response != null) {
+            InputStream in = response.getEntity().getContent();
+            String body = IOUtils.toString(in);
+            logger.info("HTTP POST :: url : " + url + " :: requestBody : " + jsonObject.toString() + " :: response : " + body);
+            if (response.getStatusLine().getStatusCode() != 200) {
+                throw new Exception("Bad Response from server");
+            } else {
+                return body;
+            }
+        } else {
+            return null;
+        }
+    }
+
+    public static String httpGet(String iUrl, JSONObject jsonObject, Map<String, String> headers) throws Exception {
+        StringBuffer newUrl = new StringBuffer(iUrl);
+        newUrl.append("?");
+        Iterator var4 = jsonObject.keySet().iterator();
+
+        while(var4.hasNext()) {
+            String key = (String)var4.next();
+            newUrl.append(key);
+            newUrl.append("=");
+            newUrl.append(jsonObject.get(key).toString());
+            newUrl.append("&");
+        }
+
+        newUrl.deleteCharAt(newUrl.length() - 1);
+        HttpClient httpClient = HttpClientBuilder.create().build();
+        HttpGet request = new HttpGet(newUrl.toString());
+        if (headers != null && headers.size() > 0) {
+            Iterator var6 = headers.entrySet().iterator();
+
+            while(var6.hasNext()) {
+                Map.Entry<String, String> entry = (Map.Entry)var6.next();
+                request.addHeader((String)entry.getKey(), (String)entry.getValue());
+            }
+        }
+
+        request.addHeader("Content-Type", "application/json");
+        HttpResponse response = httpClient.execute(request);
+        if (response != null) {
+            InputStream in = response.getEntity().getContent();
+            String body = IOUtils.toString(in);
+            logger.info("HTTP GET :: url : " + newUrl.toString() + " :: response : " + body);
+            return body;
+        } else {
+            return null;
         }
     }
 

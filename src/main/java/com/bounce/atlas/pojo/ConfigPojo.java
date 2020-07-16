@@ -360,6 +360,15 @@ public class ConfigPojo {
         @SerializedName("table")
         @Expose
         private String table;
+        @SerializedName("whereCondition")
+        @Expose
+        private String whereCondition;
+        @SerializedName("callbackUrl")
+        @Expose
+        private String callbackUrl;
+        @SerializedName("callbackHeaders")
+        @Expose
+        private Map<String, String> callbackHeaders;
 
         public List<String> getListExcludeFields() {
             return listExcludeFields;
@@ -459,6 +468,30 @@ public class ConfigPojo {
 
         public void setTable(String table) {
             this.table = table;
+        }
+
+        public String getWhereCondition() {
+            return whereCondition;
+        }
+
+        public void setWhereCondition(String whereCondition) {
+            this.whereCondition = whereCondition;
+        }
+
+        public String getCallbackUrl() {
+            return callbackUrl;
+        }
+
+        public void setCallbackUrl(String callbackUrl) {
+            this.callbackUrl = callbackUrl;
+        }
+
+        public Map<String, String> getCallbackHeaders() {
+            return callbackHeaders;
+        }
+
+        public void setCallbackHeaders(Map<String, String> callbackHeaders) {
+            this.callbackHeaders = callbackHeaders;
         }
     }
 

@@ -383,7 +383,7 @@ public class ContentUtils {
             Utils.logError(e);
         }
         if(isCustomQuery) {
-            result = getDbRecords(page, null, 1, excludeFields);
+            result = getDbRecords(page, where, 1, excludeFields);
             result.remove(1);
         }
         return result;
@@ -510,6 +510,17 @@ public class ContentUtils {
             return record.getValue("attname").toString();
         }
         return null;
+    }
+
+    public static void postRecordCallback(String primaryId, String action, String callbackUrl, Map<String, String> headers) {
+        try {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("action", action);
+            jsonObject.put("primaryKey", primaryId);
+            Utils.httpPost(callbackUrl, jsonObject, headers);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public static List<String> getEnumValues(ConfigPojo.Page page, String enumName) {

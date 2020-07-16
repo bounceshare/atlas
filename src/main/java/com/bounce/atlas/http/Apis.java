@@ -295,8 +295,8 @@ public class Apis {
         data.put("searchDataSchema", page.getSearchDataSchema());
         data.put("mapView", true);
         if(page.getCrudConfig() != null) {
-            data.put("recordsDataString", gson.toJson(ContentUtils.getDbRecords(page, null, 100, page.getCrudConfig().getListExcludeFields())));
-            data.put("recordsData", ContentUtils.getDbRecords(page, null, 100, page.getCrudConfig().getListExcludeFields()));
+            data.put("recordsDataString", gson.toJson(ContentUtils.getDbRecords(page, page.getCrudConfig().getWhereCondition(), 100, page.getCrudConfig().getListExcludeFields())));
+            data.put("recordsData", ContentUtils.getDbRecords(page, page.getCrudConfig().getWhereCondition(), 100, page.getCrudConfig().getListExcludeFields()));
             data.put("isCreateAllowed", page.getCrudConfig().isCreateAllowed());
             data.put("mapView", false);
             data.put("tableView", true);

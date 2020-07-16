@@ -53,6 +53,11 @@ public class RecordApis {
             String where = input.optString("where");
 
             ConfigPojo.Page page = ContentUtils.getPageFromPagePath(pagePath);
+            if(TextUtils.isEmpty(where)) {
+                where += page.getCrudConfig().getWhereCondition();
+            } else {
+                where += " and " + page.getCrudConfig().getWhereCondition();
+            }
             List<List<String>> obj = ContentUtils.getDbRecords(page, where, 100, page.getCrudConfig().getListExcludeFields());
             Map<Object, Object> response = Maps.newHashMap();
             response.put("records", obj);
@@ -159,10 +164,22 @@ public class RecordApis {
 
             }
 
+            if(!TextUtils.isEmpty(page.getCrudConfig().getWhereCondition())) {
+                String[] conditions = page.getCrudConfig().getWhereCondition().split("AND");
+                for(String condition : conditions) {
+                    String colName = condition.split("=")[0].trim();
+                    String val = condition.split("=")[1].trim();
+
+                    columnStatement += colName + ",";
+                    valuesStatement += "'" + val + "'" + ",";
+                }
+
+            }
+
             columnStatement = columnStatement.substring(0, columnStatement.length() -1);
             valuesStatement = valuesStatement.substring(0, valuesStatement.length() -1);
 
-            insertStatement = "INSERT INTO " + page.getCrudConfig().getSchema() + "." + page.getCrudConfig().getTable() + " ( " + columnStatement + " ) " + "VALUES ( "  + valuesStatement + " )";
+            insertStatement = "INSERT INTO " + page.getCrudConfig().getSchema() + "." + page.getCrudConfig().getTable() + " ( " + columnStatement + " ) " + "VALUES ( "  + valuesStatement + " ) RETURNING id";
             logger.info("Insert statement : " + insertStatement);
 
             Result result = DatabaseConnector.getDb()
@@ -175,6 +192,10 @@ public class RecordApis {
             } else {
                 asyncResponse.resume(Response.status(500).entity(gson.toJson(StatusPojo.buildFailure(500,  "Error  : No records deleted"))));
                 return;
+            }
+
+            if(!TextUtils.isEmpty(page.getCrudConfig().getCallbackUrl())) {
+                ContentUtils.postRecordCallback(result.getValues("id").get(0) + "", "create", page.getCrudConfig().getCallbackUrl(), page.getCrudConfig().getCallbackHeaders());
             }
 
         } catch (Exception e) {
@@ -285,7 +306,9 @@ public class RecordApis {
 
             Map<Object, Object> response = Maps.newHashMap();
             asyncResponse.resume(Response.ok().entity(gson.toJson(StatusPojo.buildSuccess(response))).build());
-            return;
+            if(!TextUtils.isEmpty(page.getCrudConfig().getCallbackUrl())) {
+                ContentUtils.postRecordCallback(primaryKeyVal, "edit", page.getCrudConfig().getCallbackUrl(), page.getCrudConfig().getCallbackHeaders());
+            }
         } catch (Exception e) {
             e.printStackTrace();
             Utils.logError(e);
@@ -331,6 +354,10 @@ public class RecordApis {
             } else {
                 asyncResponse.resume(Response.status(500).entity(gson.toJson(StatusPojo.buildFailure(500,  "Error  : No records deleted"))));
                 return;
+            }
+
+            if(!TextUtils.isEmpty(page.getCrudConfig().getCallbackUrl())) {
+                ContentUtils.postRecordCallback(primaryKeyVal, "delete", page.getCrudConfig().getCallbackUrl(), page.getCrudConfig().getCallbackHeaders());
             }
 
         } catch (Exception e) {
