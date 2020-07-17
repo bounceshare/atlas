@@ -305,7 +305,8 @@ public class Apis {
         }
         if(page.getFormConfig() != null)  {
             data.put("formPageUrl", page.getFormConfig().getFormUrl());
-            data.put("formPageDataStr", gson.toJson(page.getFormConfig().getFormRequestData()));
+            data.put("formPageReqData", gson.toJson(page.getFormConfig().getFormRequestData()));
+            data.put("formPageSchemaStr", gson.toJson(page.getFormConfig().getFormDataSchema()));
             data.put("mapView", false);
         }
         if(page.getGeoJsonRecordConfig() != null) {

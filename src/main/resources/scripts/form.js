@@ -43,8 +43,9 @@
         httpPost(postUrl, data, function(response) {
             invalidateMap(response.data.markers, response.data.fences, response.data.circles, response.data.paths, response.data.events, response.data.form, response.data.isSidebar, true, response.data.autoRefresh, response.data);
             showLoader(false);
-            bootbox.alert("Form Submission Successful");
-            location.reload();
+            bootbox.alert("Form Submission Successful", function() {
+                location.reload();
+            });
         }, function(jqXHR, exception) {
             showLoader(false);
             bootbox.alert("Form Submission Failure : " + exception);
@@ -129,7 +130,11 @@
 
     var formStr = $('#freemarker_formPageUrl')[0].innerText;
     if(formStr && formStr.length > 0) {
-        fetchFormAndRender(formStr, $('#freemarker_formPageData')[0].innerText);
+        fetchFormAndRender(formStr, $('#freemarker_formPageReqData')[0].innerText);
+    }
+    var formSchemaStr = $('#freemarker_formPageSchema')[0].innerText;
+    if(formSchemaStr && formSchemaStr.length > 0) {
+        renderFormPage(JSON.parse(formSchemaStr));
     }
 
 </script>

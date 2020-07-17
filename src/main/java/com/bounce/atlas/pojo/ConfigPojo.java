@@ -317,6 +317,9 @@ public class ConfigPojo {
         @SerializedName("formRequestData")
         @Expose
         private Map<String, Object> formRequestData;
+        @SerializedName("formDataSchema")
+        @Expose
+        private Map<String, Object> formDataSchema;
 
         public String getFormUrl() {
             return formUrl;
@@ -332,6 +335,14 @@ public class ConfigPojo {
 
         public void setFormRequestData(Map<String, Object> formRequestData) {
             this.formRequestData = formRequestData;
+        }
+
+        public Map<String, Object> getFormDataSchema() {
+            return formDataSchema;
+        }
+
+        public void setFormDataSchema(Map<String, Object> formDataSchema) {
+            this.formDataSchema = formDataSchema;
         }
     }
 

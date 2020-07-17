@@ -17,7 +17,8 @@
 <div id="freemarker_isEditControlSupported" hidden><#if isEditControlSupported??>${isEditControlSupported}<#else>false</#if></div>
 <div id="freemarker_searchDataSchema" hidden><#if searchDataSchema??>${searchDataSchema}<#else>false</#if></div>
 <div id="freemarker_recordsData" hidden><#if recordsDataString??>${recordsDataString}<#else></#if></div>
-<div id="freemarker_formPageData" hidden><#if formPageData??>${formPageData}<#else></#if></div>
+<div id="freemarker_formPageReqData" hidden><#if formPageReqData??>${formPageReqData}<#else></#if></div>
+<div id="freemarker_formPageSchema" hidden><#if formPageSchemaStr??>${formPageSchemaStr}<#else></#if></div>
 <div id="freemarker_formPageUrl" hidden><#if formPageUrl??>${formPageUrl}<#else></#if></div>
 <div id="freemarker_mapView" hidden><#if mapView>true<#else></#if></div>
 <div id="freemarker_tableView" hidden><#if tableView??>true<#else></#if></div>
@@ -31,7 +32,7 @@
 <#include "/sidebar.ftl">
 <div id="mapDiv" style="height:100%;" <#if !mapView> hidden </#if> ></div>
 <#if recordsDataString??><div><table class="table table-striped table-bordered" id="crudTable" width="100%"></table></div><#else></#if>
-<#if formPageUrl??><div class="container py-2 mt-4 mb-4" id="formpage-view"><form id="formpage-form"></form></div><#else></#if>
+<#if formPageUrl?? || formPageSchemaStr??><div class="container py-2 mt-4 mb-4" id="formpage-view"><form id="formpage-form"></form></div><#else></#if>
 <#if isCreateAllowed??><#if isCreateAllowed><a href="#" onclick="createRecord()" style="position: absolute;left: 50%;" class="btn btn-outline-primary">Add</a></#if><#else></#if>
 <#include "/scripts/render.js">
 <#include "/scripts/search.js">
