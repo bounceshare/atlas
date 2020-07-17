@@ -53,10 +53,12 @@ public class RecordApis {
             String where = input.optString("where");
 
             ConfigPojo.Page page = ContentUtils.getPageFromPagePath(pagePath);
-            if(TextUtils.isEmpty(where)) {
-                where += page.getCrudConfig().getWhereCondition();
-            } else {
-                where += " and " + page.getCrudConfig().getWhereCondition();
+            if(!TextUtils.isEmpty(page.getCrudConfig().getWhereCondition())) {
+                if (TextUtils.isEmpty(where)) {
+                    where += page.getCrudConfig().getWhereCondition();
+                } else {
+                    where += " and " + page.getCrudConfig().getWhereCondition();
+                }
             }
             List<List<String>> obj = ContentUtils.getDbRecords(page, where, 100, page.getCrudConfig().getListExcludeFields());
             Map<Object, Object> response = Maps.newHashMap();
