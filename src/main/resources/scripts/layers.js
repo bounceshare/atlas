@@ -86,7 +86,8 @@
             var qJSON = JSON.parse(query);
             getSearchData(qJSON);
         } else {
-            refreshLayers(map.getCenter(), getMapRadiusInMeters());
+            var coordsLayers = [];
+            refreshLayers([map.getCenter().lat, map.getCenter().lng], getMapRadiusInMeters());
         }
     }
     map.on('moveend', onMapEvent);
