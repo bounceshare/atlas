@@ -8,6 +8,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 public class AuthUtils {
@@ -22,8 +23,17 @@ public class AuthUtils {
                 JSONObject jsonObject = new JSONObject(jwsObject.getPayload().toJSONObject().toJSONString());
                 String domain = jsonObject.optString("hd");
                 String email_verified = jsonObject.optString("email_verified");
+                String email = jsonObject.optString("email");
                 if (!TextUtils.isEmpty(getDomain()) && domain.equals(getDomain()) && email_verified.equals("true")) {
                     return true;
+                }
+                Map<String, List<String>> authRoleMap = ContentUtils.getConfig().getAuthRoles();
+                for(Map.Entry<String, List<String>> entry : authRoleMap.entrySet()) {
+                    for(String authEmail : entry.getValue()) {
+                        if(email.equals(authEmail)) {
+                            return true;
+                        }
+                    }
                 }
             }
         } catch (Exception e) {
@@ -41,6 +51,21 @@ public class AuthUtils {
                 String email_verified = jsonObject.optString("email_verified");
                 String email = jsonObject.optString("email");
                 return email;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static String getDomain(String token) {
+        try {
+            if(!TextUtils.isEmpty(token)) {
+                JWSObject jwsObject = JWSObject.parse(token);
+                JSONObject jsonObject = new JSONObject(jwsObject.getPayload().toJSONObject().toJSONString());
+                String domain = jsonObject.optString("hd");
+                String email_verified = jsonObject.optString("email_verified");
+                return domain;
             }
         } catch (Exception e) {
             e.printStackTrace();

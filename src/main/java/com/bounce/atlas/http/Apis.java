@@ -113,7 +113,7 @@ public class Apis {
     public void login(@Suspended final AsyncResponse asyncResponse) {
         logger.info("/login");
 
-        Map<String, Object> data = ContentUtils.getDefaultFreemarkerObj("login", false, AuthUtils.getUserId(getToken()));
+        Map<String, Object> data = ContentUtils.getDefaultFreemarkerObj("login", false, AuthUtils.getUserId(getToken()), AuthUtils.getDomain(getToken()));
 
         String content = ContentUtils.getFreemarkerString("login.ftl", data);
         asyncResponse.resume(Response.ok().entity(content).build());
@@ -138,7 +138,7 @@ public class Apis {
             return;
         }
 
-        Map<String, Object> data = ContentUtils.getDefaultFreemarkerObj("config", true, userId);
+        Map<String, Object> data = ContentUtils.getDefaultFreemarkerObj("config", true, userId, AuthUtils.getDomain(getToken()));
         data.put("config", gson.toJson(ContentUtils.getConfig()));
 
         String content = ContentUtils.getFreemarkerString("config.ftl", data);
@@ -152,7 +152,7 @@ public class Apis {
     public void notFound404(@Suspended final AsyncResponse asyncResponse) {
         logger.info("/404");
 
-        Map<String, Object> data = ContentUtils.getDefaultFreemarkerObj("404", false, AuthUtils.getUserId(getToken()));
+        Map<String, Object> data = ContentUtils.getDefaultFreemarkerObj("404", false, AuthUtils.getUserId(getToken()), AuthUtils.getDomain(getToken()));
         data.put("config", gson.toJson(ContentUtils.getConfig()));
 
         String content = ContentUtils.getFreemarkerString("404.ftl", data);
@@ -246,7 +246,7 @@ public class Apis {
         boolean isAuth = AuthUtils.isAuth(getToken());
 
         ConfigPojo.Page page = ContentUtils.getPage(path, isAuth);
-        if(page == null || !ContentUtils.isPageOpenForUser(page, AuthUtils.getUserId(getToken()))) {
+        if(page == null || !ContentUtils.isPageOpenForUser(page, AuthUtils.getUserId(getToken()), AuthUtils.getDomain(getToken()))) {
             String redirectPath = "/login";
             if(httpRequest.getRequestURL().toString().contains("covid.bounceshare") || httpRequest.getRequestURI().contains("covid.bounce.bike")) {
                 redirectPath = "/404";
@@ -254,12 +254,15 @@ public class Apis {
             if(isAuth) {
                 redirectPath = "/404";
             }
+            if(path.equals("/") && isAuth && !AuthUtils.getDomain(getToken()).equals(AuthUtils.getDomain())) {
+                redirectPath = ContentUtils.getRedirectPageForExternalUsers(AuthUtils.getUserId(getToken()), AuthUtils.getDomain(getToken()), isAuth);
+            }
             UriBuilder builder =
                     UriBuilder.fromPath("").path(redirectPath);
             asyncResponse.resume(Response.temporaryRedirect(builder.build()).build());
             return;
         }
-        Map<String, Object> data = ContentUtils.getDefaultFreemarkerObj(page.getPage(), isAuth, AuthUtils.getUserId(getToken()));
+        Map<String, Object> data = ContentUtils.getDefaultFreemarkerObj(page.getPage(), isAuth, AuthUtils.getUserId(getToken()), AuthUtils.getDomain(getToken()));
         ConfigPojo config = ContentUtils.getConfig();
         if (TextUtils.isEmpty(location)) {
             location = config.getDefaultLocation();

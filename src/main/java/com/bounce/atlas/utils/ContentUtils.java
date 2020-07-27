@@ -111,7 +111,7 @@ public class ContentUtils {
         data.put("panOut", "true");
     }
 
-    public static Map<String, Object> getDefaultFreemarkerObj(String page, boolean isAuth, String userId) {
+    public static Map<String, Object> getDefaultFreemarkerObj(String page, boolean isAuth, String userId, String domain) {
         Map<String, Object> data = Maps.newHashMap();
 
         ConfigPojo config = getConfig();
@@ -121,8 +121,8 @@ public class ContentUtils {
         data.put("favicon", config.getFavicon());
         data.put("logo", config.getLogo());
 
-        data.put("tabs", getRootPages(userId, isAuth, true));
-        data.put("nestedTabs", getNestedPages(userId, isAuth, true));
+        data.put("tabs", getRootPages(userId, domain, isAuth, true));
+        data.put("nestedTabs", getNestedPages(userId, domain, isAuth, true));
         data.put("tileserverurl", PropertiesLoader.getProperty("tileserver.url"));
         data.put("tileserverid", PropertiesLoader.getProperty("tileserver.id"));
         data.put("googleclientid", PropertiesLoader.getProperty("google.clientid"));
@@ -134,11 +134,11 @@ public class ContentUtils {
         return data;
     }
 
-    public static boolean isPageOpenForUser(ConfigPojo.Page page, String userId) {
-        return isPageOpenForUser(page, userId, true);
+    public static boolean isPageOpenForUser(ConfigPojo.Page page, String userId, String domain) {
+        return isPageOpenForUser(page, userId, domain, true);
     }
 
-    private static boolean isPageOpenForUser(ConfigPojo.Page page, String userId, boolean isAuth) {
+    private static boolean isPageOpenForUser(ConfigPojo.Page page, String userId, String domain, boolean isAuth) {
         // enable page to all users who're admins
         if(AuthUtils.isAdmin(userId) && isAuth) {
             return true;
@@ -148,8 +148,10 @@ public class ContentUtils {
             return true;
         }
         // enable page across the organisation if auth is explicitly not specified
-        if((TextUtils.isEmpty(page.getAuth()) || page.getAuth().equals("org")) && isAuth) {
-            return true;
+        if(AuthUtils.getDomain().equals(domain)) {
+            if ((TextUtils.isEmpty(page.getAuth()) || page.getAuth().equals("org")) && isAuth) {
+                return true;
+            }
         }
         String authRolesStr = page.getAuth();
         if(!TextUtils.isEmpty(authRolesStr)) {
@@ -195,11 +197,11 @@ public class ContentUtils {
         return null;
     }
 
-    private static List<ConfigPojo.Page> getRootPages(String userId, boolean isAuth, boolean isHidden) {
+    private static List<ConfigPojo.Page> getRootPages(String userId, String domain, boolean isAuth, boolean isHidden) {
         List<ConfigPojo.Page> pages = Lists.newArrayList();
         for (ConfigPojo.Page item : getConfig().getTabs()) {
             if (item.getPages() == null || item.getPages().size() < 1) {
-                if(isPageOpenForUser(item, userId, isAuth)) {
+                if(isPageOpenForUser(item, userId, domain, isAuth)) {
                     if(item.isHidden() && isHidden) {
                         continue;
                     }
@@ -212,12 +214,12 @@ public class ContentUtils {
         return pages;
     }
 
-    private static Map<String, List<ConfigPojo.Page>> getNestedPages(String userId, boolean isAuth, boolean isHidden) {
+    private static Map<String, List<ConfigPojo.Page>> getNestedPages(String userId, String domain, boolean isAuth, boolean isHidden) {
         Map<String, List<ConfigPojo.Page>> map = Maps.newHashMap();
         for (ConfigPojo.Page tab : getConfig().getTabs()) {
             if (tab.getPages() != null && tab.getPages().size() > 0) {
                 for (ConfigPojo.Page page : tab.getPages()) {
-                    if(isPageOpenForUser(page, userId, isAuth)) {
+                    if(isPageOpenForUser(page, userId, domain, isAuth)) {
                         if(page.isHidden() && isHidden) {
                             continue;
                         }
@@ -713,6 +715,32 @@ public class ContentUtils {
         }
 
         return filters;
+    }
+
+    public static String getRedirectPageForExternalUsers(String userId, String domain, boolean isAuth) {
+        String authRole = null;
+        Map<String, List<String>> authRoleMap = ContentUtils.getConfig().getAuthRoles();
+        for(Map.Entry<String, List<String>> entry : authRoleMap.entrySet()) {
+            for(String authEmail : entry.getValue()) {
+                if(userId.equals(authEmail)) {
+                    authRole = entry.getKey();
+                    break;
+                }
+            }
+        }
+        if(TextUtils.isEmpty(authRole)) {
+            return "/404";
+        }
+        List<ConfigPojo.Page> pages = getRootPages(userId, domain, isAuth, false);
+        for(Map.Entry<String, List<ConfigPojo.Page>> entry : getNestedPages(userId, domain, isAuth, false).entrySet()) {
+            pages.addAll(entry.getValue());
+        }
+        for(ConfigPojo.Page page : pages) {
+            if (page.getAuth().equals(authRole)) {
+                return page.getPath();
+            }
+        }
+        return "/404";
     }
 
 }
