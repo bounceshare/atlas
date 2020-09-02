@@ -671,7 +671,7 @@
         isLoading = false;
 
         L.tileLayer(tileserverurl, {
-            maxZoom: 18,
+            maxZoom: 22,
             id: tileserverid,
             tileSize: 512,
             zoomOffset: -1
