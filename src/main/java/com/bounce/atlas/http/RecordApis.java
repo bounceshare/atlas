@@ -124,7 +124,8 @@ public class RecordApis {
 
             for(Map.Entry<String, Object> entry : createData.entrySet()) {
                 String column = entry.getKey();
-                if(page.getCrudConfig().getCreateExcludeFields().contains(column)) {
+                if(page.getCrudConfig().getCreateExcludeFields() != null &&
+                        page.getCrudConfig().getCreateExcludeFields().contains(column)) {
                     continue;
                 }
                 Field field = fieldMap.get(column);
