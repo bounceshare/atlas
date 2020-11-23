@@ -368,6 +368,22 @@
         });
     }
 
+    function bootboxPromptRenderKML() {
+            bootbox.prompt({
+                title: "Please add your KML Contents",
+                inputType: 'textarea',
+                callback: function (result) {
+                    if(result) {
+                        var geoJSONObj = toGeoJSON.kml((new DOMParser()).parseFromString(result, 'text/xml'))
+                        console.log("GeoJSONObj");
+                        console.log(JSON.stringify(geoJSONObj));
+                        clearAllLayers();
+                        renderGeoJsonObjects(geoJSONObj, true);
+                    }
+                }
+            });
+        }
+
     function renderGeoJsonArray(geojson, fitBounds = true) {
         var geolayers = createLayersFromJson(geojson);
         if(geojson.length < 1) {

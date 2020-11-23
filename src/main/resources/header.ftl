@@ -49,6 +49,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.21.0/moment.min.js" type="text/javascript"></script>
     <script src="https://cdn.jsdelivr.net/npm/jQuery-QueryBuilder/dist/js/query-builder.min.js"></script>
     <script src="/files/scripts/bootstrap-datetimepicker.min.js"></script>
+    <script src="/files/scripts/togeojson.js"></script>
 
 
 </head>
@@ -92,6 +93,7 @@
                     <div class="dropdown-menu" aria-labelledby="dropdown04">
                         <a class="dropdown-item" href="#" onclick="bootboxPromptRenderJSON()">Render Atlas JSON</a>
                         <a class="dropdown-item" href="#" onclick="bootboxPromptRenderGeoJSON()">Render GeoJSON</a>
+                        <a class="dropdown-item" href="#" onclick="bootboxPromptRenderKML()">Render KML Contents</a>
                         <#if isAdmin??><#if isAdmin>
                         <a class="dropdown-item" href="/config">Config</a>
                         </#if></#if>
