@@ -689,8 +689,7 @@
         L.tileLayer(tileserverurl, {
             maxZoom: 22,
             id: tileserverid,
-            tileSize: 512,
-            zoomOffset: -1
+            subdomains:['mt0','mt1','mt2','mt3']
         }).addTo(map);
 
         if(editFence) {
