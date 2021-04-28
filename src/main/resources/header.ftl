@@ -56,6 +56,7 @@
 
 </head>
 <body>
+
     <#include "/navbar.ftl">
     <br/>
     <br/>

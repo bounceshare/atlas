@@ -1,5 +1,4 @@
 <#include "/header.ftl">
-<main role="main">
 <div id="markerData" hidden><#if markersString??>${markersString}<#else></#if></div>
 <div id="fenceData" hidden><#if fenceString??>${fenceString}<#else></#if></div>
 <div id="pathData" hidden><#if pathString??>${pathString}<#else></#if></div>
@@ -46,6 +45,5 @@
 <!--<#if autoRefresh??><#include "/scripts/layers.js"></#if>-->
 <!--<#if searchPage??><#include "/scripts/search.js"><#else></#if>-->
 <!--<#include "/scripts/modal.js">-->
-</main>
 <#include "/footer.ftl">
 <#include "/modal.ftl">
