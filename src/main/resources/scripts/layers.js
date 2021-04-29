@@ -72,6 +72,16 @@
         }
         console.log("Empty search query. So searching wherever the map is active")
         pos = map.getCenter();
+        if(typeof center !== 'undefined') {
+            newLatLon = [pos.lat, pos.lng];
+            oldLatLon = center;
+            distanceBetweenTwo = distance(oldLatLon[0], oldLatLon[1], newLatLon[0], newLatLon[1], "K");
+            console.log("Distance Changed beteen map movements : " + distanceBetweenTwo);
+            if(distanceBetweenTwo < .2) {
+                console.log("Not a significant movement. So not refreshing");
+                return;
+            }
+        }
         center = [pos.lat, pos.lng];
         radius = getMapRadiusInMeters();
 //        if(isMapEvent) {
