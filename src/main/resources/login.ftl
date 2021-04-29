@@ -20,7 +20,7 @@
             <div class="card card-signin my-5">
                 <div class="card-body">
                     <div class="text-center">
-                        <img src="${logo}" width="200" height="200" alt="bounce.png"></img>
+                        <img src="${logo}" width="200" height="200" style="display: block; margin-left: auto; margin-right: auto;" alt="bounce.png"></img>
                     </div>
                     <br/>
                     <h5 class="card-title text-center">Atlas</h5>
