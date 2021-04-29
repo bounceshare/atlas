@@ -18,6 +18,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
     <link rel="stylesheet" href="/files/css/leaflet-sidebar.css" />
     <link rel="stylesheet" href="/files/css/bootstrap-datetimepicker.min.css" />
+    <link rel="stylesheet" href="/files/css/app.css" />
     <link rel="stylesheet" href="https://unpkg.com/@geoman-io/leaflet-geoman-free@2.5.0/dist/leaflet-geoman.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jQuery-QueryBuilder/dist/css/query-builder.default.min.css" />
     <link href="https://unpkg.com/tailwindcss@1.2.0/dist/tailwind.min.css" rel="stylesheet">
@@ -58,15 +59,5 @@
 <body>
 
     <#include "/navbar.ftl">
-    <br/>
-    <br/>
-    <div class="alert alert-success alert-dismissible fade show" id="successAlert" role="alert" hidden>
-    </div>
-    <div class="alert alert-danger alert-dismissible fade show" id="failureAlert" role="alert" hidden>
-    </div>
-    <div class="progress" id="progressBar" hidden>
-        <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%"></div>
-    </div>
-    <div class="g-signin2" data-onsuccess="onSignIn" hidden data-width="300" data-height="50" data-longtitle="true">Sing in with google</div>
 </header>
 <#include "/scripts/utils.js">

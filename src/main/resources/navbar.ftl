@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+<nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark" id="navbar">
     <a class="navbar-brand" <#if auth??> href="/" </#if> >
     <img src="${favicon}" width="20" height="20" alt="">
     </a>
