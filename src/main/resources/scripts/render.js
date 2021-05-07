@@ -740,11 +740,19 @@
         map.on('moveend', onMapEvent);
         isLoading = false;
 
-        L.tileLayer(tileserverurl, {
-            maxZoom: 22,
-            id: tileserverid,
-            subdomains:['mt0','mt1','mt2','mt3']
-        }).addTo(map);
+//        L.tileLayer(tileserverurl, {
+//            maxZoom: 22,
+//            id: tileserverid,
+//            subdomains:['mt0','mt1','mt2','mt3']
+//        }).addTo(map);
+
+        L.gridLayer
+        .googleMutant({
+            type: "roadmap", // valid values are 'roadmap', 'satellite', 'terrain' and 'hybrid'
+            styles: googleMapsStylesJSON
+        })
+        .addTo(map);
+
 
         if(editFence) {
             addEditFenceControls();
