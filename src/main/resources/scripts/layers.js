@@ -59,6 +59,7 @@
         httpPost("/geofence/search", data, function(response) {
             console.log(response);
             showLoader(false);
+            clearMarkers();
             clearAllLayers();
             renderGeoJsonArray(response.geojson, false);
         }, function(jqXHR, exceptiom) {

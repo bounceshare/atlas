@@ -361,8 +361,13 @@
             callback: function (result) {
                 if(result) {
                     var geoJSONObj = JSON.parse(result);
+                    clearMarkers();
                     clearAllLayers();
-                    renderGeoJsonObjects(geoJSONObj, true);
+                    if(Array.isArray(geoJSONObj)) {
+                        renderGeoJsonArray(geoJSONObj, true);
+                    } else {
+                        renderGeoJsonObjects(geoJSONObj, true);
+                    }
                 }
             }
         });
@@ -377,6 +382,7 @@
                         var geoJSONObj = toGeoJSON.kml((new DOMParser()).parseFromString(result, 'text/xml'))
                         console.log("GeoJSONObj");
                         console.log(JSON.stringify(geoJSONObj));
+                        clearMarkers();
                         clearAllLayers();
                         renderGeoJsonObjects(geoJSONObj, true);
                     }
@@ -398,8 +404,12 @@
     }
 
     function renderGeoJsonObjects(geoJSONObj, fitBounds = true) {
+        if(markerClusterGroup == null) {
+            markerClusterGroup = L.markerClusterGroup();
+        }
         var geoJSONLayers = createLayersFromJson(geoJSONObj);
         var properties = geoJSONObj.properties;
+        var removeLayers = [];
         for(var i=0;i<geoJSONLayers.getLayers().length;i++) {
             var geoLayer = geoJSONLayers.getLayers()[i];
             var shape = geoLayer.feature.properties.shape;
@@ -407,7 +417,39 @@
                 shape = geoLayer.feature.geometry.type;
             }
             switch(shape) {
-                case "Marker":
+                case "Point":
+                    removeLayers.push(geoLayer);
+                    var markerIcon = L.divIcon({
+                       className: 'bg-transparent text-center',
+                       html: '<img src="/resources/icons/marker_blue.png" style="width: 50; height: 50;">',
+                       iconUrl: '/resources/icons/marker_blue.png',
+                       iconSize:     [50, 50] // size of the icon
+                    });
+                    var marker = L.marker([geoLayer.getLatLng().lat, geoLayer.getLatLng().lng],{icon: markerIcon});
+                    var formData = {};
+                    var popupInfo = "<br/><div class='border'><div class='p-2 text-monospace'>";
+                     if(properties) {
+                        for(var key in properties) {
+                            if(typeof properties[key] == 'object') {
+                                continue;
+                            }
+                            popupInfo += "<div>" + key + " : " + properties[key] + "</div>";
+                            formData[key] = properties[key];
+                        }
+                    }
+                    var drawId = uuid();
+                    if(isEditMode) {
+                        popupInfo += getEditModePopupInfo(drawId);
+                    }
+                    popupInfo += "</div></div><br/>";
+                    marker.bindPopup(popupInfo, {autoClose: false});
+                    marker.shape = "Marker";
+                    marker.formData = formData;
+                    marker.drawId = drawId;
+                    if(markerData.count > 0) {
+                        marker.count = markerData.count;
+                    }
+                    markers.push(marker);
                     break;
                 case "Line":
                     break;
@@ -420,6 +462,7 @@
                     shape = "Fence";
                     break;
             }
+            if(shape == "Point") continue;
             var drawId = uuid();
             geoLayer.shape = shape;
             geoLayer.drawId = drawId;
@@ -443,9 +486,20 @@
                 geoLayer.formData = formData;
             }
         }
-        geoJSONLayers.addTo(map);
-        if(fitBounds) {
-            map.fitBounds(geoJSONLayers.getBounds());
+        if(removeLayers.length > 0) {
+            for(var i=0;i<removeLayers.length;i++) {
+                geoJSONLayers.removeLayer(removeLayers[i]);
+            }
+        }
+        if(markers != null && markers.length > 0) {
+            markerClusterGroup.addLayers(markers);
+            map.addLayer(markerClusterGroup);
+        }
+        if(geoJSONLayers.getLayers().length > 0) {
+            geoJSONLayers.addTo(map);
+            if(fitBounds) {
+                map.fitBounds(geoJSONLayers.getBounds());
+            }
         }
     }
 
