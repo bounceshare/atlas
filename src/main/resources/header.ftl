@@ -23,7 +23,7 @@
     <link rel="stylesheet" href="/files/css/bootstrap-datetimepicker.min.css" />
     <link rel="stylesheet" href="https://unpkg.com/@geoman-io/leaflet-geoman-free@2.5.0/dist/leaflet-geoman.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jQuery-QueryBuilder/dist/css/query-builder.default.min.css" />
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA1q9he7jVVxHrIe1R6Kt46Q-kHmiKEv5g" async defer></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBJG0FV8g6IJ6kyWVy52GeLwkYeNlIRjA8" async defer></script>
 
 
 
