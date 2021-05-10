@@ -123,14 +123,9 @@
 
             <div class="form-inline mt-2 mt-md-0" <#if searchPage??><#else>hidden</#if>>
                 <div id="dropdownSearch" class="dropdown">
-                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuSearch" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Search
-                </button>
-                <div class="dropdown-menu dropdown-menu-lg-right" aria-labelledby="dropdownMenuSearch">
-                    <form class="px-4 py-3" id="dropdownMenuSearchDiv">
-                    </form>
-                    <#if queryBuilder??><a class="dropdown-item" href="#" onclick="openQueryBuilder()">Query Builder</a></#if>
-                </div>
+                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuSearch" onclick="openSearchModal()" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Search
+                    </button>
                 </div>
             </div>
             <!--<div class="form-inline mt-2 mt-md-0" <#if searchPage??><#else>hidden</#if>>-->

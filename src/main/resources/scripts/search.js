@@ -1,3 +1,29 @@
+<div class="modal fade" id="searchModal" tabindex="-1" data-backdrop="static" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
+<div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" id="searchModalTitle">Search Options</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+
+            <form class="px-4 py-3" id="dropdownMenuSearchDiv">
+            </form>
+            <#if queryBuilder??><a class="dropdown-item" href="#" onclick="openQueryBuilder()">Query Builder</a></#if>
+
+
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-primary" onclick="submitSearchFormData()">Search</button>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div>
+    </div>
+</div>
+</div>
+
+
 <script>
 
     function setupSearch() {
@@ -14,11 +40,7 @@
             $('#dropdownMenuSearchDiv').jsonForm({
                 schema: searchDataSchema,
                 form: [
-                          "*",
-                          {
-                            "type": "submit",
-                            "title": "Search"
-                          }
+                          "*"
                         ],
                 onSubmit: function (errors, values) {
                   searchTableData(values);
@@ -44,11 +66,7 @@
         $('#dropdownMenuSearchDiv').jsonForm({
             schema: searchDataSchema,
             form: [
-                      "*",
-                      {
-                        "type": "submit",
-                        "title": "Search"
-                      }
+                      "*"
                     ],
             onSubmit: function (errors, values) {
               submitSearchData(values);
@@ -87,6 +105,14 @@
         }, function(jqXHR, exceptiom) {
             showLoader(false);
         });
+    }
+
+    function openSearchModal() {
+        $('#searchModal').modal();
+    }
+
+    function submitSearchFormData() {
+        $("#dropdownMenuSearchDiv").submit();
     }
 
     function submitSearchData(values) {

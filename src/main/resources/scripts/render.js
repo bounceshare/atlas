@@ -71,7 +71,7 @@
                         var legend = 0;
                         var markers = cluster.getAllChildMarkers();
                         legend = markers.length;
-                        return L.divIcon({ html: '<div class="text-center" style="order: 1; width: 50; position: relative; background-color: #fff; border-radius: 5px; border-width: 2px; border-style: solid; border-color: #444; padding: 3px; white-space: nowrap;">' + legend +'</div>',
+                        return L.divIcon({ html: '<div class="text-center" style="order: 1; width: 50; position: relative; background-color: #3ccf96; border-radius: 5px; border-width: 2px; border-style: solid; border-color: #444; padding: 3px; white-space: nowrap;">' + legend +'</div>',
                              className: 'bg-transparent'
                         });
                     }
@@ -419,7 +419,7 @@
                     var legend = 0;
                     var markers = cluster.getAllChildMarkers();
                     legend = markers.length;
-                    return L.divIcon({ html: '<div class="text-center" style="order: 1; width: 50; position: relative; background-color: #fff; border-radius: 5px; border-width: 2px; border-style: solid; border-color: #444; padding: 3px; white-space: nowrap;">' + legend +'</div>',
+                    return L.divIcon({ html: '<div class="text-center" style="order: 1; width: 50; position: relative; background-color: #3ccf96; border-radius: 5px; border-width: 2px; border-style: solid; border-color: #444; padding: 3px; white-space: nowrap;">' + legend +'</div>',
                          className: 'bg-transparent'
                     });
                 }
