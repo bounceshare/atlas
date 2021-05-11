@@ -29,7 +29,7 @@
 <div id="freemarker_tileserverid" hidden><#if tileserverid??>${tileserverid}<#else></#if></div>
 
 <#include "/sidebar.ftl">
-<div class="h-full w-fill pt-12" id="mapContent">
+<div class="h-full w-fill pt-12" style="padding-top: 3rem;" id="mapContent">
     <div class="alert alert-success alert-dismissible fade show" style="margin-bottom: 0;" id="successAlert" role="alert" hidden></div>
     <div class="alert alert-danger alert-dismissible fade show" style="margin-bottom: 0;" id="failureAlert" role="alert" hidden></div>
     <div class="progress" id="progressBar" hidden>
