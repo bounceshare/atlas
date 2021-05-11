@@ -1,6 +1,6 @@
 <script>
 
-    var isSidebarOpen = true;
+    var isSidebarOpen = false;
     function isEmpty(str) {
         return (!str || 0 === str.length);
     }
@@ -198,19 +198,7 @@
     		}
     	});
 
-    	$("#close-sidebar").click(function () {
-    		$(".page-wrapper").removeClass("toggled");
-    	});
-    	$("#show-sidebar").click(function () {
-    		$(".page-wrapper").addClass("toggled");
-    	});
-
-
     });
-
-    function toggleSidebar() {
-
-    }
 
     function isJson(str) {
         try {
@@ -296,6 +284,8 @@
                 }
             }
         });
+
+        toggleSidebar();
 
     });
 

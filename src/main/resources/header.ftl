@@ -65,18 +65,8 @@
 
 </head>
 <body>
-<div class="page-wrapper chiller-theme toggled">
+<div class="page-wrapper chiller-theme">
         <#include "/verticalNavbar.ftl">
         <#include "/navbar.ftl">
         <main class="page-content">
             <div style="line-height: 0;">
-            <br/>
-            <br/>
-            <div class="alert alert-success alert-dismissible fade show" id="successAlert" role="alert" hidden>
-            </div>
-            <div class="alert alert-danger alert-dismissible fade show" id="failureAlert" role="alert" hidden>
-            </div>
-            <div class="progress" id="progressBar" hidden>
-                <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%"></div>
-            </div>
-            <div class="g-signin2" data-onsuccess="onSignIn" hidden data-width="300" data-height="50" data-longtitle="true">Sing in with google</div>
