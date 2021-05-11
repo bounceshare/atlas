@@ -1,9 +1,7 @@
 <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
    <span>
-      <a onclick="return toggleSidebar()">
-         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" class="bi bi-three-dots-vertical" viewBox="0 0 16 16">
-            <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/>
-         </svg>
+      <a class="btn btn-sm btn-light" onclick="return toggleSidebar()">
+         <i class="fas fa-bars"></i>
       </a>
       <a class="navbar-brand" <#if auth??> href="/" </#if> >
       <img src="${favicon}" width="20" height="20" alt="">

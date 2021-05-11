@@ -1,4 +1,6 @@
 <script>
+
+    var isSidebarOpen = true;
     function isEmpty(str) {
         return (!str || 0 === str.length);
     }
@@ -172,6 +174,44 @@
         }
     }
 
+    jQuery(function ($) {
+
+    	$(".sidebar-dropdown > a").click(function () {
+    		$(".sidebar-submenu").slideUp(200);
+    		if (
+    			$(this)
+    			.parent()
+    			.hasClass("active")
+    		) {
+    			$(".sidebar-dropdown").removeClass("active");
+    			$(this)
+    				.parent()
+    				.removeClass("active");
+    		} else {
+    			$(".sidebar-dropdown").removeClass("active");
+    			$(this)
+    				.next(".sidebar-submenu")
+    				.slideDown(200);
+    			$(this)
+    				.parent()
+    				.addClass("active");
+    		}
+    	});
+
+    	$("#close-sidebar").click(function () {
+    		$(".page-wrapper").removeClass("toggled");
+    	});
+    	$("#show-sidebar").click(function () {
+    		$(".page-wrapper").addClass("toggled");
+    	});
+
+
+    });
+
+    function toggleSidebar() {
+
+    }
+
     function isJson(str) {
         try {
             JSON.parse(str);
@@ -182,7 +222,13 @@
     }
 
     function toggleSidebar() {
-        $("#wrapper").toggleClass("toggled");
+        if(isSidebarOpen) {
+            $(".page-wrapper").removeClass("toggled");
+        }
+        else {
+            $(".page-wrapper").addClass("toggled");
+        }
+        isSidebarOpen = !isSidebarOpen;
     }
 
     $("#toggleSidebarButton").click(function(e) {

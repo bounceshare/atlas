@@ -65,10 +65,11 @@
 
 </head>
 <body>
-    <div class="d-flex" id="wrapper">
+<div class="page-wrapper chiller-theme toggled">
         <#include "/verticalNavbar.ftl">
-        <div id="page-content-wrapper">
-            <#include "/navbar.ftl">
+        <#include "/navbar.ftl">
+        <main class="page-content">
+            <div style="line-height: 0;">
             <br/>
             <br/>
             <div class="alert alert-success alert-dismissible fade show" id="successAlert" role="alert" hidden>

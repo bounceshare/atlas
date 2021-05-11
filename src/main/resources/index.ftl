@@ -45,6 +45,7 @@
 <!--<#if autoRefresh??><#include "/scripts/layers.js"></#if>-->
 <!--<#if searchPage??><#include "/scripts/search.js"><#else></#if>-->
 <!--<#include "/scripts/modal.js">-->
+</div>
 </main>
 <#include "/footer.ftl">
 <#include "/modal.ftl">
