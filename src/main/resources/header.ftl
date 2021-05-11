@@ -18,7 +18,7 @@
 
     <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.css"/>
     <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css"/>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
     <link rel="stylesheet" href="/files/css/leaflet-sidebar.css" />
     <link rel="stylesheet" href="/files/css/bootstrap-datetimepicker.min.css" />
     <link rel="stylesheet" href="/files/css/atlas.css" />
@@ -68,5 +68,4 @@
 <div class="page-wrapper chiller-theme">
         <#include "/verticalNavbar.ftl">
         <#include "/navbar.ftl">
-        <main class="page-content">
-            <div style="line-height: 0;">
+        <div class="page-content">

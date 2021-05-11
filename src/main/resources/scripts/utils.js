@@ -285,7 +285,7 @@
             }
         });
 
-        toggleSidebar();
+//        toggleSidebar();
 
     });
 
