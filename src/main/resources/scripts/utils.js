@@ -181,6 +181,15 @@
         return true;
     }
 
+    function toggleSidebar() {
+        $("#wrapper").toggleClass("toggled");
+    }
+
+    $("#toggleSidebarButton").click(function(e) {
+//      e.preventDefault();
+      $("#wrapper").toggleClass("toggled");
+    });
+
     $(document).ready(function(){
         try {
             $('[data-toggle="popover"]').popover();
@@ -198,6 +207,8 @@
         });
 
         setupDateTimeElement();
+
+        $("#wrapper").toggleClass("toggled");
 
         // Burger menus
         document.addEventListener('DOMContentLoaded', function() {

@@ -1,7 +1,14 @@
 <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
-   <a class="navbar-brand" <#if auth??> href="/" </#if> >
-   <img src="${favicon}" width="20" height="20" alt="">
-   </a>
+   <span>
+      <a onclick="return toggleSidebar()">
+         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" class="bi bi-three-dots-vertical" viewBox="0 0 16 16">
+            <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/>
+         </svg>
+      </a>
+      <a class="navbar-brand" <#if auth??> href="/" </#if> >
+      <img src="${favicon}" width="20" height="20" alt="">
+      </a>
+   </span>
    <a class="navbar-brand" <#if auth??> href="/" </#if> >${title}</a>
    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse"
       aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
