@@ -24,7 +24,7 @@
     <link rel="stylesheet" href="/files/css/atlas.css" />
     <link rel="stylesheet" href="https://unpkg.com/@geoman-io/leaflet-geoman-free@2.5.0/dist/leaflet-geoman.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jQuery-QueryBuilder/dist/css/query-builder.default.min.css" />
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBJG0FV8g6IJ6kyWVy52GeLwkYeNlIRjA8" async defer></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=${googlemapsapikey}" async defer></script>
 
 
 

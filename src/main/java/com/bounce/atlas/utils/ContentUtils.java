@@ -126,6 +126,7 @@ public class ContentUtils {
         data.put("tileserverurl", PropertiesLoader.getProperty("tileserver.url"));
         data.put("tileserverid", PropertiesLoader.getProperty("tileserver.id"));
         data.put("googleclientid", PropertiesLoader.getProperty("google.clientid"));
+        data.put("googlemapsapikey", PropertiesLoader.getProperty("google.maps.apikey"));
         if(isAuth) {
             data.put("auth", isAuth);
         }
