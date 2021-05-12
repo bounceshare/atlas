@@ -51,7 +51,6 @@
         </#list>
         </#if>
 
-        <#if auth??>
         <li class="header-menu">
           <span>Advanced</span>
         </li>
@@ -69,7 +68,6 @@
             <span>Auto Refresh</span>
           </a>
         </li>
-        </#if>
 
         <#if auth??>
         <li class="header-menu">
