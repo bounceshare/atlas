@@ -48,7 +48,7 @@
         if(sidebar) {
             sidebarClose();
         }
-        if(isSideNavbarOpen) {
+        if(isSideNavbarOpen && items.length > 0) {
             toggleSideNavbar();
         }
         if(items.length < 1) {
