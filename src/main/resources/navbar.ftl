@@ -1,6 +1,6 @@
 <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
    <span>
-      <a class="btn btn-secondary" onclick="return toggleSidebar()">
+      <a class="btn btn-secondary" onclick="return toggleSideNavbar()">
          <i class="fas fa-bars"></i>
       </a>
       &nbsp;&nbsp;

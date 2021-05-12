@@ -1,4 +1,4 @@
-<nav id="sidebar" class="sidebar-wrapper">
+<nav id="sideNavbar" class="sidebar-wrapper">
   <div class="sidebar-content">
     <div class="sidebar-brand">
       <a href="#">Atlas</a>

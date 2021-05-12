@@ -48,6 +48,9 @@
         if(sidebar) {
             sidebarClose();
         }
+        if(isSideNavbarOpen) {
+            toggleSideNavbar();
+        }
         if(items.length < 1) {
             return;
         }

@@ -1,6 +1,6 @@
 <script>
 
-    var isSidebarOpen = false;
+    var isSideNavbarOpen = false;
     function isEmpty(str) {
         return (!str || 0 === str.length);
     }
@@ -209,20 +209,15 @@
         return true;
     }
 
-    function toggleSidebar() {
-        if(isSidebarOpen) {
+    function toggleSideNavbar() {
+        if(isSideNavbarOpen) {
             $(".page-wrapper").removeClass("toggled");
         }
         else {
             $(".page-wrapper").addClass("toggled");
         }
-        isSidebarOpen = !isSidebarOpen;
+        isSideNavbarOpen = !isSideNavbarOpen;
     }
-
-    $("#toggleSidebarButton").click(function(e) {
-//      e.preventDefault();
-      $("#wrapper").toggleClass("toggled");
-    });
 
     $(document).ready(function(){
         try {
@@ -286,7 +281,7 @@
         });
 
         if(window && window.innerWidth && window.innerWidth > 768) {
-            toggleSidebar();
+            toggleSideNavbar();
         }
 
     });
