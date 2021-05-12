@@ -51,27 +51,64 @@
         </#list>
         </#if>
 
+        <#if auth??>
         <li class="header-menu">
-          <span>Extra</span>
+          <span>Advanced</span>
         </li>
+        <#if searchPage??>
+        <li>
+          <a onclick="openSearchModal()" href="#">
+            <i class="fa fa-search"></i>
+            <span>Search</span>
+          </a>
+        </li>
+        </#if>
         <li>
           <a href="#">
-            <i class="fa fa-book"></i>
-            <span>Documentation</span>
+            <input style="width: 1.1rem;height: 1.1rem;" type="checkbox" class="fa" id="refreshCheckbox"></input> &nbsp;&nbsp;
+            <span>Auto Refresh</span>
+          </a>
+        </li>
+        </#if>
+
+        <#if auth??>
+        <li class="header-menu">
+          <span>Options</span>
+        </li>
+        <li>
+          <a onclick="bootboxPromptRenderJSON()" href="#">
+            <i class="fa fa-code"></i>
+            <span>Render Atlas JSON</span>
           </a>
         </li>
         <li>
-          <a href="#">
-            <i class="fa fa-calendar"></i>
-            <span>Calendar</span>
+          <a onclick="bootboxPromptRenderGeoJSON()" href="#">
+            <i class="fa fa-code"></i>
+            <span>Render GeoJSON</span>
           </a>
         </li>
         <li>
-          <a href="#">
+          <a onclick="bootboxPromptRenderKML()" href="#">
+            <i class="fa fa-map"></i>
+            <span>Render KML</span>
+          </a>
+        </li>
+        <#if isAdmin??><#if isAdmin>
+        <li>
+          <a href="/config">
             <i class="fa fa-folder"></i>
-            <span>Examples</span>
+            <span>Config</span>
           </a>
         </li>
+        </#if>
+        </#if>
+        <li>
+          <a onclick="signOut()" href="#">
+            <i class="fa fa-sign-out-alt"></i>
+            <span>Sign Out</span>
+          </a>
+        </li>
+        </#if>
       </ul>
     </div>
     <!-- sidebar-menu  -->
