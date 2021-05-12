@@ -96,7 +96,7 @@
         <#if isAdmin??><#if isAdmin>
         <li>
           <a href="/config">
-            <i class="fa fa-folder"></i>
+            <i class="fa fa-cogs"></i>
             <span>Config</span>
           </a>
         </li>
@@ -109,9 +109,28 @@
           </a>
         </li>
         </#if>
+
+        <li class="header-menu">
+          <span>Open Source</span>
+        </li>
+        <li>
+          <a href="https://github.com/bounceshare/atlas">
+            <i class="fa fa-code-branch"></i>
+            <span>Fork it on Github</span>
+          </a>
+        </li>
       </ul>
     </div>
     <!-- sidebar-menu  -->
   </div>
+
+
+
+<!--<div class="sidebar-footer">-->
+<!--<a href="https://github.com/bounceshare/atlas">-->
+  <!--<i class="fa fa-github"></i>-->
+  <!--<span>Github</span>-->
+<!--</a>-->
+<!--</div>-->
 
 </nav>
