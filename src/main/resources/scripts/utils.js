@@ -285,7 +285,9 @@
             }
         });
 
-//        toggleSidebar();
+        if(window && window.innerWidth && window.innerWidth > 768) {
+            toggleSidebar();
+        }
 
     });
 
