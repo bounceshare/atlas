@@ -815,6 +815,12 @@
         renderCircles(fitToBounds);
         renderPaths(fitToBounds);
 
+        if(form == null) {
+            pos = map.getCenter();
+            center = [pos.lat, pos.lng];
+            radius = getMapRadiusInMeters();
+        }
+
         if(tMarkers != null && tMarkers.length > 0 && fitToBounds) {
             map.fitBounds(markerClusterGroup.getBounds(), {padding: [50,50]});
         }

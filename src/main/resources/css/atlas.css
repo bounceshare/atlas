@@ -450,8 +450,12 @@ body {
 .chiller-theme .sidebar-wrapper .sidebar-dropdown .sidebar-submenu li a:hover:before,
 .chiller-theme .sidebar-wrapper .sidebar-search input.search-menu:focus+span,
 .chiller-theme .sidebar-wrapper .sidebar-menu .sidebar-dropdown.active a i {
-    color: #16c7ff;
+    color: #42d0fc;
     text-shadow:0px 0px 10px rgba(22, 199, 255, 0.5);
+}
+
+.icon-color-active {
+    color: #08c4ff;
 }
 
 .chiller-theme .sidebar-wrapper .sidebar-menu ul li a i,
