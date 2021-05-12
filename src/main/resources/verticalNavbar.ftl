@@ -1,44 +1,22 @@
 <nav id="sidebar" class="sidebar-wrapper">
   <div class="sidebar-content">
     <div class="sidebar-brand">
-      <a href="#">pro sidebar</a>
+      <a href="#">Atlas</a>
       <div id="close-sidebar">
         <i class="fas fa-times"></i>
       </div>
     </div>
-    <div class="sidebar-header">
-      <div class="user-info">
-          <span class="user-name">Jhon
-            <strong>Smith</strong>
-          </span>
-        <span class="user-role">Administrator</span>
-        <span class="user-status">
-            <i class="fa fa-circle"></i>
-            <span>Online</span>
-          </span>
-      </div>
-    </div>
-    <!-- sidebar-header  -->
-    <div class="sidebar-search">
-      <div>
-        <div class="input-group">
-          <input type="text" class="form-control search-menu" placeholder="Search...">
-          <div class="input-group-append">
-              <span class="input-group-text">
-                <i class="fa fa-search" aria-hidden="true"></i>
-              </span>
-          </div>
-        </div>
-      </div>
-    </div>
+
+
     <!-- sidebar-search  -->
     <div class="sidebar-menu">
       <ul>
         <li class="header-menu">
-          <span>General</span>
+          <span>Collections</span>
         </li>
         <li class="sidebar-dropdown">
           <a href="#">
+            <i class="fa fa-folder"></i>
             <span>Dashboard</span>
           </a>
           <div class="sidebar-submenu">
@@ -59,7 +37,7 @@
         </li>
         <li class="sidebar-dropdown">
           <a href="#">
-            <i class="fa fa-shopping-cart"></i>
+            <i class="fa fa-folder"></i>
             <span>E-commerce</span>
           </a>
           <div class="sidebar-submenu">
@@ -80,7 +58,7 @@
         </li>
         <li class="sidebar-dropdown">
           <a href="#">
-            <i class="far fa-gem"></i>
+            <i class="fa fa-folder"></i>
             <span>Components</span>
           </a>
           <div class="sidebar-submenu">
@@ -105,7 +83,7 @@
         </li>
         <li class="sidebar-dropdown">
           <a href="#">
-            <i class="fa fa-chart-line"></i>
+            <i class="fa fa-folder"></i>
             <span>Charts</span>
           </a>
           <div class="sidebar-submenu">
@@ -127,7 +105,7 @@
         </li>
         <li class="sidebar-dropdown">
           <a href="#">
-            <i class="fa fa-globe"></i>
+            <i class="fa fa-folder"></i>
             <span>Maps</span>
           </a>
           <div class="sidebar-submenu">

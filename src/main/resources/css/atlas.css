@@ -482,7 +482,7 @@ body {
 
 /*--------------------------map-----------------------------*/
 .map-wrapper {
-    height: -o-calc(100% - 65px); /* opera */
-    height: -webkit-calc(100% - 65px); /* google, safari */
-    height: -moz-calc(100% - 65px); /* firefox */
+    height: -o-calc(100% - 50px); /* opera */
+    height: -webkit-calc(100% - 50px); /* google, safari */
+    height: -moz-calc(100% - 50px); /* firefox */
 }
