@@ -27,13 +27,18 @@ Have a table storing some PostGIS info? Now you can easily visualise them on the
 }
 ```
  
-![GeoJSON rendered on Atlas](https://upload.bounce.bike/images/c1218a90-7a5c-488c-9799-4ae16c8e5754)
+![GeoJSON rendered on Atlas](https://upload.bounce.bike/test/b53ee202-049c-4e2e-bddf-8b65f72dc278)
 
 ## Screenshots 
 
-![Screenshot1](https://upload.bounce.bike/images/dc3539b7-1216-4b6a-858d-e0e409cb7b4c)
+![Screenshot1](https://upload.bounce.bike/test/9ed62c9f-182b-4d5b-afa2-82e7a4bb7143)
 
-![Screenshot2](https://upload.bounce.bike/images/25ca396e-e9c7-418b-80e7-4a25adc5cde4)
+![Screenshot2](https://upload.bounce.bike/test/2d3027f7-43a9-4ab9-8915-753d733691b3)
 
 You can find more info from [here](https://github.com/bounceshare/atlas/wiki)
 
+ 
+
+## Demo
+In light of the 2nd wave of the Covid-19 pandemic in India, Atlas was used to build a few pages to track hospital bed availability, vaccine and test centres in Bangalore. 
+[https://covid.bounceshare.com/covid19](https://covid.bounceshare.com/covid19)
