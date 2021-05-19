@@ -52,6 +52,16 @@
         </#if>
 
         <li class="header-menu">
+          <span>Oxygen Concentrator</span>
+        </li>
+        <li>
+          <a href="https://oxygenconcentrator.bounce.bike/index.html" target="_blank">
+            <i class="fa fa-heartbeat"></i>
+            <span>Rent it for <b>FREE!</b></span>
+          </a>
+        </li>
+
+        <li class="header-menu">
           <span>Advanced</span>
         </li>
         <#if searchPage??>
@@ -112,7 +122,7 @@
           <span>Open Source</span>
         </li>
         <li>
-          <a href="https://github.com/bounceshare/atlas">
+          <a href="https://github.com/bounceshare/atlas" target="_blank">
             <i class="fa fa-code-branch"></i>
             <span>Fork it on Github</span>
           </a>

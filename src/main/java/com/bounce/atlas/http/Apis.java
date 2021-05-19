@@ -270,6 +270,15 @@ public class Apis {
                 location = page.getDefaultLocation();
             }
         }
+        if(!TextUtils.isEmpty(location) && !Utils.isValidLatLong(location)) {
+            location = page.getDefaultLocation();
+        }
+        if(!TextUtils.isEmpty(zoom) && !Utils.isValidZoom(zoom)) {
+            zoom = page.getZoom() + "";
+        }
+        if(!TextUtils.isEmpty(query) && query.contains("script")) {
+            query = "";
+        }
         if (TextUtils.isEmpty(zoom)) {
             zoom = config.getZoom() + "";
             if(page.getZoom() > 0) {

@@ -43,6 +43,28 @@ public class Utils {
         return -1;
     }
 
+    public static boolean isValidLatLong(String location) {
+        try {
+            double lat = Double.parseDouble(location.split(",")[0]);
+            double lon = Double.parseDouble(location.split(",")[1]);
+            if(lat < -90 || lat > 90 || lon < -180 || lon > 180) return false;
+            return true;
+        } catch (Exception e) {
+            Utils.logError(e);
+        }
+        return false;
+    }
+
+    public static boolean isValidZoom(String zoom) {
+        try {
+            int intZoom = Integer.parseInt(zoom);
+            return true;
+        } catch (Exception e) {
+            Utils.logError(e);
+        }
+        return false;
+    }
+
     public static long convertHtmlInputTimestamp(String time) {
         try {
             SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
