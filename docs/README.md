@@ -1,9 +1,10 @@
 # Atlas
 An OpenSource Internal Admin-Panel Framework
 
-Atlas lets you build custom admin panels in a very easy manner. Atlas fills the void for a good quality map based admin panel. It can connect to remove PostgreSQL databases and fetch info directly and make editable UI components out of them. 
+Atlas lets you build custom admin panels in a very easy manner. Atlas fills the void for a good quality map based admin panel. It can connect to remote PostgreSQL databases and fetch info directly and make editable UI components out of them. 
 
-Have a table storing some PostGIS info? Now you can easily visualise them on the cloud using Atlas. Atlas understands GeoJSON, so you can go ahead and configure a page to render some table on PostgreSQL by simply configuring a query that returns a GeoJSON. As simple as that! Atlas even supports CRUD on PostgreSQL tables.
+Have a table storing some PostGIS info? 
+Now you can easily visualise them on the cloud using Atlas. Atlas understands GeoJSON, so you can go ahead and configure a page to render a table on PostgreSQL by simply configuring a query that returns a GeoJSON. As simple as that! Atlas even supports CRUD on PostgreSQL tables.
 
 ```yaml
 {
